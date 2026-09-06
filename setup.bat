@@ -1,10 +1,10 @@
 @echo off
 setlocal EnableDelayedExpansion
-title VORTEX_AI - Setup
+title VMP-AI - Setup
 cd /d "%~dp0"
 echo.
 echo  ==========================================================
-echo   VORTEX_AI / Hermes Agent - Setup (Windows)
+echo  VMP-AI / Hermes Agent - Setup (Windows)
 echo   Pasta: %CD%
 echo  ==========================================================
 echo.

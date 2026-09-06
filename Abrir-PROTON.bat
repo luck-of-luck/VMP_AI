@@ -1,9 +1,9 @@
 @echo off
 setlocal
-title PROTON - JARVIS - VORTEX_AI
+title PROTON - JARVIS - VMP-AI
 cd /d "%~dp0"
 echo ==========================================
-echo  PROTON - JARVIS (VORTEX_AI)
+echo  PROTON - JARVIS (VMP-AI)
 echo  Interface RTX | Grafite metalico | Neon
 echo  Pasta: %CD%
 echo ==========================================

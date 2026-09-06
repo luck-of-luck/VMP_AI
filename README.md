@@ -1,4 +1,4 @@
-# 🌌 VORTEX AI — Hermes Agent
+# 🌌 VMP-AI — Hermes Agent
 
 > **Agente de IA autônomo, local-first e pronto para produção.**
 > Baseado no [Hermes Agent](https://github.com/NousResearch/hermes-agent) (Nous Research),
@@ -15,7 +15,7 @@
 
 ## ✨ O que é
 
-O **VORTEX AI** é um ambiente completo para rodar o [Hermes Agent](https://github.com/NousResearch/hermes-agent) — um agente de IA autônomo com **memória persistente**, **skills** que aprendem com a experiência, agendador de tarefas (**cron**), integração com plataformas de mensagens (Telegram, Discord, WhatsApp, Signal…) e orquestração de múltiplos agentes.
+O **VMP-AI** é um ambiente completo para rodar o [Hermes Agent](https://github.com/NousResearch/hermes-agent) — um agente de IA autônomo com **memória persistente**, **skills** que aprendem com a experiência, agendador de tarefas (**cron**), integração com plataformas de mensagens (Telegram, Discord, WhatsApp, Signal…) e orquestração de múltiplos agentes.
 
 Este repositório já chega **pronto para uso**: um único comando de setup escaneia e instala todas as dependências, e os launchers incluídos dão acesso imediato ao **CLI**, **TUI**, **Gateway de mensagens** e ao **OpenCode** (via bridge MCP).
 
@@ -24,12 +24,12 @@ Este repositório já chega **pronto para uso**: um único comando de setup esca
 ## 🧱 Estrutura do repositório
 
 ```
-VORTEX_AI/
+VMP-AI/
 ├─ hermes-agent/          # código-fonte do Hermes Agent (upstream, MIT)
 │  ├─ skills/             # 16 categorias, 80+ skills (vortex, github, opencode...)
 │  └─ opencode.jsonc      # config opencode upstream (usa ../bin/hermes.exe)
 ├─ .opencode/
-│  └─ skills/vortex-hermes/ # BRIDGE VORTEX: opencode + Hermes (este repo)
+│  └─ skills/vortex-hermes/ # BRIDGE VMP-AI: opencode + Hermes (este repo)
 ├─ proton/                # PROTON — JARVIS app (RTX + neon + fluid, index.html)
 │  ├─ index.html          # app single-file (Tailwind + Three.js + Canvas)
 │  └─ README.md           # docs PROTON
@@ -70,8 +70,8 @@ VORTEX_AI/
 **Opção A — Duplo-clique (recomendado):**
 ```powershell
 # 1) Clone
-git clone https://github.com/luck-of-luck/VORTEX_AI.git
-cd VORTEX_AI
+git clone https://github.com/luck-of-luck/VMP-AI.git
+cd VMP-AI
 
 # 2) Duplo-clique em setup.bat  (ou clique direito -> Executar)
 #    Ele chama o setup.ps1, instala tudo e cria o .env automaticamente
@@ -85,8 +85,8 @@ cd VORTEX_AI
 
 **Opção B — Terminal (mesmo resultado):**
 ```powershell
-git clone https://github.com/luck-of-luck/VORTEX_AI.git
-cd VORTEX_AI
+git clone https://github.com/luck-of-luck/VMP-AI.git
+cd VMP-AI
 powershell -ExecutionPolicy Bypass -File .\setup.ps1
 # ou: .\setup.bat
 notepad .env   # preencha 1 chave
@@ -127,7 +127,7 @@ powershell -ExecutionPolicy Bypass -File .\Iniciar.ps1
 
 ### OpenCode + Hermes — editor IA com skills e MCP (integrado)
 
-> **VORTEX_AI já vem com `opencode.jsonc` configurado para usar Hermes como MCP + providers locais.**
+> **VMP-AI já vem com `opencode.jsonc` configurado para usar Hermes como MCP + providers locais.**
 
 ```powershell
 npm install -g opencode-ai   # se setup.bat não instalou
@@ -322,5 +322,5 @@ Troque de modelo a qualquer momento com `/model` no chat, ou edite `config.yaml`
 
 ## 📜 Licença & créditos
 
-- Código deste repositório: **MIT** © 2026 VORTEX_AI Contributors ([LICENSE](LICENSE)).
+- Código deste repositório: **MIT** © 2026 VMP-AI Contributors ([LICENSE](LICENSE)).
 - `hermes-agent/`: **MIT** © Nous Research — veja [`hermes-agent/LICENSE`](hermes-agent/LICENSE) e o [repositório oficial](https://github.com/NousResearch/hermes-agent).

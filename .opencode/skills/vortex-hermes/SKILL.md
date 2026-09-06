@@ -1,23 +1,23 @@
 ---
 name: vortex-hermes
-description: Bridge opencode+Hermes com skills e MCP para VORTEX_AI.
+description: Bridge opencode+Hermes com skills e MCP para VMP-AI.
 ---
 
 # VORTEX-Hermes Bridge — OpenCode + Hermes Agent
 
-> **Leia este skill SEMPRE que for codar no VORTEX_AI via opencode.** Ele conecta o editor IA (opencode) ao agente autônomo (Hermes) com todas as skills e MCPs.
+> **Leia este skill SEMPRE que for codar no VMP-AI via opencode.** Ele conecta o editor IA (opencode) ao agente autônomo (Hermes) com todas as skills e MCPs.
 
 ## Quando Usar
 
-- Você está no repo `VORTEX_AI` (raiz `C:\Users\... \hermes` ou clone `VORTEX_AI/`)
+- Você está no repo `VORTEX_AI` (raiz `C:\Users\... \hermes` ou clone `VMP-AI/`)
 - Precisa editar `hermes-agent/`, `config.yaml`, `opencode.jsonc`, `setup.ps1`, skills, gateway, cron, kanban
 - Quer usar skills Hermes (80+) dentro do opencode (via MCP `hermes`)
 - Quer delegar para Hermes como worker (`opencode` → `hermes`, ou `hermes` → `opencode`)
 
-## Arquitetura VORTEX_AI
+## Arquitetura VMP-AI
 
 ```
-VORTEX_AI/  (repo que o usuário clona)
+VMP-AI/  (repo que o usuário clona)
 ├─ hermes-agent/          # upstream Nous Research (não edite sem necessidade)
 │  ├─ skills/             # 16 categorias, 80+ skills (github, opencode, vortex, etc.)
 │  ├─ plugins/            # plugins (memory, model-providers, kanban...)
@@ -26,7 +26,7 @@ VORTEX_AI/  (repo que o usuário clona)
 │  └─ opencode.jsonc      # config opencode do upstream (referencia ../bin/hermes.exe)
 ├─ .opencode/skills/vortex-hermes/  # ← este skill (bridge VORTEX)
 ├─ bin/hermes.exe         # binário gerado por setup.ps1 (venv\Scripts\hermes.exe)
-├─ opencode.jsonc         # CONFIG PRINCIPAL VORTEX — opencode na RAIZ (usa bin/hermes.exe mcp serve)
+├─ opencode.jsonc         # CONFIG PRINCIPAL VMP-AI — opencode na RAIZ (usa bin/hermes.exe mcp serve)
 ├─ config.yaml            # fallback inteligente (Cline → OpenRouter :free → Ollama)
 ├─ setup.bat / setup.ps1  # instalador 1-clique + verificação 10 checks
 └─ SOUL.md / AGENTS.md    # persona e invariants (prompt caching sagrado)
@@ -61,7 +61,7 @@ opencode mcp invoke hermes tools  # lista skills/tools Hermes
 - `context7`: mude `"enabled": false` → `true` em `opencode.jsonc` e reinicie opencode. Para docs atualizadas: `mcp invoke context7 resolve-library-id` + `query-docs`.
 - `n8n`: instale `hermes mcp install n8n` (ou `setup.ps1 -WithN8nMCP`), depois habilite em `opencode.jsonc` e ajuste o `command` para o `.venv` correto (Windows: `hermes-agent/venv/Scripts/python.exe`, Linux/Mac: `.../.venv/bin/python`).
 
-**Hermes tem 80+ skills via MCP.** Exemplos que o opencode pode chamar:
+**VMP-AI tem 80+ skills via MCP.** Exemplos que o opencode pode chamar:
 - `vortex/ai-app-orchestration` — delegar para Claude/Cursor/Kimi via terminal
 - `vortex/git-commit-workflow` — commits no branch atual (conventional commits)
 - `vortex/visual-browser-user-protocol` — navegar como usuário de 1ª vez com visão

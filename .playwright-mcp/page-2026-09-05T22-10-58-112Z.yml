@@ -1,0 +1,260 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e4]:
+      - link "ampliagro" [ref=e5] [cursor=pointer]:
+        - /url: "#"
+      - generic [ref=e7]:
+        - link "Dashboard" [ref=e8] [cursor=pointer]:
+          - /url: "#"
+        - link "Vegetal" [ref=e14] [cursor=pointer]:
+          - /url: /guias/vegetal/
+        - link "Animal" [ref=e18] [cursor=pointer]:
+          - /url: /guias/animal/
+        - link "Aquática" [ref=e25] [cursor=pointer]:
+          - /url: /guias/aquatica/
+        - link "Sistemas" [ref=e30] [cursor=pointer]:
+          - /url: /guias/sistemas/
+        - generic [ref=e36]:
+          - generic [ref=e37] [cursor=pointer]: Cadastros
+          - generic:
+            - generic:
+              - generic: Produção
+              - link "Safras":
+                - /url: /cadastro/safra/
+              - link "Talhões":
+                - /url: /cadastro/talhao/
+              - link "Animais":
+                - /url: /cadastro/animal/
+              - link "Apiário":
+                - /url: /cadastro/apiario/
+            - generic:
+              - generic: Gestão
+              - link "Insumos":
+                - /url: /cadastro/insumo/
+              - link "Maquinários":
+                - /url: /cadastro/maquinario/
+              - link "Funcionários":
+                - /url: /cadastro/funcionario/
+              - link "Propriedades":
+                - /url: /cadastro/propriedade/
+            - generic:
+              - generic: Financeiro
+              - link "Financeiro":
+                - /url: /cadastro/financeiro/
+              - link "Estoque":
+                - /url: /cadastro/estoque/
+        - generic [ref=e42]:
+          - generic [ref=e43] [cursor=pointer]: Ferramentas
+          - generic:
+            - generic:
+              - generic: Calculadoras & Simuladores
+              - link "Calculadoras Agronomicas":
+                - /url: "#"
+              - link "Simulador Financeiro":
+                - /url: /simulador/financeiro/
+              - link "Simulador Colheita":
+                - /url: /simulador/colheita/
+              - link "Previsao do Tempo":
+                - /url: /previsao/clima/
+              - generic: Instrumentos
+              - link "Caderno de Campo":
+                - /url: "#"
+              - link "Entrada Rapida (Planilha)":
+                - /url: "#"
+              - link "QR Code Rastreabilidade":
+                - /url: "#"
+            - generic:
+              - generic: Produtos & Precificacao
+              - link "Cadastro de Produtos novo":
+                - /url: "#"
+                - text: Cadastro de Produtos
+                - generic: novo
+              - link "Tabela de Precos novo":
+                - /url: "#"
+                - text: Tabela de Precos
+                - generic: novo
+              - link "Importar Produtos em Lote":
+                - /url: "#"
+              - link "Insumos (Sistema)":
+                - /url: /cadastro/insumo/
+              - link "Estoque Geral":
+                - /url: /estoque/geral/
+            - generic:
+              - generic: Monitoramento & IoT
+              - link "Sensores IoT":
+                - /url: /iot/sensores/
+              - link "Dispositivos":
+                - /url: /iot/dispositivos/
+              - generic: Sistema
+              - link "Exportar Snapshot (.agro)":
+                - /url: "#"
+              - link "Importar Snapshot (.agro)":
+                - /url: "#"
+        - generic [ref=e48]:
+          - generic [ref=e49] [cursor=pointer]: Relatórios
+          - generic:
+            - generic:
+              - link "Dashboard OS":
+                - /url: /dashboard/os/
+              - link "Resumo Gerencial":
+                - /url: /dashboard/resumo/
+              - link "Estoque Geral":
+                - /url: /estoque/geral/
+              - link "Logística":
+                - /url: /logistica/caminhoes/
+              - link "Previsão Safra":
+                - /url: /previsao/safra/
+        - generic [ref=e53]:
+          - generic [ref=e54] [cursor=pointer]: Gestão
+          - generic:
+            - generic:
+              - link "Agenda Geral":
+                - /url: /equipe/agenda/
+              - link "Empregados":
+                - /url: /equipe/empregados/
+              - link "Agenda Agrícola":
+                - /url: /agenda/agricola/
+              - link "Agenda Pecuária":
+                - /url: /agenda/pecuaria/
+      - generic [ref=e62]:
+        - generic [ref=e63]:
+          - button "Claro" [ref=e64] [cursor=pointer]
+          - menu "Claro":
+            - generic:
+              - button "Escuro Escuro":
+                - generic: Escuro
+                - generic: Escuro
+              - button "Claro Ativo Claro" [pressed]:
+                - generic:
+                  - generic: Claro
+                  - generic: Ativo
+                - generic: Claro
+              - generic:
+                - button "Personalizado Personalizado":
+                  - generic: Personalizado
+                  - generic: Personalizado
+            - generic:
+              - button "Personalizar"
+        - generic [ref=e74]:
+          - generic "Visitante" [ref=e75] [cursor=pointer]: "?"
+          - generic:
+            - generic: Visitante
+            - link "Configurações":
+              - /url: /perfil/config/
+            - link "Sistema":
+              - /url: /config/sistema/
+            - link "Sair":
+              - /url: /logout/
+  - text:   
+  - toolbar "Barra de widgets — estilo Windows" [ref=e76]:
+    - generic [ref=e77]:
+      - button "Modo Edição" [ref=e79] [cursor=pointer]:
+        - generic [ref=e80]: 
+      - generic [ref=e81]:
+        - button "" [ref=e82] [cursor=pointer]
+        - dialog [aria-hidden]:
+          - generic:
+            - generic: 
+            - textbox:
+              - /placeholder: Pesquisar widgets, módulos, ações...
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic: 
+                  - text: Recentes
+                - generic:
+                  - generic: 
+                  - generic: Nenhum widget recente
+              - generic:
+                - generic:
+                  - generic: 
+                  - text: Favoritos
+                - generic:
+                  - generic: 
+                  - generic: Sem favoritos
+            - generic:
+              - generic:
+                - generic:
+                  - generic: 
+                  - text: Sugerido para você
+                - generic:
+                  - generic: 
+                  - generic: IA analisando seu uso...
+              - generic:
+                - generic: Ações rápidas
+                - generic:
+                  - generic: 
+                  - generic: Ir para Dashboard
+                  - generic: Ctrl+1
+                - generic:
+                  - generic: 
+                  - generic: Ir para Financeiro
+                  - generic: Ctrl+2
+                - generic:
+                  - generic: 
+                  - generic: Ir para Campo
+                  - generic: Ctrl+3
+                - generic:
+                  - generic: 
+                  - generic: Ir para Estoque
+                  - generic: Ctrl+4
+                - generic:
+                  - generic: 
+                  - generic: Paleta de Comandos
+                  - generic: Ctrl+K
+          - generic:
+            - generic:
+              - generic: 
+              - text: Ampliagro OS
+            - generic: ↵ Enter para ir • Esc para fechar
+      - generic [ref=e84]:
+        - generic "internet" [ref=e85] [cursor=pointer]: 
+        - generic [ref=e87] [cursor=pointer]: 
+    - generic [ref=e89]:
+      - text: 
+      - generic "Arraste ou clique em qualquer lugar" [ref=e90]:
+        - generic [ref=e91] [cursor=pointer]: Mês
+        - generic [ref=e94] [cursor=pointer]: Ambos
+      - text:          
+    - dialog [aria-hidden]:
+      - heading [level=4]:
+        - generic: 
+        - text: Controles
+      - generic: Período
+      - generic: Financeiro
+      - generic:
+        - button: Fechar
+    - menu [aria-hidden]:
+      - menuitem:
+        - generic: 
+        - text: Editar
+      - menuitem:
+        - generic: 
+        - text: Duplicar
+      - menuitem:
+        - generic: 
+        - text: Cor de fundo
+      - separator
+      - menuitem:
+        - generic: 
+        - text: Excluir
+  - generic [ref=e98]:
+    - generic [aria-hidden]:
+      - generic: 1/2
+      - generic: 1/2
+      - generic: 1/3
+      - generic: 1/3
+      - generic: 1/3
+      - generic: 2/3
+  - generic [ref=e99]:
+    - generic [ref=e100]:
+      - generic [ref=e101]:
+        - generic [ref=e102]: 
+        - generic [ref=e103]: IA - Assistente Inteligente
+      - button "" [ref=e104]
+    - generic [ref=e106]: Olá! Como posso ajudar no seu agronegócio hoje?
+    - generic [ref=e109]:
+      - textbox "Digite um comando..." [ref=e110]
+      - button "Enviar" [ref=e111]
+  - text:                        

@@ -1,5 +1,5 @@
 # =====================================================================
-#  setup.ps1 - VORTEX_AI / Hermes Agent
+#  setup.ps1 - VMP-AI / Hermes Agent
 #
 #  Instala / atualiza TODAS as dependencias e deixa o agente pronto
 #  para uso imediato no Windows (PowerShell 5.1+ / 7+).
@@ -7,7 +7,7 @@
 #  Fluxo "clone & use" para quem baixa do GitHub:
 #    1) git clone https://github.com/luck-of-luck/VORTEX_AI.git
 #    2) duplo-clique em setup.bat  (ou: powershell -ExecutionPolicy Bypass -File setup.ps1)
-#    3) editar .env (wizard ajuda) e usar Abrir-Hermes.bat
+#    3) editar .env (wizard ajuda) usar Abrir-Hermes.bat
 #
 #  Uso:
 #    setup.bat
@@ -75,7 +75,7 @@ function Get-ValidPython {
 }
 
 Write-Host ""
-Write-Host "  VORTEX_AI / Hermes Agent - Setup" -ForegroundColor Cyan
+Write-Host "  VMP-AI / Hermes Agent - Setup" -ForegroundColor Cyan
 Write-Host "  HERMES_HOME: $root" -ForegroundColor DarkGray
 Write-Host "  Modo: $(if($interactive){'interativo'}else{'nao-interativo'})" -ForegroundColor DarkGray
 Write-Host ""
@@ -544,7 +544,7 @@ $checks += @{ nome="Abrir-PROTON.bat"; ok=$protonBatOk; detalhe=if($protonBatOk)
 
 Write-Host ""
 Write-Host "  ----------------------------------------------------------" -ForegroundColor Cyan
-Write-Host "   VERIFICACAO FINAL - VORTEX_AI" -ForegroundColor Cyan
+Write-Host "   VERIFICACAO FINAL - VMP-AI" -ForegroundColor Cyan
 Write-Host "  ----------------------------------------------------------" -ForegroundColor Cyan
 $okCount = 0
 foreach ($c in $checks) {
@@ -575,13 +575,13 @@ if ($VerifyOnly) {
 
 # ------------------------------------------------------------ Concluido
 Write-Host "  ==========================================================" -ForegroundColor Green
-Write-Host "   Concluido! VORTEX_AI pronto." -ForegroundColor Green
+Write-Host "   Concluido! VMP-AI pronto." -ForegroundColor Green
 Write-Host "  ==========================================================" -ForegroundColor Green
 Write-Host ""
 Write-Host "  Como usar agora (1 clique):" -ForegroundColor White
 Write-Host "    * Duplo-clique em Abrir-Hermes.bat         -> CLI (chat)" -ForegroundColor White
 Write-Host "    * Duplo-clique em Abrir-Hermes-TUI.bat     -> TUI (interface completa)" -ForegroundColor White
-Write-Host "    * Duplo-clique em Iniciar.ps1              -> menu interativo (8 opcoes)" -ForegroundColor White
+Write-Host "    * Duplo-clique em Iniciar.ps1              -> menu interativo (9 opcoes)" -ForegroundColor White
 Write-Host "    * Terminal: hermes-agent\venv\Scripts\hermes.exe --tui" -ForegroundColor Gray
 Write-Host ""
 if (-not $hasKey -and -not $ollamaOk) {

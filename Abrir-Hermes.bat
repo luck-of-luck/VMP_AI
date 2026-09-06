@@ -1,10 +1,10 @@
 @echo off
 setlocal
-title Hermes CLI - VORTEX_AI
+title VMP-AI CLI - VMP-AI
 cd /d "%~dp0hermes-agent"
 set "HERMES_HOME=%~dp0"
 echo ==========================================
-echo  Hermes CLI - VORTEX_AI
+echo  VMP-AI CLI - VMP-AI
 echo  HERMES_HOME: %HERMES_HOME%
 echo  Pasta: %CD%
 echo ==========================================

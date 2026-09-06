@@ -1,9 +1,9 @@
 @echo off
 setlocal
-title OpenCode - Hermes - VORTEX_AI
+title OpenCode - Hermes - VMP-AI
 cd /d "%~dp0"
 echo ==========================================
-echo  OpenCode - Hermes RAIZ - VORTEX_AI
+echo  OpenCode - Hermes RAIZ - VMP-AI
 echo  Pasta: %CD%
 echo  Config: %CD%\opencode.jsonc
 echo  MCP: hermes -^> bin\hermes.exe mcp serve

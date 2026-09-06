@@ -1,0 +1,301 @@
+- generic [active] [ref=f4e1]:
+  - navigation [ref=f4e2]:
+    - generic [ref=f4e4]:
+      - link "ampliagro" [ref=f4e5] [cursor=pointer]:
+        - /url: "#"
+      - generic [ref=f4e7]:
+        - link "Dashboard" [ref=f4e8] [cursor=pointer]:
+          - /url: "#"
+        - link "Vegetal" [ref=f4e14] [cursor=pointer]:
+          - /url: /guias/vegetal/
+        - link "Animal" [ref=f4e18] [cursor=pointer]:
+          - /url: /guias/animal/
+        - link "Aquática" [ref=f4e25] [cursor=pointer]:
+          - /url: /guias/aquatica/
+        - link "Sistemas" [ref=f4e30] [cursor=pointer]:
+          - /url: /guias/sistemas/
+        - generic [ref=f4e36]:
+          - generic [ref=f4e37] [cursor=pointer]: Cadastros
+          - generic:
+            - generic:
+              - generic: Produção
+              - link "Safras":
+                - /url: /cadastro/safra/
+              - link "Talhões":
+                - /url: /cadastro/talhao/
+              - link "Animais":
+                - /url: /cadastro/animal/
+              - link "Apiário":
+                - /url: /cadastro/apiario/
+            - generic:
+              - generic: Gestão
+              - link "Insumos":
+                - /url: /cadastro/insumo/
+              - link "Maquinários":
+                - /url: /cadastro/maquinario/
+              - link "Funcionários":
+                - /url: /cadastro/funcionario/
+              - link "Propriedades":
+                - /url: /cadastro/propriedade/
+            - generic:
+              - generic: Financeiro
+              - link "Financeiro":
+                - /url: /cadastro/financeiro/
+              - link "Estoque":
+                - /url: /cadastro/estoque/
+        - generic [ref=f4e42]:
+          - generic [ref=f4e43] [cursor=pointer]: Ferramentas
+          - generic:
+            - generic:
+              - generic: Calculadoras & Simuladores
+              - link "Calculadoras Agronomicas":
+                - /url: "#"
+              - link "Simulador Financeiro":
+                - /url: /simulador/financeiro/
+              - link "Simulador Colheita":
+                - /url: /simulador/colheita/
+              - link "Previsao do Tempo":
+                - /url: /previsao/clima/
+              - generic: Instrumentos
+              - link "Caderno de Campo":
+                - /url: "#"
+              - link "Entrada Rapida (Planilha)":
+                - /url: "#"
+              - link "QR Code Rastreabilidade":
+                - /url: "#"
+            - generic:
+              - generic: Produtos & Precificacao
+              - link "Cadastro de Produtos novo":
+                - /url: "#"
+                - text: Cadastro de Produtos
+                - generic: novo
+              - link "Tabela de Precos novo":
+                - /url: "#"
+                - text: Tabela de Precos
+                - generic: novo
+              - link "Importar Produtos em Lote":
+                - /url: "#"
+              - link "Insumos (Sistema)":
+                - /url: /cadastro/insumo/
+              - link "Estoque Geral":
+                - /url: /estoque/geral/
+            - generic:
+              - generic: Monitoramento & IoT
+              - link "Sensores IoT":
+                - /url: /iot/sensores/
+              - link "Dispositivos":
+                - /url: /iot/dispositivos/
+              - generic: Sistema
+              - link "Exportar Snapshot (.agro)":
+                - /url: "#"
+              - link "Importar Snapshot (.agro)":
+                - /url: "#"
+        - generic [ref=f4e48]:
+          - generic [ref=f4e49] [cursor=pointer]: Relatórios
+          - generic:
+            - generic:
+              - link "Dashboard OS":
+                - /url: /dashboard/os/
+              - link "Resumo Gerencial":
+                - /url: /dashboard/resumo/
+              - link "Estoque Geral":
+                - /url: /estoque/geral/
+              - link "Logística":
+                - /url: /logistica/caminhoes/
+              - link "Previsão Safra":
+                - /url: /previsao/safra/
+        - generic [ref=f4e53]:
+          - generic [ref=f4e54] [cursor=pointer]: Gestão
+          - generic:
+            - generic:
+              - link "Agenda Geral":
+                - /url: /equipe/agenda/
+              - link "Empregados":
+                - /url: /equipe/empregados/
+              - link "Agenda Agrícola":
+                - /url: /agenda/agricola/
+              - link "Agenda Pecuária":
+                - /url: /agenda/pecuaria/
+      - generic [ref=f4e62]:
+        - generic [ref=f4e63]:
+          - button "Claro" [ref=f4e64] [cursor=pointer]
+          - menu "Claro":
+            - generic:
+              - button "Escuro Escuro":
+                - generic: Escuro
+                - generic: Escuro
+              - button "Claro Ativo Claro" [pressed]:
+                - generic:
+                  - generic: Claro
+                  - generic: Ativo
+                - generic: Claro
+              - generic:
+                - button "Personalizado Personalizado":
+                  - generic: Personalizado
+                  - generic: Personalizado
+            - generic:
+              - button "Personalizar"
+        - generic [ref=f4e74]:
+          - generic "teste" [ref=f4e75] [cursor=pointer]: T
+          - generic:
+            - generic: teste
+            - link "Configurações":
+              - /url: /perfil/config/
+            - link "Sistema":
+              - /url: /config/sistema/
+            - link "Sair":
+              - /url: /logout/
+  - text:   
+  - toolbar "Barra de widgets — estilo Windows" [ref=f4e77]:
+    - generic [ref=f4e78]:
+      - button "Modo Edição" [ref=f4e80] [cursor=pointer]:
+        - generic [ref=f4e81]: 
+      - generic [ref=f4e82]:
+        - button "" [ref=f4e83] [cursor=pointer]
+        - dialog [aria-hidden]:
+          - generic:
+            - generic: 
+            - textbox:
+              - /placeholder: Pesquisar widgets, módulos, ações...
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic: 
+                  - text: Recentes
+                - generic:
+                  - generic: 
+                  - generic: Nenhum widget recente
+              - generic:
+                - generic:
+                  - generic: 
+                  - text: Favoritos
+                - generic:
+                  - generic: 
+                  - generic: Sem favoritos
+            - generic:
+              - generic:
+                - generic:
+                  - generic: 
+                  - text: Sugerido para você
+                - generic:
+                  - generic: 
+                  - generic: IA analisando seu uso...
+              - generic:
+                - generic: Ações rápidas
+                - generic:
+                  - generic: 
+                  - generic: Ir para Dashboard
+                  - generic: Ctrl+1
+                - generic:
+                  - generic: 
+                  - generic: Ir para Financeiro
+                  - generic: Ctrl+2
+                - generic:
+                  - generic: 
+                  - generic: Ir para Campo
+                  - generic: Ctrl+3
+                - generic:
+                  - generic: 
+                  - generic: Ir para Estoque
+                  - generic: Ctrl+4
+                - generic:
+                  - generic: 
+                  - generic: Paleta de Comandos
+                  - generic: Ctrl+K
+          - generic:
+            - generic:
+              - generic: 
+              - text: Ampliagro OS
+            - generic: ↵ Enter para ir • Esc para fechar
+      - generic [ref=f4e85]:
+        - generic "internet" [ref=f4e86] [cursor=pointer]: 
+        - generic [ref=f4e88] [cursor=pointer]: 
+    - generic [ref=f4e90]:
+      - text: 
+      - generic "Arraste ou clique em qualquer lugar" [ref=f4e91]:
+        - generic [ref=f4e92] [cursor=pointer]: Mês
+        - generic [ref=f4e95] [cursor=pointer]: Ambos
+      - text:          
+    - dialog [aria-hidden]:
+      - heading [level=4]:
+        - generic: 
+        - text: Controles
+      - generic: Período
+      - generic: Financeiro
+      - generic:
+        - button: Fechar
+    - menu [aria-hidden]:
+      - menuitem:
+        - generic: 
+        - text: Editar
+      - menuitem:
+        - generic: 
+        - text: Duplicar
+      - menuitem:
+        - generic: 
+        - text: Cor de fundo
+      - separator
+      - menuitem:
+        - generic: 
+        - text: Excluir
+  - generic [ref=f4e99]:
+    - generic [ref=f4e102]:
+      - text: ROI
+      - paragraph [ref=f4e103]:
+        - generic "Cadastre lançamentos de receita e despesa para calcular o ROI operacional." [ref=f4e104]:
+          - generic [ref=f4e105]: 
+          - text: Sem dados
+    - generic [ref=f4e108]:
+      - text: Custo/Ha
+      - paragraph [ref=f4e109]:
+        - generic "Cadastre despesas e a área da propriedade para calcular o custo por hectare." [ref=f4e110]:
+          - generic [ref=f4e111]: 
+          - text: Sem dados
+    - generic [ref=f4e114]:
+      - generic [ref=f4e115]:
+        - generic [ref=f4e116]: 
+        - generic [ref=f4e118]:
+          - generic [ref=f4e119]: "0"
+          - generic [ref=f4e120]: Alertas
+      - generic [ref=f4e121]:
+        - generic [ref=f4e122]: 
+        - text: Nenhum alerta ativo
+    - generic [ref=f4e126]:
+      - generic [ref=f4e127]:
+        - generic [ref=f4e128]: Umidade
+        - generic "Conecte sensores IoT ou aguarde leituras da estação para exibir a umidade." [ref=f4e130]:
+          - generic [ref=f4e131]: 
+          - text: Sem dados
+      - generic [ref=f4e134]:
+        - generic [ref=f4e135]: Temp.
+        - generic "Conecte sensores IoT ou aguarde leituras da estação para exibir a temperatura." [ref=f4e137]:
+          - generic [ref=f4e138]: 
+          - text: Sem dados
+      - generic [ref=f4e139]:
+        - generic [ref=f4e140]: Estação
+        - generic [ref=f4e141]: Simulada
+    - generic [ref=f4e147]:
+      - generic [ref=f4e148]: Fluxo de Caixa
+      - paragraph [ref=f4e149]:
+        - generic "Cadastre lançamentos financeiros para ver o saldo." [ref=f4e150]:
+          - generic [ref=f4e151]: 
+          - text: Sem dados
+    - generic [aria-hidden]:
+      - generic: 1/2
+      - generic: 1/2
+      - generic: 1/3
+      - generic: 1/3
+      - generic: 1/3
+      - generic: 2/3
+  - generic [ref=f4e153]:
+    - generic [ref=f4e154]:
+      - generic [ref=f4e155]:
+        - generic [ref=f4e156]: 
+        - generic [ref=f4e157]: IA - Assistente Inteligente
+      - button "" [ref=f4e158]
+    - generic [ref=f4e160]: Olá! Como posso ajudar no seu agronegócio hoje?
+    - generic [ref=f4e163]:
+      - textbox "Digite um comando..." [ref=f4e164]
+      - button "Enviar" [ref=f4e165]
+  - text:                        

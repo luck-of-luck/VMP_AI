@@ -1,4 +1,4 @@
-# VORTEX_AI — Hermes config — clone & use (setup.bat)
+# VMP-AI — Hermes config — clone & use (setup.bat)
 # HERMES_HOME = raiz do repositorio (auto-preenchido pelo setup.bat/setup.ps1).
 # Fallback inteligente: ao esgotar tokens (429/402/529/503/context_length) troca
 # automaticamente para o proximo modelo da cadeia, SEM travar.
@@ -417,7 +417,7 @@ auxiliary:
     reasoning_effort: high
 
 # ═══════════════════════════════════════════════════════════════════════
-#  VORTEX AI — potência extra (navegador, n8n, visão de tela)
+#  VMP-AI — potência extra (navegador, n8n, visão de tela)
 # ═══════════════════════════════════════════════════════════════════════
 
 # ── Navegador automatizado ──

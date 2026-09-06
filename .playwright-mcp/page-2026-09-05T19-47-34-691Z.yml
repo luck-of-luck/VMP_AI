@@ -1,0 +1,443 @@
+- generic [active] [ref=f3e1]:
+  - banner [ref=f3e2]:
+    - heading "Page not found (404)" [level=1] [ref=f3e3]
+    - table [ref=f3e4]:
+      - rowgroup [ref=f3e5]:
+        - row [ref=f3e6]:
+          - rowheader "Request Method:" [ref=f3e7]
+          - cell "GET" [ref=f3e8]
+        - row [ref=f3e9]:
+          - rowheader "Request URL:" [ref=f3e10]
+          - cell "http://127.0.0.1:8001/accounts/profile/" [ref=f3e11]
+  - main [ref=f3e12]:
+    - paragraph [ref=f3e13]:
+      - text: Using the URLconf defined in
+      - code [ref=f3e14]: config.urls
+      - text: ", Django tried these URL patterns, in this order:"
+    - list [ref=f3e15]:
+      - listitem [ref=f3e16]:
+        - code [ref=f3e17]: admin/
+      - listitem [ref=f3e18]:
+        - code [ref=f3e19]: accounts/
+        - code
+        - code [ref=f3e20]: login/ [name='account_login']
+      - listitem [ref=f3e21]:
+        - code [ref=f3e22]: accounts/
+        - code
+        - code [ref=f3e23]: logout/ [name='account_logout']
+      - listitem [ref=f3e24]:
+        - code [ref=f3e25]: accounts/
+        - code
+        - code [ref=f3e26]: inactive/ [name='account_inactive']
+      - listitem [ref=f3e27]:
+        - code [ref=f3e28]: accounts/
+        - code
+        - code [ref=f3e29]: signup/ [name='account_signup']
+      - listitem [ref=f3e30]:
+        - code [ref=f3e31]: accounts/
+        - code
+        - code [ref=f3e32]: reauthenticate/ [name='account_reauthenticate']
+      - listitem [ref=f3e33]:
+        - code [ref=f3e34]: accounts/
+        - code
+        - code [ref=f3e35]: email/ [name='account_email']
+      - listitem [ref=f3e36]:
+        - code [ref=f3e37]: accounts/
+        - code
+        - code [ref=f3e38]: confirm-email/ [name='account_email_verification_sent']
+      - listitem [ref=f3e39]:
+        - code [ref=f3e40]: accounts/
+        - code
+        - code [ref=f3e41]: password/change/ [name='account_change_password']
+      - listitem [ref=f3e42]:
+        - code [ref=f3e43]: accounts/
+        - code
+        - code [ref=f3e44]: password/set/ [name='account_set_password']
+      - listitem [ref=f3e45]:
+        - code [ref=f3e46]: accounts/
+        - code
+        - code [ref=f3e47]: password/reset/ [name='account_reset_password']
+      - listitem [ref=f3e48]:
+        - code [ref=f3e49]: accounts/
+        - code
+        - code [ref=f3e50]: login/code/confirm/ [name='account_confirm_login_code']
+      - listitem [ref=f3e51]:
+        - code [ref=f3e52]: accounts/
+        - code
+        - code [ref=f3e53]: ^confirm-email/(?P<key>[-:\w]+)/$ [name='account_confirm_email']
+      - listitem [ref=f3e54]:
+        - code [ref=f3e55]: accounts/
+        - code
+        - code [ref=f3e56]: password/reset/key/done/ [name='account_reset_password_from_key_done']
+      - listitem [ref=f3e57]:
+        - code [ref=f3e58]: accounts/
+        - code
+        - code [ref=f3e59]: ^password/reset/key/(?P<uidb36>[0-9A-Za-z]+)-(?P<key>.+)/$ [name='account_reset_password_from_key']
+      - listitem [ref=f3e60]:
+        - code [ref=f3e61]: accounts/
+        - code
+        - code [ref=f3e62]: password/reset/done/ [name='account_reset_password_done']
+      - listitem [ref=f3e63]:
+        - code [ref=f3e64]: accounts/
+        - code [ref=f3e65]: 3rdparty/
+      - listitem [ref=f3e66]:
+        - code [ref=f3e67]: accounts/
+        - code [ref=f3e68]: social/login/cancelled/
+      - listitem [ref=f3e69]:
+        - code [ref=f3e70]: accounts/
+        - code [ref=f3e71]: social/login/error/
+      - listitem [ref=f3e72]:
+        - code [ref=f3e73]: accounts/
+        - code [ref=f3e74]: social/signup/
+      - listitem [ref=f3e75]:
+        - code [ref=f3e76]: accounts/
+        - code [ref=f3e77]: social/connections/
+      - listitem [ref=f3e78]:
+        - code [ref=f3e79]: accounts/
+        - code [ref=f3e80]: google/
+      - listitem [ref=f3e81]:
+        - code [ref=f3e82]: accounts/
+        - code [ref=f3e83]: google/login/token/ [name='google_login_by_token']
+      - listitem [ref=f3e84]:
+        - code [ref=f3e85]: health/
+      - listitem [ref=f3e86]:
+        - code [ref=f3e87]: healthz [name='healthz']
+      - listitem [ref=f3e88]:
+        - code [ref=f3e89]: healthz/
+      - listitem [ref=f3e90]:
+        - code [ref=f3e91]: health/dashboard/ [name='health-dashboard']
+      - listitem [ref=f3e92]:
+        - code [ref=f3e93]: api/
+      - listitem [ref=f3e94]:
+        - code [ref=f3e95]: api/iot/
+      - listitem [ref=f3e96]:
+        - code
+        - code [ref=f3e97]: login/ [name='login']
+      - listitem [ref=f3e98]:
+        - code
+        - code [ref=f3e99]: logout/ [name='logout']
+      - listitem [ref=f3e100]:
+        - code
+        - code [ref=f3e101]: demo/ [name='demo-login']
+      - listitem [ref=f3e102]:
+        - code
+        - code [ref=f3e103]: onboarding/ [name='onboarding']
+      - listitem [ref=f3e104]:
+        - code
+        - code [ref=f3e105]: "[name='index_spa']"
+      - listitem [ref=f3e106]:
+        - code
+        - code [ref=f3e107]: dashboard/ [name='dashboard-spa']
+      - listitem [ref=f3e108]:
+        - code
+        - code [ref=f3e109]: empregados/ [name='empregados-spa']
+      - listitem [ref=f3e110]:
+        - code
+        - code [ref=f3e111]: agenda/ [name='agenda-spa']
+      - listitem [ref=f3e112]:
+        - code
+        - code [ref=f3e113]: agenda/analises/ [name='agenda-analises-spa']
+      - listitem [ref=f3e114]:
+        - code
+        - code [ref=f3e115]: agenda/producao/ [name='agenda-producao-spa']
+      - listitem [ref=f3e116]:
+        - code
+        - code [ref=f3e117]: estoque/ [name='estoque-spa']
+      - listitem [ref=f3e118]:
+        - code
+        - code [ref=f3e119]: vendas/ [name='vendas-spa']
+      - listitem [ref=f3e120]:
+        - code
+        - code [ref=f3e121]: apiario/ [name='apiario-spa']
+      - listitem [ref=f3e122]:
+        - code
+        - code [ref=f3e123]: armazem/ [name='armazem-spa']
+      - listitem [ref=f3e124]:
+        - code
+        - code [ref=f3e125]: pecuaria/ [name='pecuaria-spa']
+      - listitem [ref=f3e126]:
+        - code
+        - code [ref=f3e127]: financeiro/ [name='financeiro-spa']
+      - listitem [ref=f3e128]:
+        - code
+        - code [ref=f3e129]: compras/ [name='compras-spa']
+      - listitem [ref=f3e130]:
+        - code
+        - code [ref=f3e131]: maquinarios/ [name='maquinarios-spa']
+      - listitem [ref=f3e132]:
+        - code
+        - code [ref=f3e133]: novidades/ [name='novidades-spa']
+      - listitem [ref=f3e134]:
+        - code
+        - code [ref=f3e135]: visao-geral/ [name='visao-geral-spa']
+      - listitem [ref=f3e136]:
+        - code
+        - code [ref=f3e137]: gestao/ [name='gestao-spa']
+      - listitem [ref=f3e138]:
+        - code
+        - code [ref=f3e139]: perfil/ [name='perfil-spa']
+      - listitem [ref=f3e140]:
+        - code
+        - code [ref=f3e141]: cadastro/safra/ [name='cadastro-safra']
+      - listitem [ref=f3e142]:
+        - code
+        - code [ref=f3e143]: cadastro/insumo/ [name='cadastro-insumo']
+      - listitem [ref=f3e144]:
+        - code
+        - code [ref=f3e145]: cadastro/funcionario/ [name='cadastro-funcionario']
+      - listitem [ref=f3e146]:
+        - code
+        - code [ref=f3e147]: funcionario/adicionar/ [name='adicionar-funcionario']
+      - listitem [ref=f3e148]:
+        - code
+        - code [ref=f3e149]: cadastro/animal/ [name='cadastro-animal']
+      - listitem [ref=f3e150]:
+        - code
+        - code [ref=f3e151]: cadastro/talhao/ [name='cadastro-talhao']
+      - listitem [ref=f3e152]:
+        - code
+        - code [ref=f3e153]: cadastro/maquinario/ [name='cadastro-maquinario']
+      - listitem [ref=f3e154]:
+        - code
+        - code [ref=f3e155]: cadastro/financeiro/ [name='cadastro-financeiro']
+      - listitem [ref=f3e156]:
+        - code
+        - code [ref=f3e157]: cadastro/estoque/ [name='cadastro-estoque']
+      - listitem [ref=f3e158]:
+        - code
+        - code [ref=f3e159]: cadastro/apiario/ [name='cadastro-apiario']
+      - listitem [ref=f3e160]:
+        - code
+        - code [ref=f3e161]: cadastro/propriedade/ [name='cadastro-propriedade']
+      - listitem [ref=f3e162]:
+        - code
+        - code [ref=f3e163]: cadastro/caminhao/ [name='cadastro-caminhao']
+      - listitem [ref=f3e164]:
+        - code
+        - code [ref=f3e165]: cadastro/rota/ [name='cadastro-rota']
+      - listitem [ref=f3e166]:
+        - code
+        - code [ref=f3e167]: mapa/ [name='mapa']
+      - listitem [ref=f3e168]:
+        - code
+        - code [ref=f3e169]: simulador/financeiro/ [name='simulador-financeiro']
+      - listitem [ref=f3e170]:
+        - code
+        - code [ref=f3e171]: simulador/colheita/ [name='simulador-colheita']
+      - listitem [ref=f3e172]:
+        - code
+        - code [ref=f3e173]: simulador-lucro/ [name='simulador_lucro']
+      - listitem [ref=f3e174]:
+        - code
+        - code [ref=f3e175]: financeiro/dre/ [name='dre_view']
+      - listitem [ref=f3e176]:
+        - code
+        - code [ref=f3e177]: financeiro/cashflow/ [name='cashflow_view']
+      - listitem [ref=f3e178]:
+        - code
+        - code [ref=f3e179]: financeiro/comparativo-safras/ [name='comparativo_safras_view']
+      - listitem [ref=f3e180]:
+        - code
+        - code [ref=f3e181]: agenda/agricola/ [name='agenda-agricola']
+      - listitem [ref=f3e182]:
+        - code
+        - code [ref=f3e183]: agenda/pecuaria/ [name='agenda-pecuaria']
+      - listitem [ref=f3e184]:
+        - code
+        - code [ref=f3e185]: setor/campo/ [name='setor-campo']
+      - listitem [ref=f3e186]:
+        - code
+        - code [ref=f3e187]: setor/estoque/ [name='setor-estoque']
+      - listitem [ref=f3e188]:
+        - code
+        - code [ref=f3e189]: alertas/criticos/ [name='alertas-criticos']
+      - listitem [ref=f3e190]:
+        - code
+        - code [ref=f3e191]: alertas/info/ [name='alertas-info']
+      - listitem [ref=f3e192]:
+        - code
+        - code [ref=f3e193]: animais/gado/ [name='animais-gado']
+      - listitem [ref=f3e194]:
+        - code
+        - code [ref=f3e195]: animais/racoes/ [name='racoes-nutricao']
+      - listitem [ref=f3e196]:
+        - code
+        - code [ref=f3e197]: dashboard/os/ [name='dashboard-os']
+      - listitem [ref=f3e198]:
+        - code
+        - code [ref=f3e199]: dashboard/resumo/ [name='resumo-gerencial']
+      - listitem [ref=f3e200]:
+        - code
+        - code [ref=f3e201]: previsao/clima/ [name='previsao-clima']
+      - listitem [ref=f3e202]:
+        - code
+        - code [ref=f3e203]: previsao/safra/ [name='previsao-safra']
+      - listitem [ref=f3e204]:
+        - code
+        - code [ref=f3e205]: iot/sensores/ [name='sensores']
+      - listitem [ref=f3e206]:
+        - code
+        - code [ref=f3e207]: iot/dispositivos/ [name='dispositivos']
+      - listitem [ref=f3e208]:
+        - code
+        - code [ref=f3e209]: telemetria/ [name='telemetria']
+      - listitem [ref=f3e210]:
+        - code
+        - code [ref=f3e211]: agronomia/ndvi/ [name='ndvi-view']
+      - listitem [ref=f3e212]:
+        - code
+        - code [ref=f3e213]: agronomia/compliance/ [name='compliance-view']
+      - listitem [ref=f3e214]:
+        - code
+        - code [ref=f3e215]: servidor/ [name='servidor-dashboard']
+      - listitem [ref=f3e216]:
+        - code
+        - code [ref=f3e217]: servidor/estoque/ [name='servidor-estoque']
+      - listitem [ref=f3e218]:
+        - code
+        - code [ref=f3e219]: servidor/agenda/ [name='servidor-agenda']
+      - listitem [ref=f3e220]:
+        - code
+        - code [ref=f3e221]: servidor/alertas/ [name='servidor-alertas']
+      - listitem [ref=f3e222]:
+        - code
+        - code [ref=f3e223]: api/servidor/config/ [name='servidor-config']
+      - listitem [ref=f3e224]:
+        - code
+        - code [ref=f3e225]: equipe/agenda/ [name='equipe-agenda']
+      - listitem [ref=f3e226]:
+        - code
+        - code [ref=f3e227]: equipe/empregados/ [name='equipe-empregados']
+      - listitem [ref=f3e228]:
+        - code
+        - code [ref=f3e229]: estoque/geral/ [name='estoque-geral']
+      - listitem [ref=f3e230]:
+        - code
+        - code [ref=f3e231]: estoque/insumos/ [name='estoque-insumos']
+      - listitem [ref=f3e232]:
+        - code
+        - code [ref=f3e233]: logistica/caminhoes/ [name='logistica-caminhao']
+      - listitem [ref=f3e234]:
+        - code
+        - code [ref=f3e235]: logistica/rotas/ [name='logistica-rotas']
+      - listitem [ref=f3e236]:
+        - code
+        - code [ref=f3e237]: perfil/config/ [name='perfil-config']
+      - listitem [ref=f3e238]:
+        - code
+        - code [ref=f3e239]: config/dia/ [name='config-dia']
+      - listitem [ref=f3e240]:
+        - code
+        - code [ref=f3e241]: config/noturno/ [name='config-noturno']
+      - listitem [ref=f3e242]:
+        - code
+        - code [ref=f3e243]: config/sistema/ [name='config-sistema']
+      - listitem [ref=f3e244]:
+        - code
+        - code [ref=f3e245]: config/page/ [name='config-page']
+      - listitem [ref=f3e246]:
+        - code
+        - code [ref=f3e247]: erro/ [name='erro-report']
+      - listitem [ref=f3e248]:
+        - code
+        - code [ref=f3e249]: avaliador/ [name='avaliador-login']
+      - listitem [ref=f3e250]:
+        - code
+        - code [ref=f3e251]: guias/vegetal/ [name='guia-vegetal']
+      - listitem [ref=f3e252]:
+        - code
+        - code [ref=f3e253]: guias/vegetal/cafe/ [name='registro-cafe']
+      - listitem [ref=f3e254]:
+        - code
+        - code [ref=f3e255]: registro/cafe/ [name='registro-cafe-alias']
+      - listitem [ref=f3e256]:
+        - code
+        - code [ref=f3e257]: guias/vegetal/<slug:cultura_slug>/ [name='registro-cultura']
+      - listitem [ref=f3e258]:
+        - code
+        - code [ref=f3e259]: registro/<slug:cultura_slug>/ [name='registro-cultura-alias']
+      - listitem [ref=f3e260]:
+        - code
+        - code [ref=f3e261]: guias/animal/ [name='guia-animal']
+      - listitem [ref=f3e262]:
+        - code
+        - code [ref=f3e263]: guias/aquatica/ [name='guia-aquatica']
+      - listitem [ref=f3e264]:
+        - code
+        - code [ref=f3e265]: guias/sistemas/ [name='guia-sistemas']
+      - listitem [ref=f3e266]:
+        - code
+        - code [ref=f3e267]: api/talhoes-por-propriedade/ [name='talhoes-por-propriedade']
+      - listitem [ref=f3e268]:
+        - code
+        - code [ref=f3e269]: operario/kanban/ [name='operario-kanban']
+      - listitem [ref=f3e270]:
+        - code
+        - code [ref=f3e271]: servidor/kanban/ [name='servidor-kanban']
+      - listitem [ref=f3e272]:
+        - code
+        - code [ref=f3e273]: operario/perfil/ [name='operario-perfil']
+      - listitem [ref=f3e274]:
+        - code
+        - code [ref=f3e275]: operario/registrar/ [name='operario-registrar']
+      - listitem [ref=f3e276]:
+        - code
+        - code [ref=f3e277]: operario/api/criar-login/ [name='operario-criar-login']
+      - listitem [ref=f3e278]:
+        - code
+        - code [ref=f3e279]: operario/api/remover-login/ [name='operario-remover-login']
+      - listitem [ref=f3e280]:
+        - code
+        - code [ref=f3e281]: tarefas/associacao/ [name='tarefas-associacao']
+      - listitem [ref=f3e282]:
+        - code
+        - code [ref=f3e283]: api/tarefas/associar/ [name='api-tarefas-associar']
+      - listitem [ref=f3e284]:
+        - code
+        - code [ref=f3e285]: rastreabilidade/ [name='rastreabilidade-lista']
+      - listitem [ref=f3e286]:
+        - code
+        - code [ref=f3e287]: custos/producao/ [name='custos-producao']
+      - listitem [ref=f3e288]:
+        - code
+        - code [ref=f3e289]: custos/dre/ [name='dre-view']
+      - listitem [ref=f3e290]:
+        - code
+        - code [ref=f3e291]: custos/centros/ [name='cadastro-centro-custo']
+      - listitem [ref=f3e292]:
+        - code
+        - code [ref=f3e293]: pitch/ [name='pitch']
+      - listitem [ref=f3e294]:
+        - code
+        - code [ref=f3e295]: simulador/lucro/ [name='simulador-lucro']
+      - listitem [ref=f3e296]:
+        - code
+        - code [ref=f3e297]: privacidade/ [name='privacidade']
+      - listitem [ref=f3e298]:
+        - code
+        - code [ref=f3e299]: lgpd/export/ [name='lgpd-export']
+      - listitem [ref=f3e300]:
+        - code
+        - code [ref=f3e301]: lgpd/delete/ [name='lgpd-delete']
+      - listitem [ref=f3e302]:
+        - code
+        - code [ref=f3e303]: admin/tenant/ [name='tenant-switcher']
+      - listitem [ref=f3e304]:
+        - code [ref=f3e305]: favicon.ico
+      - listitem [ref=f3e306]:
+        - code [ref=f3e307]: api/schema/ [name='schema']
+      - listitem [ref=f3e308]:
+        - code [ref=f3e309]: api/docs/ [name='swagger-ui']
+      - listitem [ref=f3e310]:
+        - code [ref=f3e311]: ^static/(?P<path>.*)$
+    - paragraph [ref=f3e312]:
+      - text: The current path,
+      - code [ref=f3e313]: accounts/profile/
+      - text: ", didn’t match any of these."
+  - contentinfo [ref=f3e314]:
+    - paragraph [ref=f3e315]:
+      - text: You’re seeing this error because you have
+      - code [ref=f3e316]: DEBUG = True
+      - text: in your Django settings file. Change that to
+      - code [ref=f3e317]: "False"
+      - text: ", and Django will display a standard 404 page."

@@ -1,4 +1,4 @@
-# VORTEX_AI v1.2.0 — OpenCode + Hermes Skills + MCP
+# VMP-AI v1.2.0 — OpenCode + Hermes Skills + MCP
 
 > **Data:** 2026-08-31  
 > **Tags:** `v1.1.0` (setup fresh-install) + `v1.2.0` (opencode bridge)
@@ -37,8 +37,8 @@ powershell -File setup.ps1 -VerifyOnly  # 13/13 OK
 
 ## Como usar quem baixou do GitHub
 ```powershell
-git clone https://github.com/luck-of-luck/VORTEX_AI.git
-cd VORTEX_AI
+git clone https://github.com/luck-of-luck/VMP-AI.git
+cd VMP-AI
 setup.bat          # ou setup.bat --verify
 notepad .env       # CLINE_API_KEY ou OPENROUTER_API_KEY ou ollama
 Abrir-OpenCode.bat # opencode com Hermes MCP
@@ -53,5 +53,5 @@ Abrir-OpenCode.bat # opencode com Hermes MCP
 - `8267dba` feat(opencode): Hermes integrado no OpenCode com skills + MCP
 
 ## Próximos passos
-- Criar Release no GitHub: https://github.com/luck-of-luck/VORTEX_AI/releases → Draft new release → Tag `v1.2.0` → Title `VORTEX_AI v1.2.0` → copie este arquivo
-- Ou instale `gh`: `winget install GitHub.cli` → `gh auth login` → `gh release create v1.2.0 --title "VORTEX_AI v1.2.0" --notes-file RELEASE_v1.2.0.md`
+- Criar Release no GitHub: https://github.com/luck-of-luck/VMP-AI/releases → Draft new release → Tag `v1.2.0` → Title `VMP-AI v1.2.0` → copie este arquivo
+- Ou instale `gh`: `winget install GitHub.cli` → `gh auth login` → `gh release create v1.2.0 --title "VMP-AI v1.2.0" --notes-file RELEASE_v1.2.0.md`

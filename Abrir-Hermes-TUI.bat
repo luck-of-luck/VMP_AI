@@ -1,10 +1,10 @@
 @echo off
 setlocal
-title Hermes - TUI - VORTEX_AI
+title Hermes - TUI - VMP-AI
 cd /d "%~dp0hermes-agent"
 set "HERMES_HOME=%~dp0"
 echo ==========================================
-echo  Hermes TUI - VORTEX_AI
+echo  Hermes TUI - VMP-AI
 echo  HERMES_HOME: %HERMES_HOME%
 echo ==========================================
 echo.
