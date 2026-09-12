@@ -52,6 +52,24 @@ function Get-HermesExe {
   return $null
 }
 
+function Ensure-Crowork {
+  $py = Join-Path $root "hermes-agent\venv\Scripts\python.exe"
+  if (-not (Test-Path $py)) { $py = "python" }
+  $crowDir = Join-Path $root "crowork"
+  if (-not (Test-Path $crowDir)) { New-Item -ItemType Directory -Path $crowDir | Out-Null }
+  try {
+    $roomFile = Join-Path $crowDir "ampliagro-sprint.json"
+    if (-not (Test-Path $roomFile)) {
+      Write-Host "  [CROWORK] criando sala padrão ampliagro-sprint..." -ForegroundColor DarkCyan
+      & $py -c "from hermes_cli.crowork import handle_crowork; print(handle_crowork(['create','ampliagro-sprint','Sprint Agro 5.0 - sala padrão VMP-AI']))" 2>$null | Out-Null
+    }
+    Write-Host "  [CROWORK] entrando em ampliagro-sprint..." -ForegroundColor DarkCyan
+    & $py -c "from hermes_cli.crowork import handle_crowork; print(handle_crowork(['join','ampliagro-sprint']))" 2>$null | Out-Null
+    $share = & $py -c "from hermes_cli.crowork import handle_crowork; print(handle_crowork(['share','ampliagro-sprint']))" 2>$null
+    if ($share) { Write-Host "  [CROWORK] $share" -ForegroundColor Gray }
+  } catch {}
+}
+
 while ($true) {
   Show-Menu
   $c = Read-Host "Escolha [0-9]"
@@ -60,6 +78,8 @@ while ($true) {
       Set-Location $root
       Write-Host "`nIniciando OpenCode em $root ..." -ForegroundColor Green
       if (Test-Path "$root\opencode.jsonc") { Write-Host "  config: $root\opencode.jsonc" -ForegroundColor DarkGray }
+      Ensure-Crowork
+      Write-Host "  [CROWORK] sala ampliagro-sprint ativa — opencode + hermes espelhados" -ForegroundColor DarkCyan
       try { & opencode } catch { & "opencode.cmd" }
       Pause
     }
@@ -72,6 +92,7 @@ while ($true) {
     "3" {
       Set-Location $agent
       Write-Host "`nIniciando Hermes CLI ..." -ForegroundColor Yellow
+      Ensure-Crowork
       $exe = Get-HermesExe
       if ($exe) { & $exe }
       Pause
@@ -79,6 +100,7 @@ while ($true) {
     "4" {
       Set-Location $agent
       Write-Host "`nIniciando Hermes TUI ..." -ForegroundColor Yellow
+      Ensure-Crowork
       $exe = Get-HermesExe
       if ($exe) { & $exe --tui }
       Pause
@@ -86,6 +108,7 @@ while ($true) {
     "5" {
       Set-Location $agent
       Write-Host "`nIniciando Hermes Gateway (Ctrl+C para parar)..." -ForegroundColor Magenta
+      Ensure-Crowork
       $exe = Get-HermesExe
       if ($exe) { & $exe gateway run }
       Pause

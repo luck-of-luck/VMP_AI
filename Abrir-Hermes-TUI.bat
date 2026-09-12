@@ -21,6 +21,13 @@ if not exist "%~dp0.env" (
   echo [AVISO] .env nao encontrado. Rode setup.bat primeiro.
   echo.
 )
+echo [CROWORK] preparando sala ampliagro-sprint...
+if not exist "%~dp0crowork" mkdir "%~dp0crowork" >nul 2>&1
+set "PY=%~dp0hermes-agent\venv\Scripts\python.exe"
+if not exist "%PY%" set "PY=python"
+if not exist "%~dp0crowork\ampliagro-sprint.json" "%PY%" -c "from hermes_cli.crowork import handle_crowork; print(handle_crowork(['create','ampliagro-sprint','Sprint Agro 5.0 - sala padrao VMP-AI']))" >nul 2>&1
+"%PY%" -c "from hermes_cli.crowork import handle_crowork; print(handle_crowork(['join','ampliagro-sprint']))" >nul 2>&1
+"%PY%" -c "from hermes_cli.crowork import handle_crowork; print(handle_crowork(['share','ampliagro-sprint']))"
 echo Iniciando Hermes TUI...
 "%HERMES_EXE%" --tui
 pause

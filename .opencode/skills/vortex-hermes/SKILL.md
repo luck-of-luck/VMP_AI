@@ -98,11 +98,23 @@ Skills são **instruções** que o modelo deve ler antes de agir. No opencode, o
 
 Troque com `/model` no opencode ou edite `opencode.jsonc` → reinicie. O `setup.ps1 -VerifyOnly` valida tudo (10 checks).
 
+## CROWORK — Sempre Ativo (novo)
+
+**CROWORK é conhecimento permanente do Hermes e do opencode.** Sala padrão `ampliagro-sprint` é criada no startup de qualquer launcher (`Iniciar.ps1`, `Abrir-Hermes.bat`, `Abrir-Hermes-TUI.bat`) via `hermes crowork create/join`. O agente **sempre** conhece:
+- CLI `hermes crowork` (aliases `crow`, `cw`)
+- TUI `/crowork` | Web `/cowork` | Desktop `hermes-crowork` | Tools `crowork_*` | Skill `crowork`
+- Dados em `HERMES_HOME/crowork/*.json`, presença TTL 5min
+
+**opencode já carrega `hermes-agent/skills/crowork/SKILL.md`** via `opencode.jsonc` `instructions` — então opencode também sabe usar `hermes crowork` via terminal e propor salas compartilhadas.
+
+**Use quando usuário disser:** `crowork`, `sala compartilhada`, `pair programming`, `vamos codar juntos`.
+
 ## Delegação Cruzada (Hermes ↔ OpenCode)
 
 **OpenCode → Hermes (este skill):**
-- Via MCP `hermes`: `hermes_chat`, `hermes_delegate_task`, `hermes_browser_*`
+- Via MCP `hermes`: `hermes_chat`, `hermes_delegate_task`, `hermes_browser_*`, `crowork_*`
 - Hermes roda com `HERMES_HOME` da raiz VORTEX e tem acesso a `config.yaml` + `.env`
+- Para CROWORK via opencode: `terminal: hermes crowork create sala-01` ou `hermes crowork join sala-01`
 
 **Hermes → OpenCode (oposto):**
 - Hermes tem skill `autonomous-ai-agents/opencode` em `%LOCALAPPDATA%\hermes\skills\opencode\SKILL.md`
@@ -112,6 +124,7 @@ Troque com `/model` no opencode ou edite `opencode.jsonc` → reinicie. O `setup
   opencode run "fix Y" -f file.ts    # com contexto
   ```
 - Hermes sabe que `opencode mcp serve` vive em `bin/hermes.exe`
+- Ao delegar, inclua contexto CROWORK se a tarefa for colaborativa: `opencode run "continue na sala ampliagro-sprint: implemente feature X"`
 
 ## Pitfalls
 

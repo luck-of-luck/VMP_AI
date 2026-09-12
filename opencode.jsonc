@@ -2,7 +2,7 @@
   "$schema": "https://opencode.ai/config.json",
   "model": "cline/minimax/minimax-m2.5",
   "small_model": "cline/deepseek/deepseek-chat",
-  "instructions": ["AGENTS.md", "SOUL.md", "hermes-agent/AGENTS.md"],
+  "instructions": ["AGENTS.md", "SOUL.md", "hermes-agent/AGENTS.md", "hermes-agent/skills/crowork/SKILL.md"],
   "references": {
     "hermes-agent": {
       "path": "./hermes-agent",
@@ -27,6 +27,10 @@
     "vortex-bridge": {
       "path": "./.opencode/skills/vortex-hermes",
       "description": "Bridge VORTEX_AI: opencode + Hermes (skills + MCP) — leia antes de codar no VORTEX"
+    },
+    "crowork": {
+      "path": "./hermes-agent/skills/crowork",
+      "description": "CROWORK colaborativo: sala compartilhada transcript+PTY - CLI hermes crowork / TUI /cowork / tools crowork_*"
     }
   },
   "mcp": {
