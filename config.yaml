@@ -10,10 +10,30 @@
 # Requer conta em app.cline.bot + CLINE_API_KEY no .env.
 model: cline/minimax/minimax-m2.5
 
-# ── Provedores locais (gratuitos) — Ollama / LM Studio no seu PC ──
-# Entradas locais só funcionam com o serviço rodando
-# (ex.: Ollama em http://127.0.0.1:11434). Baixe modelos como qwen2.5-coder.
+# ── Provedores locais + OmniRoute + IAs grátis (Vídeos Robson Vibe Coding) ──
+# OmniRoute: router local que agrega IAs grátis com troca automática (vídeo 6pEmC9aAkQU)
+#   - Instale: npm i -g omniroute && omniroute serve  (porta 20128)
+#   - Gere chave: omniroute → Gerenciador de API → Criar chave "Hermes"
+#   - Crie combos em OmniRoute (ex: fogueteiros coding) e aponte aqui como provider
 providers:
+  omniroute:
+    base_url: "http://127.0.0.1:20128/v1"
+    api_mode: chat_completions
+  inferx:
+    # DeepSeek V4 Flash 100% grátis via InferX (vídeo SciHyoqtUmk)
+    # Base URL + API Key você pega no site InferX → DeepSeek V4 Flash → API
+    base_url: "https://api.inferx.net/v1"
+    api_mode: chat_completions
+  zai:
+    # GLM-5.2 via Z.AI Coding Plan (vídeo 1QH-cKRuyuM) — chat grátis, API paga mas barata
+    # Base: https://api.z.ai/api/paas/v4  — gere chave em https://z.ai/manage-apikey/apikey-list
+    base_url: "https://api.z.ai/api/paas/v4"
+    api_mode: chat_completions
+  nvidia:
+    # GLM-5.1 + outros gratuitos via Nvidia NIM (vídeo bOuC3RHpBak)
+    # Gere chave em https://build.nvidia.com → API Keys
+    base_url: "https://integrate.api.nvidia.com/v1"
+    api_mode: chat_completions
   ollama-local:
     base_url: "http://127.0.0.1:11434/v1"
     api_mode: chat_completions
@@ -24,6 +44,19 @@ providers:
     api_mode: chat_completions
 
 fallback_model:
+  # ── OmniRoute COMBOS (vídeo 6pEmC9aAkQU + qGn3Xyntemk) — roteador local que troca automático entre IAs grátis
+  - provider: omniroute
+    model: fogueteiros-coding
+  - provider: omniroute
+    model: teste-um
+  # ── InferX DeepSeek V4 Flash 100% grátis (vídeo SciHyoqtUmk) — 1M contexto, pt-BR excelente
+  - provider: inferx
+    model: deepseek-v4-flash
+  # ── GLM via Z.AI / Nvidia (vídeos 1QH-cKRuyuM + bOuC3RHpBak)
+  - provider: zai
+    model: glm-5.2
+  - provider: nvidia
+    model: meta/llama-3.1-8b-instruct
   # ── Cline (usage-billing) — modelos gratuitos/baratos via api.cline.bot ──
   - provider: cline
     model: cline/deepseek/deepseek-chat
@@ -68,8 +101,18 @@ fallback_model:
   - provider: ollama-local
     model: "qwen2.5:14b"
 
-# ── Fallback principal — mesma chain, na mesma ordem ──
+# ── Fallback principal — mesma chain, na mesma ordem (com grátis do Robson) ──
 fallback_providers:
+  - provider: omniroute
+    model: fogueteiros-coding
+  - provider: omniroute
+    model: teste-um
+  - provider: inferx
+    model: deepseek-v4-flash
+  - provider: zai
+    model: glm-5.2
+  - provider: nvidia
+    model: meta/llama-3.1-8b-instruct
   # ── Cline (usage-billing) — modelos gratuitos/baratos via api.cline.bot ──
   - provider: cline
     model: cline/deepseek/deepseek-chat

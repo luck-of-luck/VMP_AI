@@ -84,6 +84,53 @@
         }
       }
     },
+    "omniroute": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "OmniRoute (IAs grátis agregadas)",
+      "options": {
+        "baseURL": "http://127.0.0.1:20128/v1",
+        "apiKey": "{env:OMNIROUTE_API_KEY}"
+      },
+      "models": {
+        "fogueteiros-coding": { "name": "Combo Fogueteiros (Robson) - várias IAs grátis" },
+        "teste-um": { "name": "Combo Teste Um" }
+      }
+    },
+    "inferx": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "InferX (DeepSeek V4 Flash grátis)",
+      "options": {
+        "baseURL": "https://api.inferx.net/v1",
+        "apiKey": "{env:INFERX_API_KEY}"
+      },
+      "models": {
+        "deepseek-v4-flash": { "name": "DeepSeek V4 Flash 1M (grátis)" }
+      }
+    },
+    "zai": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Z.AI (GLM-5.2)",
+      "options": {
+        "baseURL": "https://api.z.ai/api/paas/v4",
+        "apiKey": "{env:ZAI_API_KEY}"
+      },
+      "models": {
+        "glm-5.2": { "name": "GLM-5.2 (melhor aberto)" },
+        "glm-5.1": { "name": "GLM-5.1" }
+      }
+    },
+    "nvidia": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Nvidia NIM (grátis)",
+      "options": {
+        "baseURL": "https://integrate.api.nvidia.com/v1",
+        "apiKey": "{env:NVIDIA_API_KEY}"
+      },
+      "models": {
+        "meta/llama-3.1-8b-instruct": { "name": "Llama 3.1 8B (Nvidia grátis)" },
+        "z-ai/glm-5.1": { "name": "GLM 5.1 via Nvidia" }
+      }
+    },
     "ollama-local": {
       "npm": "@ai-sdk/openai-compatible",
       "name": "Ollama Local",
