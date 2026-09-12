@@ -1,0 +1,12 @@
+name: crowork
+version: 1.0.0
+description: "CROWORK - Sala colaborativa compartilhada: sessões espelhadas, presença ao vivo e quadro canban. Tools crowork_* para criar/entrar/listar salas. CLI hermes crowork."
+author: VMP-AI / luck-of-luck
+kind: backend
+provides_tools:
+  - crowork_create
+  - crowork_join
+  - crowork_list
+  - crowork_status
+  - crowork_leave
+  - crowork_share
