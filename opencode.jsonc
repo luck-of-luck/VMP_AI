@@ -61,27 +61,68 @@
     },
     "cline": {
       "npm": "@ai-sdk/openai-compatible",
-      "name": "Cline",
+      "name": "Cline (Billing Grátis + ClinePass)",
       "options": {
         "baseURL": "https://api.cline.bot/api/v1",
         "apiKey": "{env:CLINE_API_KEY}"
       },
       "models": {
-        "minimax/minimax-m2.5": {
-          "name": "MiniMax M2.5 (grátis/experimentação)"
-        },
-        "deepseek/deepseek-chat": {
-          "name": "DeepSeek Chat"
-        },
-        "cline-pass/deepseek-v4-flash": {
-          "name": "ClinePass DeepSeek V4 Flash"
-        },
-        "cline-pass/qwen3.7-plus": {
-          "name": "ClinePass Qwen3.7 Plus"
-        },
-        "cline-pass/glm-5.2": {
-          "name": "ClinePass GLM-5.2"
-        }
+        "minimax/minimax-m2.5": { "name": "MiniMax M2.5 (grátis/experimentação) - PRINCIPAL" },
+        "qwen/qwen3-coder-plus": { "name": "Qwen3 Coder Plus (Cline grátis)" },
+        "moonshot/kimi-k2-thinking": { "name": "Kimi K2 Thinking (Cline grátis)" },
+        "deepseek/deepseek-chat": { "name": "DeepSeek Chat" },
+        "cline-pass/deepseek-v4-flash": { "name": "ClinePass DeepSeek V4 Flash" },
+        "cline-pass/qwen3.7-plus": { "name": "ClinePass Qwen3.7 Plus" },
+        "cline-pass/glm-5.2": { "name": "ClinePass GLM-5.2" }
+      }
+    },
+    "google": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Google Pro (Gemini - quota alta)",
+      "options": {
+        "baseURL": "https://generativelanguage.googleapis.com/v1beta/openai",
+        "apiKey": "{env:GOOGLE_API_KEY}"
+      },
+      "models": {
+        "gemini-3-flash-preview": { "name": "Gemini 3 Flash Preview (Google Pro)" },
+        "gemini-2.5-pro": { "name": "Gemini 2.5 Pro (Google Pro)" },
+        "gemini-2.0-flash": { "name": "Gemini 2.0 Flash" },
+        "gemini-1.5-pro": { "name": "Gemini 1.5 Pro" }
+      }
+    },
+    "groq": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Groq (ultra rápido grátis)",
+      "options": {
+        "baseURL": "https://api.groq.com/openai/v1",
+        "apiKey": "{env:GROQ_API_KEY}"
+      },
+      "models": {
+        "llama-3.3-70b-versatile": { "name": "Llama 3.3 70B Versatile (Groq)" },
+        "qwen/qwen3-32b": { "name": "Qwen3 32B (Groq)" },
+        "moonshotai/kimi-k2-instruct": { "name": "Kimi K2 Instruct (Groq)" }
+      }
+    },
+    "cerebras": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Cerebras (free tier)",
+      "options": {
+        "baseURL": "https://api.cerebras.ai/v1",
+        "apiKey": "{env:CEREBRAS_API_KEY}"
+      },
+      "models": {
+        "llama-3.3-70b": { "name": "Llama 3.3 70B (Cerebras)" }
+      }
+    },
+    "together": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Together AI (free)",
+      "options": {
+        "baseURL": "https://api.together.xyz/v1",
+        "apiKey": "{env:TOGETHER_API_KEY}"
+      },
+      "models": {
+        "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo": { "name": "Llama 3.1 70B Turbo (Together)" }
       }
     },
     "omniroute": {

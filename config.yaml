@@ -34,6 +34,27 @@ providers:
     # Gere chave em https://build.nvidia.com → API Keys
     base_url: "https://integrate.api.nvidia.com/v1"
     api_mode: chat_completions
+  # ── Google (Pro plan) — Gemini 3 Flash / 2.5 Pro / 1.5 grátis via AI Studio ──
+  # Gere chave em https://aistudio.google.com/app/apikey (com sua conta Pro = quota alta)
+  # Docs: https://ai.google.dev/gemini-api/docs/openai
+  google:
+    base_url: "https://generativelanguage.googleapis.com/v1beta/openai"
+    api_mode: chat_completions
+  # ── Groq — ultra rápido, free tier generoso (vídeo Robson extra) ──
+  # Gere chave em https://console.groq.com/keys
+  groq:
+    base_url: "https://api.groq.com/openai/v1"
+    api_mode: chat_completions
+  # ── Cerebras — inferência gratuita rápida ──
+  # Gere chave em https://cloud.cerebras.ai
+  cerebras:
+    base_url: "https://api.cerebras.ai/v1"
+    api_mode: chat_completions
+  # ── Together AI — free tier ──
+  # Gere chave em https://api.together.xyz/settings/api-keys
+  together:
+    base_url: "https://api.together.xyz/v1"
+    api_mode: chat_completions
   ollama-local:
     base_url: "http://127.0.0.1:11434/v1"
     api_mode: chat_completions
@@ -57,6 +78,26 @@ fallback_model:
     model: glm-5.2
   - provider: nvidia
     model: meta/llama-3.1-8b-instruct
+  # ── Google Pro (você tem!) — Gemini grátis com quota alta via AI Studio ──
+  - provider: google
+    model: gemini-3-flash-preview
+  - provider: google
+    model: gemini-2.5-pro
+  - provider: google
+    model: gemini-2.0-flash
+  # ── Groq ultra-rápido grátis (120x) ──
+  - provider: groq
+    model: llama-3.3-70b-versatile
+  - provider: groq
+    model: qwen/qwen3-32b
+  - provider: groq
+    model: moonshotai/kimi-k2-instruct
+  # ── Cerebras free ──
+  - provider: cerebras
+    model: llama-3.3-70b
+  # ── Together free ──
+  - provider: together
+    model: meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo
   # ── Cline (usage-billing) — modelos gratuitos/baratos via api.cline.bot ──
   - provider: cline
     model: cline/deepseek/deepseek-chat
@@ -76,7 +117,18 @@ fallback_model:
   # ── Kimi / Moonshot (KIMI_API_KEY) ──
   - provider: kimi-coding
     model: kimi-k2-turbo-preview
-  # ── Camada gratuita (OpenRouter :free) - auto-router + modelos verificados 2026-08 ──
+  # ── Google Pro free + Groq + Cerebras + Together (extras) ──
+  - provider: google
+    model: gemini-3-flash-preview
+  - provider: google
+    model: gemini-2.5-pro
+  - provider: groq
+    model: llama-3.3-70b-versatile
+  - provider: cerebras
+    model: llama-3.3-70b
+  - provider: together
+    model: meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo
+  # ── Camada gratuita (OpenRouter :free) - 10 modelos :free extras ──
   # openrouter/free = roteador que escolhe sozinho o melhor :free disponivel (mais resiliente)
   - provider: openrouter
     model: openrouter/free
@@ -86,6 +138,14 @@ fallback_model:
     model: meta-llama/llama-3.3-70b-instruct:free
   - provider: openrouter
     model: qwen/qwen-2.5-72b-instruct:free
+  - provider: openrouter
+    model: google/gemini-2.0-flash-001:free
+  - provider: openrouter
+    model: google/gemma-3-27b-it:free
+  - provider: openrouter
+    model: deepseek/deepseek-r1:free
+  - provider: openrouter
+    model: mistralai/mistral-small-3.1-24b-instruct:free
   - provider: openrouter
     model: nvidia/nemotron-nano-2-20b-instruct:free
   # ── LM Studio local (app aberto + servidor :1234 habilitado) ──
@@ -113,6 +173,23 @@ fallback_providers:
     model: glm-5.2
   - provider: nvidia
     model: meta/llama-3.1-8b-instruct
+  - provider: google
+    model: gemini-3-flash-preview
+  - provider: google
+    model: gemini-2.5-pro
+  - provider: groq
+    model: llama-3.3-70b-versatile
+  - provider: cerebras
+    model: llama-3.3-70b
+  - provider: together
+    model: meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo
+  # ── Cline Bling grátis — billing free (minimax/m2.5 é free experimentation oficial) ──
+  - provider: cline
+    model: cline/minimax/minimax-m2.5
+  - provider: cline
+    model: cline/qwen/qwen3-coder-plus
+  - provider: cline
+    model: cline/moonshot/kimi-k2-thinking
   # ── Cline (usage-billing) — modelos gratuitos/baratos via api.cline.bot ──
   - provider: cline
     model: cline/deepseek/deepseek-chat
@@ -132,7 +209,7 @@ fallback_providers:
   # ── Kimi / Moonshot (KIMI_API_KEY) ──
   - provider: kimi-coding
     model: kimi-k2-turbo-preview
-  # ── Camada gratuita (OpenRouter :free) - auto-router + modelos verificados 2026-08 ──
+  # ── Camada gratuita (OpenRouter :free) - 10 modelos extras ──
   - provider: openrouter
     model: openrouter/free
   - provider: openrouter
