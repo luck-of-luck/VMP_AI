@@ -340,4 +340,3 @@ hermes crowork share ampliagro-sprint
 - Este repo: **MIT** © 2026 VMP-AI ([LICENSE](LICENSE)).
 - `hermes-agent/`: **MIT** © Nous Research — [repositório oficial](https://github.com/NousResearch/hermes-agent).
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0F3460,50:16213E,100:1A1A2E&height=120&section=footer&text=VMP--AI+%C2%B7+CROWORK+%C2%B7+Fallback+Sagrado&fontSize=18&fontColor=FF6B35" width="100%" />
