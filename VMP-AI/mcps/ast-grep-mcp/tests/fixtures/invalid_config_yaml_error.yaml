@@ -1,0 +1,4 @@
+# Invalid YAML - syntax error
+ruleDirs:
+  - rules
+  - missing quote: "unclosed

@@ -1,0 +1,22 @@
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Cloudflare-Browser-Rendering MCP Server",
+  "description": "Server-side browser rendering via Cloudflare",
+  "applicationCategory": "DeveloperApplication",
+  "applicationSubCategory": "Web Automation",
+  "operatingSystem": "Cross-platform",
+  "softwareVersion": "latest",
+  "programmingLanguage": [
+    "JavaScript"
+  ],
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "softwareHelp": {
+    "@type": "WebPage",
+    "url": "https://www.npmjs.com/package/@cloudflare/mcp-browser-rendering"
+  }
+}

@@ -1,0 +1,103 @@
+name: sast-mcp-server
+version: 0.8.3
+description: >
+  Production-grade SAST/DAST vulnerability scanner MCP server — 11 scanners
+  (Bandit, njsscan, Bearer, Semgrep, Trivy, CodeQL, Checkov, Gitleaks,
+  OSV-Scanner, Grype, OWASP ZAP) with closed-loop remediation, SARIF 2.1.0
+  import/export, CycloneDX/SPDX SBOM generation, VEX triage, compliance
+  reporting (OWASP/SANS/PCI/CIS), baselines, and integrations with GitHub
+  Advanced Security, DefectDojo, Slack, and Jira.
+author: Skyrxin
+license: MIT
+homepage: https://github.com/Skyrxin/sast-mcp-server
+repository: https://github.com/Skyrxin/sast-mcp-server
+tags:
+  - security
+  - sast
+  - dast
+  - vulnerability-scanner
+  - code-analysis
+  - supply-chain
+  - sbom
+  - sarif
+  - bandit
+  - semgrep
+  - trivy
+  - codeql
+  - checkov
+  - gitleaks
+  - grype
+  - owasp-zap
+  - devsecops
+  - ai-agent
+
+install:
+  command: uvx
+  args:
+    - sast-mcp-server
+  env:
+    SAST_MCP_TIMEOUT: "300"
+    SAST_MCP_LOG_LEVEL: "INFO"
+
+tools:
+  - name: scan_vulnerabilities
+    description: Scan a directory for security vulnerabilities using a specific scanner
+  - name: scan_all
+    description: Run all installed scanners concurrently with deduplication
+  - name: scan_git_history
+    description: Scan git history for secrets and sensitive data
+  - name: scan_image
+    description: Scan a container image for vulnerabilities using Trivy or Grype
+  - name: run_active_scan
+    description: Run OWASP ZAP DAST scan against a live web application URL
+  - name: remediate_and_verify
+    description: Apply a patch, re-scan to confirm the finding is gone, and auto-rollback on failure
+  - name: import_sarif
+    description: Import an external SARIF file (Snyk, Veracode, etc.) into the normalized pipeline
+  - name: triage_finding
+    description: Triage a finding with VEX disposition (exploitable/not_affected/false_positive)
+  - name: generate_fix_prompt
+    description: Generate an AI patch prompt for a specific vulnerability
+  - name: apply_patch
+    description: Apply a unified diff patch to remediate a finding
+  - name: export_sarif
+    description: Export findings as SARIF 2.1.0 for CI/CD and GitHub Code Scanning
+  - name: export_sbom
+    description: Export a CycloneDX or SPDX software bill of materials with VEX statements
+  - name: compliance_report
+    description: Map findings to OWASP Top 10, SANS CWE Top 25, PCI DSS, or CIS Benchmarks
+  - name: generate_report
+    description: Generate an HTML or PDF security report
+  - name: save_baseline
+    description: Save current scan results as a named baseline for trend analysis
+  - name: compare_baseline
+    description: Compare current findings against a saved baseline to detect regressions
+  - name: evaluate_policy
+    description: Enforce a security policy gate (fail CI if critical findings exceed threshold)
+  - name: ignore_vulnerability
+    description: Suppress a specific finding from future scans
+  - name: unignore_vulnerability
+    description: Re-enable a previously suppressed finding
+  - name: list_ignored_vulnerabilities
+    description: Show all currently suppressed findings
+  - name: list_scanners
+    description: List all available scanners and their installation status
+  - name: upload_to_defectdojo
+    description: Push findings to DefectDojo vulnerability management platform
+  - name: upload_to_github
+    description: Upload SARIF results to GitHub Advanced Security Code Scanning
+  - name: notify_slack
+    description: Post a security summary to a Slack channel
+  - name: notify_teams
+    description: Post a security summary to Microsoft Teams
+  - name: create_jira_issue
+    description: Create a Jira issue for a security finding
+  - name: comment_on_pr
+    description: Post a security review comment on a GitHub pull request
+
+requirements:
+  - Python 3.10+
+  - At least one scanner installed (see list_scanners for installation commands)
+  - Optional — container scanning: docker, trivy image / grype
+  - Optional — SBOM inventory: syft
+  - Optional — PDF reports: pip install "sast-mcp-server[pdf]"

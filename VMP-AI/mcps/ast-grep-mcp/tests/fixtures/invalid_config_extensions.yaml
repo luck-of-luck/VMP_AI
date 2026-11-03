@@ -1,0 +1,6 @@
+# Invalid config - extensions without dots
+customLanguages:
+  badlang:
+    extensions:
+      - txt  # Should be .txt
+      - md   # Should be .md

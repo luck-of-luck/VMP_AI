@@ -1,0 +1,64 @@
+{
+  "@version": "2.14.0",
+  "@generated": "Thu, 12 Jun 2026 12:00:00",
+  "site": [
+    {
+      "@name": "http://localhost:8080",
+      "@host": "localhost",
+      "@port": "8080",
+      "@ssl": "false",
+      "alerts": [
+        {
+          "pluginid": "10021",
+          "alertRef": "10021",
+          "alert": "X-Content-Type-Options Header Missing",
+          "name": "X-Content-Type-Options Header Missing",
+          "riskcode": "1",
+          "confidence": "2",
+          "riskdesc": "Low (Medium)",
+          "desc": "The Anti-MIME-Sniffing header X-Content-Type-Options was not set to 'nosniff'.",
+          "instances": [
+            {
+              "uri": "http://localhost:8080/",
+              "method": "GET",
+              "param": "",
+              "evidence": ""
+            }
+          ],
+          "count": "1",
+          "solution": "Ensure that the application/web server sets the Content-Type header appropriately.",
+          "otherinfo": "",
+          "reference": "https://tools.ietf.org/html/rfc6919",
+          "cweid": "16",
+          "wascid": "15",
+          "sourceid": "3"
+        },
+        {
+          "pluginid": "40018",
+          "alertRef": "40018",
+          "alert": "SQL Injection",
+          "name": "SQL Injection",
+          "riskcode": "3",
+          "confidence": "3",
+          "riskdesc": "High (High)",
+          "desc": "SQL injection may be possible.",
+          "instances": [
+            {
+              "uri": "http://localhost:8080/login",
+              "method": "POST",
+              "param": "username",
+              "evidence": "SQL syntax error"
+            }
+          ],
+          "count": "1",
+          "solution": "Do not trust client side input, even if there is client side validation in place. Use parameterized queries.",
+          "otherinfo": "",
+          "reference": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+          "cweid": "89",
+          "wascid": "19",
+          "sourceid": "1"
+        }
+      ]
+    }
+  ]
+}

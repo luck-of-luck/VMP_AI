@@ -1,580 +1,329 @@
-# VMP-AI — Hermes config — clone & use (setup.bat)
-# HERMES_HOME = raiz do repositorio (auto-preenchido pelo setup.bat/setup.ps1).
-# Fallback inteligente: ao esgotar tokens (429/402/529/503/context_length) troca
-# automaticamente para o proximo modelo da cadeia, SEM travar.
-# Setup: duplo-clique em setup.bat -> edite .env -> Abrir-Hermes.bat
-
-# ── Modelo principal: Cline (grátis/experimentação) ──
-# Cline usage-billing oferece cotas gratuitas de experimentação em alguns
-# modelos. minimax/m2.5 = "free experimentation" na doc oficial da Cline.
-# Requer conta em app.cline.bot + CLINE_API_KEY no .env.
-model: cline/minimax/minimax-m2.5
-
-# ── Provedores locais + OmniRoute + IAs grátis (Vídeos Robson Vibe Coding) ──
-# OmniRoute: router local que agrega IAs grátis com troca automática (vídeo 6pEmC9aAkQU)
-#   - Instale: npm i -g omniroute && omniroute serve  (porta 20128)
-#   - Gere chave: omniroute → Gerenciador de API → Criar chave "Hermes"
-#   - Crie combos em OmniRoute (ex: fogueteiros coding) e aponte aqui como provider
-providers:
-  omniroute:
-    base_url: "http://127.0.0.1:20128/v1"
-    api_mode: chat_completions
-  inferx:
-    # DeepSeek V4 Flash 100% grátis via InferX (vídeo SciHyoqtUmk)
-    # Base URL + API Key você pega no site InferX → DeepSeek V4 Flash → API
-    base_url: "https://api.inferx.net/v1"
-    api_mode: chat_completions
-  zai:
-    # GLM-5.2 via Z.AI Coding Plan (vídeo 1QH-cKRuyuM) — chat grátis, API paga mas barata
-    # Base: https://api.z.ai/api/paas/v4  — gere chave em https://z.ai/manage-apikey/apikey-list
-    base_url: "https://api.z.ai/api/paas/v4"
-    api_mode: chat_completions
-  nvidia:
-    # GLM-5.1 + outros gratuitos via Nvidia NIM (vídeo bOuC3RHpBak)
-    # Gere chave em https://build.nvidia.com → API Keys
-    base_url: "https://integrate.api.nvidia.com/v1"
-    api_mode: chat_completions
-  # ── Google (Pro plan) — Gemini 3 Flash / 2.5 Pro / 1.5 grátis via AI Studio ──
-  # Gere chave em https://aistudio.google.com/app/apikey (com sua conta Pro = quota alta)
-  # Docs: https://ai.google.dev/gemini-api/docs/openai
-  google:
-    base_url: "https://generativelanguage.googleapis.com/v1beta/openai"
-    api_mode: chat_completions
-  # ── Groq — ultra rápido, free tier generoso (vídeo Robson extra) ──
-  # Gere chave em https://console.groq.com/keys
-  groq:
-    base_url: "https://api.groq.com/openai/v1"
-    api_mode: chat_completions
-  # ── Cerebras — inferência gratuita rápida ──
-  # Gere chave em https://cloud.cerebras.ai
-  cerebras:
-    base_url: "https://api.cerebras.ai/v1"
-    api_mode: chat_completions
-  # ── Together AI — free tier ──
-  # Gere chave em https://api.together.xyz/settings/api-keys
-  together:
-    base_url: "https://api.together.xyz/v1"
-    api_mode: chat_completions
-  ollama-local:
-    base_url: "http://127.0.0.1:11434/v1"
-    api_mode: chat_completions
-  lmstudio-local:
-    # LM Studio: abra o app → aba Developer → habilite "Start Server"
-    # (rodando em http://127.0.0.1:1234/v1). Modelos instalados aparecem em /v1/models.
-    base_url: "http://127.0.0.1:1234/v1"
-    api_mode: chat_completions
-
-fallback_model:
-  # ── OmniRoute COMBOS (vídeo 6pEmC9aAkQU + qGn3Xyntemk) — roteador local que troca automático entre IAs grátis
-  - provider: omniroute
-    model: fogueteiros-coding
-  - provider: omniroute
-    model: teste-um
-  # ── InferX DeepSeek V4 Flash 100% grátis (vídeo SciHyoqtUmk) — 1M contexto, pt-BR excelente
-  - provider: inferx
-    model: deepseek-v4-flash
-  # ── GLM via Z.AI / Nvidia (vídeos 1QH-cKRuyuM + bOuC3RHpBak)
-  - provider: zai
-    model: glm-5.2
-  - provider: nvidia
-    model: meta/llama-3.1-8b-instruct
-  # ── Google Pro (você tem!) — Gemini grátis com quota alta via AI Studio ──
-  - provider: google
-    model: gemini-3-flash-preview
-  - provider: google
-    model: gemini-2.5-pro
-  - provider: google
-    model: gemini-2.0-flash
-  # ── Groq ultra-rápido grátis (120x) ──
-  - provider: groq
-    model: llama-3.3-70b-versatile
-  - provider: groq
-    model: qwen/qwen3-32b
-  - provider: groq
-    model: moonshotai/kimi-k2-instruct
-  # ── Cerebras free ──
-  - provider: cerebras
-    model: llama-3.3-70b
-  # ── Together free ──
-  - provider: together
-    model: meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo
-  # ── Cline (usage-billing) — modelos gratuitos/baratos via api.cline.bot ──
-  - provider: cline
-    model: cline/deepseek/deepseek-chat
-  # ── ClinePass (assinatura $9.99/mes; 2-5x uso em modelos abertos) ──
-  - provider: cline
-    model: cline/cline-pass/deepseek-v4-flash
-  - provider: cline
-    model: cline/cline-pass/qwen3.7-plus
-  - provider: cline
-    model: cline/cline-pass/glm-5.2
-  # ── GitHub Copilot / GitHub Models (COPILOT_GITHUB_TOKEN ou GH_TOKEN) ──
-  - provider: copilot
-    model: gpt-4.1
-  # ── Claude / Anthropic (ANTHROPIC_API_KEY) ──
-  - provider: anthropic
-    model: claude-sonnet-4-6
-  # ── Kimi / Moonshot (KIMI_API_KEY) ──
-  - provider: kimi-coding
-    model: kimi-k2-turbo-preview
-  # ── Google Pro free + Groq + Cerebras + Together (extras) ──
-  - provider: google
-    model: gemini-3-flash-preview
-  - provider: google
-    model: gemini-2.5-pro
-  - provider: groq
-    model: llama-3.3-70b-versatile
-  - provider: cerebras
-    model: llama-3.3-70b
-  - provider: together
-    model: meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo
-  # ── Camada gratuita (OpenRouter :free) - 10 modelos :free extras ──
-  # openrouter/free = roteador que escolhe sozinho o melhor :free disponivel (mais resiliente)
-  - provider: openrouter
-    model: openrouter/free
-  - provider: openrouter
-    model: z-ai/glm-5.2:free
-  - provider: openrouter
-    model: meta-llama/llama-3.3-70b-instruct:free
-  - provider: openrouter
-    model: qwen/qwen-2.5-72b-instruct:free
-  - provider: openrouter
-    model: google/gemini-2.0-flash-001:free
-  - provider: openrouter
-    model: google/gemma-3-27b-it:free
-  - provider: openrouter
-    model: deepseek/deepseek-r1:free
-  - provider: openrouter
-    model: mistralai/mistral-small-3.1-24b-instruct:free
-  - provider: openrouter
-    model: nvidia/nemotron-nano-2-20b-instruct:free
-  # ── LM Studio local (app aberto + servidor :1234 habilitado) ──
-  - provider: lmstudio-local
-    model: "qwen2.5-coder-14b-instruct"   # ajuste p/ um modelo que instalou no app
-  # ── Camada local (PC) — Ollama (offline, ilimitada, 100% gratis) ──
-  - provider: ollama-local
-    model: "qwen2.5-coder:32b"
-  - provider: ollama-local
-    model: "llama3.3:70b"
-  - provider: ollama-local
-    model: "deepseek-r1:32b"
-  - provider: ollama-local
-    model: "qwen2.5:14b"
-
-# ── Fallback principal — mesma chain, na mesma ordem (com grátis do Robson) ──
-fallback_providers:
-  - provider: omniroute
-    model: fogueteiros-coding
-  - provider: omniroute
-    model: teste-um
-  - provider: inferx
-    model: deepseek-v4-flash
-  - provider: zai
-    model: glm-5.2
-  - provider: nvidia
-    model: meta/llama-3.1-8b-instruct
-  - provider: google
-    model: gemini-3-flash-preview
-  - provider: google
-    model: gemini-2.5-pro
-  - provider: groq
-    model: llama-3.3-70b-versatile
-  - provider: cerebras
-    model: llama-3.3-70b
-  - provider: together
-    model: meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo
-  # ── Cline Bling grátis — billing free (minimax/m2.5 é free experimentation oficial) ──
-  - provider: cline
-    model: cline/minimax/minimax-m2.5
-  - provider: cline
-    model: cline/qwen/qwen3-coder-plus
-  - provider: cline
-    model: cline/moonshot/kimi-k2-thinking
-  # ── Cline (usage-billing) — modelos gratuitos/baratos via api.cline.bot ──
-  - provider: cline
-    model: cline/deepseek/deepseek-chat
-  # ── ClinePass (assinatura $9.99/mes; 2-5x uso em modelos abertos) ──
-  - provider: cline
-    model: cline/cline-pass/deepseek-v4-flash
-  - provider: cline
-    model: cline/cline-pass/qwen3.7-plus
-  - provider: cline
-    model: cline/cline-pass/glm-5.2
-  # ── GitHub Copilot / GitHub Models (COPILOT_GITHUB_TOKEN ou GH_TOKEN) ──
-  - provider: copilot
-    model: gpt-4.1
-  # ── Claude / Anthropic (ANTHROPIC_API_KEY) ──
-  - provider: anthropic
-    model: claude-sonnet-4-6
-  # ── Kimi / Moonshot (KIMI_API_KEY) ──
-  - provider: kimi-coding
-    model: kimi-k2-turbo-preview
-  # ── Camada gratuita (OpenRouter :free) - 10 modelos extras ──
-  - provider: openrouter
-    model: openrouter/free
-  - provider: openrouter
-    model: z-ai/glm-5.2:free
-  - provider: openrouter
-    model: meta-llama/llama-3.3-70b-instruct:free
-  - provider: openrouter
-    model: qwen/qwen-2.5-72b-instruct:free
-  - provider: openrouter
-    model: nvidia/nemotron-nano-2-20b-instruct:free
-  # ── LM Studio local (app aberto + servidor :1234 habilitado) ──
-  - provider: lmstudio-local
-    model: "qwen2.5-coder-14b-instruct"   # ajuste p/ um modelo que instalou no app
-  # ── Camada local (PC) — Ollama (offline, ilimitada, 100% gratis) ──
-  - provider: ollama-local
-    model: "qwen2.5-coder:32b"
-  - provider: ollama-local
-    model: "llama3.3:70b"
-  - provider: ollama-local
-    model: "deepseek-r1:32b"
-  - provider: ollama-local
-    model: "qwen2.5:14b"
-
-# ── Cérebro — nível máximo: raciocínio, memória, aprendizado ──
-# Raciocínio ultra, memória holográfica, curator agressivo, background review
-memory:
-  provider: holographic
-  memory_enabled: true
-  user_profile_enabled: true
-  write_approval: false
-  memory_char_limit: 5000
-  user_char_limit: 3000
-  nudge_interval: 5
-
-curator:
-  enabled: true
-  interval_hours: 24
-  min_idle_hours: 1
-  stale_after_days: 14
-  archive_after_days: 30
-  consolidate: true
-  prune_builtins: true
-  archive_ttl_days: 0
-  backup:
-    enabled: true
-    keep: 10
-
-# ── Agente — resiliência para dia/noite + cérebro máximo ──
 agent:
-  api_max_retries: 2
-  gateway_timeout: 1800
-  gateway_timeout_warning: 900
-  gateway_notify_interval: 120
-  session_stall_timeout: 300
-  clarify_timeout: 3600
-  build_wait_timeout: 600
-  service_tier: ""
-  reasoning_effort: ultra
-  reasoning_overrides:
-    "claude-sonnet": ultra
-    "claude-opus": ultra
-    "gemini": max
-    "gpt-5": ultra
-  reasoning_echo: false
-  tool_use_enforcement: true
-  execution_guidance: true
-  intent_ack_continuation: true
-  stall_guards: true
-  task_completion_guidance: true
-  parallel_tool_call_guidance: true
-  environment_probe: true
-  coding_context: auto
-  verify_on_stop: false
-  verify_guidance: true
-
-# ── Segurança — camadas ──
-security:
-  redact_secrets: true
-  redact_pii: false
-  allow_private_urls: false
-  tirith_enabled: true
-  tirith_timeout: 5
-  tirith_fail_open: true
-  protected_instruction_files: true
-  allow_lazy_installs: false
-  approvals:
-    mode: smart
-    timeout: 300
-
-# Aprovações — evita comandos destrutivos sem confirmação
+    api_max_retries: 2
+    build_wait_timeout: 600
+    clarify_timeout: 3600
+    coding_context: auto
+    environment_probe: true
+    execution_guidance: true
+    gateway_notify_interval: 120
+    gateway_timeout: 1800
+    gateway_timeout_warning: 900
+    intent_ack_continuation: true
+    parallel_tool_call_guidance: true
+    reasoning_echo: false
+    reasoning_effort: ultra
+    reasoning_overrides:
+        claude-opus: ultra
+        claude-sonnet: ultra
+        gemini: max
+        gpt-5: ultra
+    service_tier: ""
+    session_stall_timeout: 300
+    stall_guards: true
+    task_completion_guidance: true
+    tool_use_enforcement: true
+    verify_guidance: true
+    verify_on_stop: false
 approvals:
-  mode: smart
-  timeout: 300
-  cron_mode: deny
-  single_query_mode: deny
-  destructive_slash_confirm: true
-  mcp_reload_confirm: true
-  denial_breaker_threshold: 3
-  deny:
-    - "rm -rf /*"
-    - "rm -rf ~/*"
-    - "git push --force *"
-    - "git push -f *"
-    - "format c:*"
-    - "mkfs*"
-    - "dd if=* of=/dev/*"
-    - "shutdown *"
-    - "reboot *"
-
-# ── Display / UX — longa duração ──
-display:
-  compact: false
-  interface: tui
-  resume_display: full
-  resume_exchanges: 10
-  busy_input_mode: interrupt
-  cli_multiline_shortcuts: true
-  tui_auto_resume_recent: true
-  tui_agents_nudge: true
-  show_reasoning: true
-  reasoning_full: false
-  memory_notifications: on
-  background_process_notifications: concise
-  streaming: true
-  timestamps: true
-  timestamp_format: "%H:%M"
-  final_response_markdown: strip
-  inline_diffs: true
-  file_mutation_verifier: true
-  turn_summary: true
-  spinner_token_flow: true
-  friendly_tool_labels: true
-  tool_progress: true
-  tool_preview_length: 0
-  tool_progress_grouping: accumulate
-  skin: default
-  language: en
-  tui_status_indicator: kaomoji
-  cli_refresh_interval: 1.0
-  show_cost: false
-  battery: false
-
-# ── Checkpoints — edição de grandes sistemas com rollback ──
-checkpoints:
-  enabled: true
-  max_snapshots: 20
-  max_total_size_mb: 500
-  max_file_size_mb: 10
-  auto_prune: true
-  retention_days: 7
-  min_interval_hours: 24
-
-# ── Terminal — isolamento e persistência ──
-terminal:
-  backend: local
-  timeout: 180
-  persistent_shell: true
-  degraded_mode: warn
-  docker_image: nikolaik/python-nodejs:python3.11-nodejs20
-  container_memory: 5120
-  container_disk: 51200
-  container_persistent: true
-  docker_network: true
-  docker_shm_size: 1g
-  env_passthrough: []
-  home_mode: auto
-  auto_source_bashrc: true
-
-# ── Gateway — operação contínua ──
-gateway:
-  platform_connect_timeout: 30
-  loop_watchdog: true
-  delivery_ledger: true
-  write_sessions_json: true
-  max_inbound_media_bytes: 134217728
-  strict: false
-  trust_recent_files: true
-  trust_recent_files_seconds: 600
-  scale_to_zero:
-    idle_timeout_minutes: 2
-  restart_loop_guard:
-    max_restarts: 3
-    window: 60
-    max_gap: 300
-  respawn_storm:
-    max: 5
-    window: 120
-
-# ── Cron — jobs agendados ──
-cron:
-  allow_agent_scheduling: false
-  preflight: true
-  model_drift_guard: true
-  wrap_response: true
-  mirror_delivery: false
-  max_parallel_jobs: 3
-  script_timeout_seconds: 3600
-  media_send_timeout: 300
-
-# ── Kanban — edição paralela de grandes sistemas ──
-kanban:
-  dispatch_in_gateway: true
-  review_dispatch: true
-  dispatch_interval_seconds: 60
-  dispatch_stale_timeout_seconds: 14400
-  failure_limit: 2
-  max_in_progress: 4
-  max_in_progress_per_profile: 2
-  auto_decompose: true
-  auto_decompose_per_tick: 3
-  reconcile_orphans: true
-  done_sub_retention_days: 30
-  auto_subscribe_on_create: true
-
-# ── Delegação — cérebro máximo: subagentes ultra, orquestrador, 4 paralelos ──
-delegation:
-  max_concurrent_children: 6
-  max_spawn_depth: 3
-  child_timeout_seconds: 900
-  orchestrator_enabled: true
-  subagent_auto_approve: false
-  inherit_mcp_toolsets: true
-  max_iterations: 500
-  reasoning_effort: ultra
-
-# ── Compressão — janelas grandes ──
-compression:
-  enabled: true
-  threshold: 0.50
-  target_ratio: 0.20
-  protect_last_n: 20
-  protect_first_n: 3
-  in_place: true
-  codex_gpt55_autoraise: true
-
-# ── Limites de leitura — grandes arquivos / contextos enormes ──
-# Máximo para o "esquema inteligente": o modelo principal recebe bases de
-# código grandes e arquivos extensos sem truncar. (padrão: 100000)
-context_file_max_chars: 400000
-file_read_max_chars: 400000
-
-tool_output:
-  max_bytes: 150000
-  max_lines: 4000
-  max_line_length: 4000
-
-tool_loop_guardrails:
-  warnings_enabled: true
-  hard_stop_enabled: false
-  loop_caps:
-    max_web_searches: 50
-    max_subagents: 50
-
-# ── Prompt caching & OpenRouter cache ──
-prompt_caching:
-  cache_ttl: 5m
-
-openrouter:
-  response_cache: true
-  response_cache_ttl: 300
-
-# ── Sync fluido — um segredo, um lugar ──
-sync:
-  opencode_env: true
-
-# ── Auxiliares — custo zero, visão via Cline ──
-auxiliary:
-  free_only: true
-  transient_retries: 3
-  openrouter_model: ""
-  compression:
-    provider: auto
-    model: ""
-    timeout: 180
-    reasoning_effort: high
-  title_generation:
-    enabled: true
-    provider: auto
-    model: ""
-    prefer_fast_model: false
-    timeout: 30
-    reasoning_effort: low
-  vision:
-    # IA que "enxerga": analisa screenshots, imagens e leitura de tela
-    # (browser_vision, vision_analyze). gpt-4o = multimodal na Cline.
-    provider: cline
-    model: "cline/openai/gpt-4o"
-    timeout: 120
-    reasoning_effort: high
-  curator:
-    provider: auto
-    model: ""
-    timeout: 600
-    reasoning_effort: high
-  background_review:
-    enabled: true
-    provider: auto
-    model: ""
-    timeout: 180
-    reasoning_effort: high
-    max_input_tokens: 800000
-  approval:
-    provider: auto
-    model: ""
-    timeout: 30
-    reasoning_effort: medium
-  review:
-    provider: auto
-    model: ""
+    cron_mode: deny
+    denial_breaker_threshold: 3
+    deny:
+        - rm -rf /*
+        - rm -rf ~/*
+        - git push --force *
+        - git push -f *
+        - format c:*
+        - mkfs*
+        - dd if=* of=/dev/*
+        - shutdown *
+        - reboot *
+    destructive_slash_confirm: true
+    mcp_reload_confirm: true
+    mode: smart
+    single_query_mode: deny
     timeout: 300
-  monitor:
-    provider: auto
-    model: ""
-    timeout: 60
-    reasoning_effort: medium
-  triage_specifier:
-    provider: auto
-    model: ""
-    timeout: 120
-    reasoning_effort: high
-  kanban_decomposer:
-    provider: auto
-    model: ""
-    timeout: 180
-    reasoning_effort: high
-
-# ═══════════════════════════════════════════════════════════════════════
-#  VMP-AI — potência extra (navegador, n8n, visão de tela)
-# ═══════════════════════════════════════════════════════════════════════
-
-# ── Navegador automatizado ──
-# Tools nativas ativas: browser_navigate, browser_click, browser_type,
-# browser_snapshot, browser_vision (screenshot + análise de tela) e mais.
-#   backend: ""           → auto (Browser Use CLI se disponível; senão built-in)
-#            "browser-use"→ forçar Browser Use CLI (driver Python)
-#            "off"        → usar sempre as tools nativas (built-in)
-# Navegador local: Chrome/Edge/Chromium por padrão; `hermes browser connect`
-# para anexar a um navegador já aberto (CDP).
-# ── Protocolo visual-cognitivo ──
-# "browser como usuário de 1ª vez": use o browser_vision(annotate=true) para
-# enxergar a tela (labels [N] → refs @eN), agir em passos, verificar e aprender.
-# Skill: visual-browser-user-protocol · Journal: HERMES_HOME/protocol/browser-learning/
+auxiliary:
+    approval:
+        model: ""
+        provider: auto
+        reasoning_effort: medium
+        timeout: 30
+    background_review:
+        enabled: true
+        max_input_tokens: 800000
+        model: ""
+        provider: auto
+        reasoning_effort: high
+        timeout: 180
+    compression:
+        model: ""
+        provider: auto
+        reasoning_effort: high
+        timeout: 180
+    curator:
+        model: ""
+        provider: auto
+        reasoning_effort: high
+        timeout: 600
+    free_only: true
+    kanban_decomposer:
+        model: ""
+        provider: auto
+        reasoning_effort: high
+        timeout: 180
+    monitor:
+        model: ""
+        provider: auto
+        reasoning_effort: medium
+        timeout: 60
+    openrouter_model: ""
+    review:
+        model: ""
+        provider: auto
+        timeout: 300
+    title_generation:
+        enabled: true
+        model: ""
+        prefer_fast_model: false
+        provider: auto
+        reasoning_effort: low
+        timeout: 30
+    transient_retries: 3
+    triage_specifier:
+        model: ""
+        provider: auto
+        reasoning_effort: high
+        timeout: 120
+    vision:
+        model: gemini-3.8-flash
+        provider: gemini
+        reasoning_effort: high
+        timeout: 120
 browser:
-  backend: ""            # auto
-  headed: false          # headless (sem janela visível)
-  allow_private_urls: false
-  engine: auto           # chrome (padrão) | lightpanda (rápido, sem screenshots)
-  snapshot_threshold: 15000
-  record_sessions: false
-
-# ── n8n — orquestração de workflows via MCP ──
-# Instale o bridge oficial (catálogo Nous) — ele já configura mcp_servers:
-#   1) hermes mcp install n8n
-#   2) Gere uma API key no n8n (Settings → API) e salve em .env:
-#        N8N_BASE_URL=http://127.0.0.1:5678
-#        N8N_API_KEY=...
-#   3) Reinicie a sessão (ou /reload-mcp).
-# O install clona o servidor em ${HERMES_HOME}/mcp-installs/n8n e escreve a
-# entrada em mcp_servers automaticamente (veja `hermes mcp list`).
-# Se preferir configurar na mão, o formato é:
-# mcp_servers:
-#   n8n:
-#     command: "${HERMES_HOME}/mcp-installs/n8n/.venv/bin/python"
-#     args: ["${HERMES_HOME}/mcp-installs/n8n/server.py"]
-#     env:
-#       N8N_BASE_URL: "${N8N_BASE_URL}"
-#       N8N_API_KEY: "${N8N_API_KEY}"
-#     enabled: true
+    allow_private_urls: false
+    backend: ""
+    engine: auto
+    headed: false
+    record_sessions: false
+    snapshot_threshold: 15000
+checkpoints:
+    auto_prune: true
+    enabled: true
+    max_file_size_mb: 10
+    max_snapshots: 20
+    max_total_size_mb: 500
+    min_interval_hours: 24
+    retention_days: 7
+compression:
+    codex_gpt55_autoraise: true
+    enabled: true
+    in_place: true
+    protect_first_n: 3
+    protect_last_n: 20
+    target_ratio: 0.2
+    threshold: 0.5
+context_file_max_chars: 400000
+cron:
+    allow_agent_scheduling: false
+    max_parallel_jobs: 3
+    media_send_timeout: 300
+    mirror_delivery: false
+    model_drift_guard: true
+    preflight: true
+    script_timeout_seconds: 3600
+    wrap_response: true
+curator:
+    archive_after_days: 30
+    archive_ttl_days: 0
+    backup:
+        enabled: true
+        keep: 10
+    consolidate: true
+    enabled: true
+    interval_hours: 24
+    min_idle_hours: 1
+    prune_builtins: true
+    stale_after_days: 14
+delegation:
+    child_timeout_seconds: 900
+    inherit_mcp_toolsets: true
+    max_concurrent_children: 6
+    max_iterations: 500
+    max_spawn_depth: 3
+    orchestrator_enabled: true
+    reasoning_effort: ultra
+    subagent_auto_approve: false
+display:
+    background_process_notifications: concise
+    battery: false
+    busy_input_mode: interrupt
+    cli_multiline_shortcuts: true
+    cli_refresh_interval: 1
+    compact: false
+    file_mutation_verifier: true
+    final_response_markdown: strip
+    friendly_tool_labels: true
+    inline_diffs: true
+    interface: tui
+    language: en
+    memory_notifications: "on"
+    reasoning_full: false
+    resume_display: full
+    resume_exchanges: 10
+    show_cost: false
+    show_reasoning: true
+    skin: default
+    spinner_token_flow: true
+    streaming: true
+    timestamp_format: '%H:%M'
+    timestamps: true
+    tool_preview_length: 0
+    tool_progress: true
+    tool_progress_grouping: accumulate
+    tui_agents_nudge: true
+    tui_auto_resume_recent: true
+    tui_status_indicator: kaomoji
+    turn_summary: true
+fallback_model:
+    - model: gpt-4.1
+      provider: copilot
+    - model: gpt-4o
+      provider: copilot
+    - model: gpt-4o-mini
+      provider: copilot
+    - model: gemini-3.8-flash
+      provider: gemini
+    - model: qwen2.5-coder:32b
+      provider: ollama-local
+    - model: qwen2.5-coder-14b-instruct
+      provider: lmstudio-local
+file_read_max_chars: 400000
+gateway:
+    delivery_ledger: true
+    loop_watchdog: true
+    max_inbound_media_bytes: 134217728
+    platform_connect_timeout: 30
+    respawn_storm:
+        max: 5
+        window: 120
+    restart_loop_guard:
+        max_gap: 300
+        max_restarts: 3
+        window: 60
+    scale_to_zero:
+        idle_timeout_minutes: 2
+    strict: false
+    trust_recent_files: true
+    trust_recent_files_seconds: 600
+    write_sessions_json: true
+kanban:
+    auto_decompose: true
+    auto_decompose_per_tick: 3
+    auto_subscribe_on_create: true
+    dispatch_in_gateway: true
+    dispatch_interval_seconds: 60
+    dispatch_stale_timeout_seconds: 14400
+    done_sub_retention_days: 30
+    failure_limit: 2
+    max_in_progress: 4
+    max_in_progress_per_profile: 2
+    reconcile_orphans: true
+    review_dispatch: true
+memory:
+    memory_char_limit: 5000
+    memory_enabled: true
+    nudge_interval: 5
+    provider: holographic
+    user_char_limit: 3000
+    user_profile_enabled: true
+    write_approval: false
+model:
+    api_key: ollama
+    base_url: http://127.0.0.1:11434/v1
+    default: dcostenco/prism-coder:2b
+    provider: ollama-launch
+openrouter:
+    response_cache: true
+    response_cache_ttl: 300
+prompt_caching:
+    cache_ttl: 5m
+providers:
+    cerebras:
+        api_mode: chat_completions
+        base_url: https://api.cerebras.ai/v1
+    google:
+        api_mode: chat_completions
+        base_url: https://generativelanguage.googleapis.com/v1beta/openai
+    groq:
+        api_mode: chat_completions
+        base_url: https://api.groq.com/openai/v1
+    inferx:
+        api_mode: chat_completions
+        base_url: https://api.inferx.net/v1
+    lmstudio-local:
+        api_mode: chat_completions
+        base_url: http://127.0.0.1:1234/v1
+    nvidia:
+        api_mode: chat_completions
+        base_url: https://integrate.api.nvidia.com/v1
+    ollama-launch:
+        api: http://127.0.0.1:11434/v1
+        default_model: dcostenco/prism-coder:2b
+        models:
+            - dcostenco/prism-coder:2b
+            - llama3.2:latest
+            - qwen3.5:4b
+        name: Ollama
+    ollama-local:
+        api_mode: chat_completions
+        base_url: http://127.0.0.1:11434/v1
+    omniroute:
+        api_mode: chat_completions
+        base_url: http://127.0.0.1:20128/v1
+    together:
+        api_mode: chat_completions
+        base_url: https://api.together.xyz/v1
+    zai:
+        api_mode: chat_completions
+        base_url: https://api.z.ai/api/paas/v4
+security:
+    allow_lazy_installs: false
+    allow_private_urls: false
+    approvals:
+        mode: smart
+        timeout: 300
+    protected_instruction_files: true
+    redact_pii: false
+    redact_secrets: true
+    tirith_enabled: true
+    tirith_fail_open: true
+    tirith_timeout: 5
+sync:
+    opencode_env: true
+terminal:
+    auto_source_bashrc: true
+    backend: local
+    container_disk: 51200
+    container_memory: 5120
+    container_persistent: true
+    degraded_mode: warn
+    docker_image: nikolaik/python-nodejs:python3.11-nodejs20
+    docker_network: true
+    docker_shm_size: 1g
+    env_passthrough: []
+    home_mode: auto
+    persistent_shell: true
+    timeout: 180
+tool_loop_guardrails:
+    hard_stop_enabled: false
+    loop_caps:
+        max_subagents: 50
+        max_web_searches: 50
+    warnings_enabled: true
+tool_output:
+    max_bytes: 150000
+    max_line_length: 4000
+    max_lines: 4000
+toolsets:
+    - hermes-cli
+    - web

@@ -1,0 +1,57 @@
+[
+  {
+    "check_type": "terraform",
+    "results": {
+      "passed_checks": [
+        {
+          "check_id": "CKV_AWS_18",
+          "check_name": "Ensure the S3 bucket has access logging enabled",
+          "check_result": {"result": "PASSED"},
+          "file_path": "/main.tf",
+          "file_line_range": [1, 10],
+          "resource": "aws_s3_bucket.data"
+        }
+      ],
+      "failed_checks": [
+        {
+          "check_id": "CKV_AWS_21",
+          "check_name": "Ensure the S3 bucket has versioning enabled",
+          "check_result": {"result": "FAILED"},
+          "file_path": "/main.tf",
+          "file_line_range": [1, 10],
+          "resource": "aws_s3_bucket.data",
+          "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/s3-policies/s3-16-enable-versioning",
+          "severity": "HIGH"
+        },
+        {
+          "check_id": "CKV_AWS_145",
+          "check_name": "Ensure that S3 buckets are encrypted with KMS",
+          "check_result": {"result": "FAILED"},
+          "file_path": "/main.tf",
+          "file_line_range": [1, 10],
+          "resource": "aws_s3_bucket.data",
+          "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/aws-policies/aws-general-policies/ensure-that-s3-buckets-are-encrypted-with-kms-by-default",
+          "severity": "MEDIUM"
+        }
+      ]
+    }
+  },
+  {
+    "check_type": "dockerfile",
+    "results": {
+      "passed_checks": [],
+      "failed_checks": [
+        {
+          "check_id": "CKV_DOCKER_3",
+          "check_name": "Ensure that a user for the container has been created",
+          "check_result": {"result": "FAILED"},
+          "file_path": "/Dockerfile",
+          "file_line_range": [1, 8],
+          "resource": "/Dockerfile.",
+          "guideline": "https://docs.prismacloud.io/en/enterprise-edition/policy-reference/docker-policies/docker-policy-index/ensure-that-a-user-for-the-container-has-been-created",
+          "severity": "LOW"
+        }
+      ]
+    }
+  }
+]

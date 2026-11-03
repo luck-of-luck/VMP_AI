@@ -1,0 +1,26 @@
+# Prefer-Const Detection (WITHOUT autofix — manual review required)
+# 
+# Based on session findings (2026-04-20):
+# - Blanket const rewrites break code
+# - Pattern-based detection has false positives
+# - Reassignment detection requires semantic analysis
+#
+# This rule flags potential const candidates but requires manual verification.
+# Use ESLint prefer-const for safer automated fixes.
+
+id: prefer-const-report
+language: typescript
+severity: info
+message: |
+  Variable {{ $VAR }} is initialized with let but may never be reassigned.
+  Verify that {{ $VAR }} is truly immutable before changing to const.
+  
+  ⚠️  This is a suggestion only — use ESLint for safer automated fixes:
+  https://eslint.org/docs/latest/rules/prefer-const
+
+rule:
+  pattern: let $VAR = $INIT;
+  
+# Note: Fix is intentionally omitted to require manual code review.
+# Automated fixes for semantic rules (reassignment detection) require
+# full AST scope analysis that ast-grep patterns cannot reliably provide.

@@ -1,0 +1,89 @@
+{
+  "_nota": "Ground truth do benchmark. 'detectavel_por' registra o que a ferramenta TEM como chance de ver, nao o que ela de fato acha. Isso separa 'o scanner errou' de 'o scanner nao poderia ver' — sem essa distincao o recall vira numero de teatro.",
+  "arquivo": "planted.py",
+  "total_bugs": 11,
+  "bugs": [
+    {
+      "id": 1,
+      "linha": 13,
+      "titulo": "segredo hardcoded em variavel de modulo",
+      "severidade": "alta",
+      "detectavel_por": ["bandit:B105", "semgrep:secrets", "trivy:secret"],
+      "nota": "REGRA CRITICA: secrets em variavel de modulo sao o caso mais comum em producao. Se bandit pegar so o default-arg (bug 4) e nao este, a cobertura de secrets esta furada."
+    },
+    {
+      "id": 2,
+      "linha": 18,
+      "titulo": "shell=True com concatenacao de entrada -> command injection",
+      "severidade": "critica",
+      "detectavel_por": ["bandit:B602", "bandit:B605", "semgrep:subprocess-shell-true"],
+      "nota": "O achado mais grave e o mais facil de achar. Se alguem falha NESTE, o pipeline esta quebrado."
+    },
+    {
+      "id": 3,
+      "linha": 24,
+      "titulo": "senha em default arg",
+      "severidade": "media",
+      "detectavel_por": ["bandit:B107"],
+      "nota": "Este bandit pega (medido: L24 [B107])."
+    },
+    {
+      "id": 4,
+      "linha": 34,
+      "titulo": "except Exception genérico engolindo erro",
+      "severidade": "media",
+      "detectavel_por": ["bandit:B110", "pylint:W0703", "astgrep:code_smell"],
+      "nota": "Bug de robustez, nao de seguranca. Nenhum scanner SEGURO acha isso. E o tipo de coisa que so um LLM ou analise de code smell pega."
+    },
+    {
+      "id": 5,
+      "linha": 41,
+      "titulo": "divisao sem guarda de lista vazia -> ZeroDivisionError",
+      "severidade": "baixa",
+      "detectavel_por": ["astgrep:code_smell", "pylint", "llm"],
+      "nota": "Nao e vulnerabilidade. Divisao por zero e erro de runtime, nao seguranca. Scanner de SAST nao deveria achar — e OK que nao ache."
+    },
+    {
+      "id": 6,
+      "linha": 46,
+      "titulo": "arquivo aberto sem contexto/fechamento -> recurso vazado",
+      "severidade": "media",
+      "detectavel_por": ["bandit:B310", "pylint:R1732", "astgrep:code_smell"],
+      "nota": "Depende do scanner olhar alem da linha do open()."
+    },
+    {
+      "id": 7,
+      "linha": 52,
+      "titulo": "hash MD5 sem salt para uso seguro",
+      "severidade": "media",
+      "detectavel_por": ["bandit:B324", "semgrep:weak-hash"],
+      "nota": "bandit pega (medido: L52 [B324])."
+    },
+    {
+      "id": 8,
+      "linha": 57,
+      "titulo": "SQL injection por format %s",
+      "severidade": "critica",
+      "detectavel_por": ["bandit:B608", "semgrep:formatted-sql-query"],
+      "nota": "bandit E semgrep concordam aqui (medido: ambos L57). Unico ponto de corroboracao real no arquivo."
+    }
+  ],
+  "nao_detectavel_por_scanner_de_seguranca": [
+    {
+      "linha": 34,
+      "id": 4,
+      "porque": "robustez, nao seguranca"
+    },
+    {
+      "linha": 41,
+      "id": 5,
+      "porque": "erro de runtime, nao vulnerabilidade"
+    },
+    {
+      "linha": 61,
+      "id": 10,
+      "porque": "nome enganoso — so smell"
+    }
+  ],
+  "como_usar": "Rode bandit, semgrep e astgrep contra planted.py. Compare os achados com bugs[].linha. So quebre o numero de recall se um scanner FALHA um bug que o detectavel_por lista. Bug nao listado em detectavel_por NAO conta como falha — contar seria false negative inventado."
+}

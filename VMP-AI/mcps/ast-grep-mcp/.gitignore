@@ -1,0 +1,30 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# MyPy. Ruff, PyTest cache folders
+.*_cache/
+
+# Virtual environments
+.venv
+
+# OS artifacts
+.DS_Store
+
+# Generated outputs
+repomix-output.xml
+docs/repomix/*
+!docs/repomix/repomix-instruction.md
+benchmark_output.txt
+.doppler.yaml
+.coverage
+htmlcov/
+analysis_reports/
+benchmark_comparisons/
+.claude/py-cache/
+.claude/tsc-cache/
+.serena/project.yml

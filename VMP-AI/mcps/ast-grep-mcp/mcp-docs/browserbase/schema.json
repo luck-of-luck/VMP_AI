@@ -1,0 +1,20 @@
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Browserbase MCP Server",
+  "description": "Browser automation and web scraping capabilities",
+  "applicationCategory": "DeveloperApplication",
+  "applicationSubCategory": "Web Automation",
+  "operatingSystem": "Cross-platform",
+  "softwareVersion": "latest",
+  "programmingLanguage": [],
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "softwareHelp": {
+    "@type": "WebPage",
+    "url": "https://www.npmjs.com/package/@browserbasehq/mcp-server-browserbase"
+  }
+}

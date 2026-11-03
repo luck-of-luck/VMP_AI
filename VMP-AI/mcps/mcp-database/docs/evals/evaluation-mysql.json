@@ -1,0 +1,18 @@
+[
+  {
+    "question": "On the mysql_app connection, what is the price of the product named golden-widget in the app database?",
+    "answer": "999.99"
+  },
+  {
+    "question": "On the mysql_app connection, how many products in the app database cost more than 500?",
+    "answer": "26"
+  },
+  {
+    "question": "On the mysql_app connection, which article title matches a text search for the word vector on the body column of the articles table in the app database?",
+    "answer": "gamma"
+  },
+  {
+    "question": "On the mysql_app connection, which table in the app database has a FULLTEXT index?",
+    "answer": "articles"
+  }
+]

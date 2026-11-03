@@ -1,0 +1,8 @@
+# Config with custom languages for testing get_supported_languages
+customLanguages:
+  customlang1:
+    extensions:
+      - .custom1
+  customlang2:
+    extensions:
+      - .custom2

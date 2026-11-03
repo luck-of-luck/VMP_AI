@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "verification-loop",
+  "owner": "affaan-m",
+  "repo": "everything-claude-code",
+  "path": ".agents/skills/verification-loop",
+  "branch": "main",
+  "sha": "4b5559cdcc6300a8368a00e3ae772417224dda9d",
+  "source": "manual"
+}

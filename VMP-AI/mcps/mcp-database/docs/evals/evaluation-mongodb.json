@@ -1,0 +1,14 @@
+[
+  {
+    "question": "On the mongo_app connection, how many documents are in the events collection?",
+    "answer": "1000"
+  },
+  {
+    "question": "On the mongo_app connection, which page has the most events in the events collection?",
+    "answer": "/home"
+  },
+  {
+    "question": "On the mongo_app connection, how many distinct pages appear in the events collection?",
+    "answer": "7"
+  }
+]

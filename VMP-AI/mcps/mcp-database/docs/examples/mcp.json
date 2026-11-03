@@ -1,0 +1,90 @@
+{
+  "mcpServers": {
+    "db-postgres": {
+      "command": "docker",
+      "args": [
+        "run", "-i", "--rm", "--network", "host",
+        "-e", "URI", "-e", "ENGINE_TYPE", "-e", "MODE", "-e", "NAME",
+        "ghcr.io/diegobulhoes/mcp-database:latest"
+      ],
+      "env": {
+        "URI": "postgresql://dev:dev@localhost:5432/app",
+        "ENGINE_TYPE": "postgres",
+        "MODE": "read_write"
+      }
+    },
+    "db-mysql": {
+      "command": "docker",
+      "args": [
+        "run", "-i", "--rm", "--network", "host",
+        "-e", "URI", "-e", "ENGINE_TYPE", "-e", "MODE", "-e", "NAME",
+        "ghcr.io/diegobulhoes/mcp-database:latest"
+      ],
+      "env": {
+        "URI": "mysql://root:dev@localhost:3306/app",
+        "ENGINE_TYPE": "mysql",
+        "MODE": "read_write"
+      }
+    },
+    "db-mariadb": {
+      "command": "docker",
+      "args": [
+        "run", "-i", "--rm", "--network", "host",
+        "-e", "URI", "-e", "ENGINE_TYPE", "-e", "MODE", "-e", "NAME",
+        "ghcr.io/diegobulhoes/mcp-database:latest"
+      ],
+      "env": {
+        "URI": "mariadb://root:dev@localhost:3307/app",
+        "ENGINE_TYPE": "mariadb",
+        "MODE": "read_write"
+      }
+    },
+    "db-sqlite": {
+      "command": "uv",
+      "args": ["run", "--directory", "/path/to/mcp-database", "mcp-database"],
+      "env": {
+        "URI": "sqlite:///temp/playground.db",
+        "ENGINE_TYPE": "sqlite",
+        "MODE": "read_write"
+      }
+    },
+    "db-mongo": {
+      "command": "docker",
+      "args": [
+        "run", "-i", "--rm", "--network", "host",
+        "-e", "URI", "-e", "ENGINE_TYPE", "-e", "MODE", "-e", "NAME",
+        "ghcr.io/diegobulhoes/mcp-database:latest"
+      ],
+      "env": {
+        "URI": "mongodb://localhost:27019/app?directConnection=true",
+        "ENGINE_TYPE": "mongodb",
+        "MODE": "read_write"
+      }
+    },
+    "db-redis": {
+      "command": "docker",
+      "args": [
+        "run", "-i", "--rm", "--network", "host",
+        "-e", "URI", "-e", "ENGINE_TYPE", "-e", "MODE", "-e", "NAME",
+        "ghcr.io/diegobulhoes/mcp-database:latest"
+      ],
+      "env": {
+        "URI": "redis://localhost:6380/0",
+        "ENGINE_TYPE": "redis",
+        "MODE": "read_write"
+      }
+    },
+    "db-postgres-external": {
+      "command": "docker",
+      "args": [
+        "run", "-i", "--rm",
+        "-e", "URI", "-e", "ENGINE_TYPE", "-e", "MODE", "-e", "NAME",
+        "ghcr.io/diegobulhoes/mcp-database:latest"
+      ],
+      "env": {
+        "URI": "postgresql://app:secret@mydb.abc123.us-east-1.rds.amazonaws.com:5432/orders?sslmode=require",
+        "ENGINE_TYPE": "postgres"
+      }
+    }
+  }
+}

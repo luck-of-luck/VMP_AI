@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Testing
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Secrets (integrations read credentials from env vars only)
+.env
+.env.*
+
+# Generated self-scan output (the committed snapshot lives in examples/self-scan/)
+/self-scan/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project-specific
+.sast-mcp-ignore.json
+.sast-mcp-cache/
+
+# crAPI engagement demo / PoC — published separately (wiki/blog), not in-repo.
+# scripts/loadtest.py and scripts/self_scan.py are kept (CI depends on them).
+/poc/
+/examples/engagement/
+/scripts/poc_report.py

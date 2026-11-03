@@ -1,0 +1,33 @@
+{
+  "nodejs": {
+    "node_eval_injection": [
+      {
+        "files": [
+          {"file_path": "tests/fixtures/vulnerable_app.js", "match_position": {"line_start": 7, "line_end": 7}},
+          {"file_path": "tests/fixtures/other_file.js", "match_position": {"line_start": 12, "line_end": 12}}
+        ],
+        "metadata": {
+          "severity": "ERROR",
+          "confidence": "HIGH",
+          "description": "User controlled data in eval() can result in Server Side Injection."
+        },
+        "line": 7
+      }
+    ]
+  },
+  "templates": {
+    "xss_template_injection": [
+      {
+        "files": [
+          {"file_path": "tests/fixtures/template.ejs", "match_position": {"line_start": 5, "line_end": 5}}
+        ],
+        "metadata": {
+          "severity": "WARNING",
+          "confidence": "MEDIUM",
+          "description": "Unescaped template output may lead to XSS."
+        },
+        "line": 5
+      }
+    ]
+  }
+}

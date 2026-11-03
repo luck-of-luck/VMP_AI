@@ -1,0 +1,3 @@
+# Invalid config - empty lists
+ruleDirs: []
+customLanguages: {}

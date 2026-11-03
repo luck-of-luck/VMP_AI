@@ -1,0 +1,112 @@
+# integration
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareSourceCode",
+  "name": "integration",
+  "description": "Directory containing 4 code files with 14 classes and 10 functions",
+  "programmingLanguage": [
+    {
+      "@type": "ComputerLanguage",
+      "name": "Python"
+    }
+  ],
+  "featureList": [
+    "14 class definitions",
+    "10 function definitions"
+  ]
+}
+</script>
+
+## Overview
+
+This directory contains 4 code file(s) with extracted schemas.
+
+## Files and Schemas
+
+### `test_benchmark.py` (python)
+
+**Classes:**
+- `_MockMCP` - Line 36
+  - Mock MCP for backward compatibility with existing benchmark tests.
+- `BenchmarkResult` - Line 72
+  - Store benchmark results for comparison.
+  - Methods: __init__, to_dict, from_dict
+- `BenchmarkRunner` - Line 102
+  - Run benchmarks and track results.
+  - Methods: __init__, _load_baseline, save_baseline, run_benchmark, check_regression (+1 more)
+- `TestPerformanceBenchmarks` - Line 253
+  - Performance benchmarking test suite.
+  - Methods: test_benchmark_simple_pattern_search, test_benchmark_yaml_rule_search, test_benchmark_max_results_early_termination, test_benchmark_file_size_filtering, test_benchmark_caching_performance (+2 more)
+- `TestCIBenchmarks` - Line 393
+  - Benchmarks that run in CI for regression detection.
+  - Methods: test_ci_regression_check
+- `DeduplicationBenchmarkResult` - Line 417
+  - Store deduplication benchmark results with statistical analysis.
+  - Methods: __init__, to_dict
+- `DeduplicationBenchmarkRunner` - Line 440
+  - Run deduplication-specific benchmarks with statistical reporting.
+  - Methods: __init__, _load_baseline, save_baseline, run_benchmark, check_regression (+1 more)
+- `TestDeduplicationBenchmarks` - Line 533
+  - Performance benchmarks for deduplication functions (Phase 6.4).
+  - Methods: test_benchmark_calculate_deduplication_score, test_benchmark_rank_deduplication_candidates, test_benchmark_get_test_coverage_for_files, test_benchmark_generate_deduplication_recommendation, test_benchmark_create_enhanced_duplication_response (+2 more)
+
+**Functions:**
+- `benchmark_runner() -> BenchmarkRunner` - Line 242
+- `benchmark_fixtures() -> Path` - Line 248
+- `dedup_benchmark_runner() -> DeduplicationBenchmarkRunner` - Line 528
+- `run_deduplication_benchmarks(iterations, save_baseline) -> Dict[...]` - Line 723
+
+**Key Imports:** `ast_grep_mcp.core`, `ast_grep_mcp.features.deduplication.coverage`, `ast_grep_mcp.features.deduplication.ranker`, `ast_grep_mcp.features.deduplication.recommendations`, `ast_grep_mcp.features.deduplication.reporting` (+10 more)
+
+### `test_integration.py` (python)
+
+**Classes:**
+- `TestIntegration` - Line 24
+  - Integration tests for ast-grep MCP functions
+  - Methods: test_find_code_text_format, test_find_code_json_format, test_find_code_by_rule, test_find_code_with_max_results, test_find_code_no_matches
+
+**Functions:**
+- `fixtures_dir() -> str` - Line 19
+
+**Key Imports:** `ast_grep_mcp.features.search.service`, `json`, `os`, `pytest`, `typing` (+1 more)
+
+### `test_rename_symbol_integration.py` (python)
+
+**Classes:**
+- `TestSymbolRenamerIntegration` - Line 98
+  - Integration tests for SymbolRenamer with real ast-grep.
+  - Methods: test_find_python_symbol_references, test_find_typescript_symbol_references, test_file_filter, test_reference_classification, test_scope_tree_building
+- `TestRenameCoordinatorIntegration` - Line 195
+  - Integration tests for RenameCoordinator with real ast-grep.
+  - Methods: test_dry_run_rename, test_apply_rename_single_file, test_multi_file_rename, test_word_boundary_replacement, test_conflict_detection
+
+**Functions:**
+- `ast_grep_available()` - Line 17
+- `temp_project(tmp_path)` - Line 35
+- `temp_ts_project(tmp_path)` - Line 67
+
+**Key Imports:** `ast_grep_mcp.features.refactoring.rename_coordinator`, `ast_grep_mcp.features.refactoring.renamer`, `os`, `pytest`, `subprocess`
+
+### `test_semantic_integration.py` (python)
+
+**Classes:**
+- `TestSemanticSimilarityIntegration` - Line 65
+  - Integration tests for SemanticSimilarity with real model.
+  - Methods: test_model_loads_successfully, test_identical_code_perfect_similarity, test_semantically_similar_code_high_score, test_different_functionality_lower_score, test_embedding_caching_works (+1 more)
+- `TestHybridThreeStageIntegration` - Line 162
+  - Integration tests for three-stage hybrid pipeline.
+  - Methods: test_three_stage_pipeline_works, test_early_exit_skips_semantic, test_semantic_weight_affects_result
+- `TestSemanticType4Clones` - Line 244
+  - Tests specifically for Type-4 (semantic) clone detection.
+  - Methods: test_loop_vs_comprehension, test_recursive_vs_iterative, test_different_algorithms_same_result
+
+**Functions:**
+- `semantic_calculator()` - Line 27
+- `hybrid_calculator_with_semantic()` - Line 47
+
+**Key Imports:** `ast_grep_mcp.features.deduplication.similarity`, `importlib.util`, `pytest`
+
+---
+*Generated by Enhanced Schema Generator with schema.org markup*

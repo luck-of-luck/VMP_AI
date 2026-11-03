@@ -1,0 +1,14 @@
+[
+  {
+    "question": "On the mariadb_app connection, how many products are in the app database?",
+    "answer": "51"
+  },
+  {
+    "question": "On the mariadb_app connection, how many customers are in the app database?",
+    "answer": "100"
+  },
+  {
+    "question": "On the mariadb_app connection, which article title matches a text search for the word atlas on the body column of the articles table in the app database?",
+    "answer": "gamma"
+  }
+]

@@ -1,0 +1,32 @@
+# One-command HTTP deployment of the full (batteries-included) image.
+#
+#   docker compose up
+#
+# Exposes the Streamable HTTP MCP endpoint at http://localhost:8080/mcp plus the
+# operational endpoints /health, /ready, and /metrics on the same port.
+#
+# Auth is OFF by default for local use. For anything reachable by others, set
+# SAST_MCP_JWT_SECRET (or SAST_MCP_API_KEY) in a .env file next to this file.
+
+services:
+  sast-mcp-server:
+    image: ghcr.io/skyrxin/sast-mcp-server:full
+    # To build locally instead of pulling, comment out `image:` above and use:
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile.full
+    command: ["--transport", "streamable-http", "--host", "0.0.0.0", "--port", "8080"]
+    ports:
+      - "8080:8080"
+    environment:
+      SAST_MCP_LOG_LEVEL: "INFO"
+      # SAST_MCP_JWT_SECRET: "${SAST_MCP_JWT_SECRET:-}"
+      # SAST_MCP_RATE_LIMIT_PER_MIN: "120"
+      # SAST_MCP_MAX_CONCURRENT_SCANS: "4"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped

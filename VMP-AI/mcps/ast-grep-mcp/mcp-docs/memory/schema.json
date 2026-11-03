@@ -1,0 +1,19 @@
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Memory MCP Server",
+  "description": "Persistent memory and context storage for AI conversations",
+  "applicationCategory": "DeveloperApplication",
+  "applicationSubCategory": "AI/ML",
+  "operatingSystem": "Cross-platform",
+  "softwareVersion": "latest",
+  "programmingLanguage": [
+    "JavaScript"
+  ],
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "url": "https://github.com/modelcontextprotocol/server-memory"
+}

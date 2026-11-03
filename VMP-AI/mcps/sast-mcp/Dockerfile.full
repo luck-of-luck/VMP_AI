@@ -1,0 +1,57 @@
+# "Full" image: bundles the CLI-based scanners so scan_all works out of the box.
+#
+# Bundled: bandit, njsscan, semgrep, checkov (pip); trivy, gitleaks, osv-scanner,
+# grype, syft (binaries); bearer (install script).
+# NOT bundled (too large / need special runtimes): CodeQL and OWASP ZAP — ZAP's
+# run_active_scan orchestrates Docker on the host, and CodeQL ships a multi-GB
+# bundle better mounted at runtime.
+#
+# Build:  docker build -f Dockerfile.full -t sast-mcp-server:full .
+# For the minimal image (bandit/njsscan/bearer only) use the default Dockerfile.
+
+FROM python:3.12-slim AS base
+
+ARG TRIVY_VERSION=0.71.2
+ARG GITLEAKS_VERSION=8.18.4
+ARG OSV_SCANNER_VERSION=1.8.5
+ARG GRYPE_VERSION=0.79.6
+ARG SYFT_VERSION=1.11.0
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git curl ca-certificates tar \
+    && rm -rf /var/lib/apt/lists/*
+
+# --- Binary scanners ---
+# Trivy
+RUN curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh \
+    | sh -s -- -b /usr/local/bin "v${TRIVY_VERSION}"
+
+# Bearer
+RUN curl -sfL https://raw.githubusercontent.com/Bearer/bearer/main/contrib/install.sh \
+    | sh -s -- -b /usr/local/bin
+
+# Gitleaks
+RUN curl -sfL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
+    | tar -xz -C /usr/local/bin gitleaks
+
+# OSV-Scanner
+RUN curl -sfL "https://github.com/google/osv-scanner/releases/download/v${OSV_SCANNER_VERSION}/osv-scanner_linux_amd64" \
+    -o /usr/local/bin/osv-scanner && chmod +x /usr/local/bin/osv-scanner
+
+# Grype + Syft (Anchore) — image/SCA scanning and SBOM generation
+RUN curl -sfL https://raw.githubusercontent.com/anchore/grype/main/install.sh \
+    | sh -s -- -b /usr/local/bin "v${GRYPE_VERSION}"
+RUN curl -sfL https://raw.githubusercontent.com/anchore/syft/main/install.sh \
+    | sh -s -- -b /usr/local/bin "v${SYFT_VERSION}"
+
+WORKDIR /app
+COPY pyproject.toml README.md LICENSE ./
+COPY sast_mcp_server/ ./sast_mcp_server/
+
+# --- Python package + pip-based scanners ---
+RUN pip install --no-cache-dir ".[auth,typescript,pdf]" bandit njsscan semgrep checkov
+
+RUN useradd --create-home --shell /bin/bash scanner
+USER scanner
+
+ENTRYPOINT ["sast-mcp-server"]

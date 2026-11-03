@@ -1,0 +1,93 @@
+# AST-grep Rules for Zod Schema Validation
+# Generated from eslint-plugin-zod patterns
+
+---
+# Rule 1: Disallow z.any() - unsafe and vague
+id: no-any-schema
+language: typescript
+rule:
+  pattern: z.any()
+message: Disallow z.any() - use z.unknown().catch({}) instead
+severity: error
+
+---
+# Rule 2: Require Schema suffix on schema variables
+id: require-schema-suffix
+language: typescript
+rule:
+  pattern: const $NAME = z.object($$ARGS)
+message: Schema variables must end with 'Schema' suffix
+severity: warning
+
+---
+# Rule 3: Refine must include error message
+id: require-error-message
+language: typescript
+rule:
+  pattern: $SCHEMA.refine($$ARGS)
+message: refine() must include error message in second argument
+severity: error
+
+---
+# Rule 4: Prefer z.enum() over union of literals
+id: prefer-enum-over-literal-union
+language: typescript
+rule:
+  pattern: z.union([z.literal($LIT1), z.literal($LIT2)])
+message: Use z.enum() instead of union of literals
+severity: warning
+
+---
+# Rule 5: Don't use both .optional() and .default()
+id: no-optional-and-default-together
+language: typescript
+rule:
+  pattern: $SCHEMA.optional().default($VAL)
+message: Don't use both .optional() and .default() - just use .default()
+severity: error
+
+---
+# Rule 6: Disallow z.unknown()
+id: no-unknown-schema
+language: typescript
+rule:
+  pattern: z.unknown()
+message: Avoid z.unknown() - use z.any() or a specific type instead
+severity: warning
+
+---
+# Rule 7: Disallow z.string().uuid() - use z.uuid() instead
+id: no-string-schema-with-uuid
+language: typescript
+rule:
+  pattern: z.string().uuid()
+message: Use z.uuid() instead of z.string().uuid()
+severity: warning
+
+---
+# Rule 8: Enforce z.string().trim() to prevent whitespace issues
+id: prefer-string-schema-with-trim
+language: typescript
+rule:
+  pattern: z.string()
+  inside: z.object($$ARGS)
+message: Consider adding .trim() to string schemas to prevent accidental whitespace
+severity: info
+
+---
+# Rule 9: Disallow z.custom() without implementation
+id: no-empty-custom-schema
+language: typescript
+rule:
+  pattern: z.custom()
+message: z.custom() requires an implementation function
+severity: error
+
+---
+# Rule 10: Enforce namespace import for Zod
+id: prefer-namespace-import
+language: typescript
+rule:
+  pattern: "import { z } from 'zod'"
+message: Use namespace import instead - import * as z from 'zod'
+severity: warning

@@ -1,0 +1,139 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[dev]"
+      - name: Ruff
+        run: ruff check sast_mcp_server/
+      - name: Mypy (enforced)
+        run: mypy sast_mcp_server/
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install -e ".[dev]"
+      - run: pytest tests/ -v --tb=short --cov=sast_mcp_server --cov-report=term-missing --cov-report=xml --cov-fail-under=70
+      - name: Upload coverage to Codecov
+        if: matrix.python-version == '3.12'
+        uses: codecov/codecov-action@v5
+        with:
+          files: ./coverage.xml
+          flags: unittests
+          fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  dogfood:
+    # Run the server's own scanners against this repository and publish the
+    # SARIF + Markdown report as build artifacts (real "scanned a repo" proof).
+    needs: [lint]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[scanners]"
+      - name: Self-scan (non-blocking report)
+        run: python scripts/self_scan.py --target sast_mcp_server --out-dir self-scan
+      - name: Show summary
+        run: cat self-scan/SUMMARY.md
+      - name: Upload self-scan report
+        uses: actions/upload-artifact@v4
+        with:
+          name: self-scan-report
+          path: self-scan/
+
+  loadtest:
+    # Smoke-test the Streamable HTTP transport + ops endpoints under concurrency.
+    needs: [lint]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[scanners]"
+      - name: HTTP transport load smoke test
+        # Generous p95 threshold — shared CI runners are slow; we mainly assert
+        # zero failures and that the server stays up under concurrent load.
+        run: python scripts/loadtest.py --port 8765 --requests 500 --concurrency 25 --max-p95-ms 3000
+
+  publish:
+    needs: [lint, test]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install build
+      - run: python -m build
+      - uses: pypa/gh-action-pypi-publish@release/v1
+
+  release:
+    # Create a GitHub Release whose notes come from CHANGELOG.md for this tag.
+    needs: [publish]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Extract release notes from CHANGELOG
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          python - <<'PY'
+          import os
+          import re
+          import sys
+          from pathlib import Path
+
+          version = os.environ["TAG"].lstrip("vV").strip()
+          text = Path("CHANGELOG.md").read_text(encoding="utf-8")
+          pattern = re.compile(
+              r"^##\s*\[" + re.escape(version) + r"\].*?$(.*?)(?=^##\s|\Z)",
+              re.MULTILINE | re.DOTALL,
+          )
+          match = pattern.search(text)
+          if not match:
+              sys.stderr.write(f"No CHANGELOG section found for version '{version}'.\n")
+              raise SystemExit(1)
+          Path("RELEASE_NOTES.md").write_text(match.group(1).strip() + "\n", encoding="utf-8")
+          PY
+          echo "----- release notes -----"
+          cat RELEASE_NOTES.md
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" \
+            --title "${GITHUB_REF_NAME}" \
+            --notes-file RELEASE_NOTES.md \
+            --verify-tag

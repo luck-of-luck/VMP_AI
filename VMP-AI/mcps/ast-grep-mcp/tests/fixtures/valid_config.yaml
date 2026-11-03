@@ -1,0 +1,22 @@
+# Valid sgconfig.yaml for testing
+ruleDirs:
+  - rules
+  - custom-rules
+
+testDirs:
+  - tests
+
+customLanguages:
+  mylang:
+    extensions:
+      - .ml
+      - .mli
+    languageId: mylang
+
+  anotherlang:
+    extensions:
+      - .al
+
+languageGlobs:
+  - extensions: [.proto]
+    language: protobuf

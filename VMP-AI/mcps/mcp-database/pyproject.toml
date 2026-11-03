@@ -1,0 +1,82 @@
+[project]
+name = "mcp-database"
+version = "1.0.0"
+description = "Multi-database MCP server (PostgreSQL, MySQL, MongoDB) with per-connection access modes and performance analysis tools"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "Apache-2.0"
+authors = [{ name = "Diego Bulhões" }]
+dependencies = [
+    "mcp[cli]>=1.25.0,<2",
+    "psycopg[binary,pool]>=3.2,<4",
+    "aiomysql>=0.2.3,<1",
+    "pymongo>=4.10,<5",
+    "sqlglot>=25.0,<31",
+    "aiosqlite>=0.20,<1",
+    "redis>=5.0,<7",
+    "cryptography>=43,<49",
+]
+
+[project.scripts]
+mcp-database = "mcp_database:main"
+
+[tool.uv]
+# Supply-chain cooldown: only adopt versions published more than 15 days ago (a rolling window,
+# re-evaluated on every resolve). Fresh malicious/yanked releases are usually caught in that window.
+# Applies to `uv lock`/`uv add`; CI installs from the pinned, hash-verified uv.lock via `--frozen`.
+exclude-newer = "15 days"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mcp_database"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "pytest-asyncio>=0.24",
+    "pytest-cov>=6.0",
+    "testcontainers[mongodb,mysql,postgres,redis]>=4.8",
+    "ruff>=0.8",
+    "pytest-timeout>=2.4.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
+asyncio_default_test_loop_scope = "session"
+markers = [
+    "integration: requires a running Docker daemon",
+    "cross_engine: integration test that spans all engines at once (the CI 'cross' job selects these by marker)",
+    "cluster: multi-node topology test (dedicated CI job, excluded from the coverage gate)",
+]
+timeout = 300
+
+[tool.coverage.run]
+source = ["mcp_database"]
+
+[tool.coverage.report]
+show_missing = true
+exclude_also = ["if TYPE_CHECKING:", "raise NotImplementedError"]
+
+[tool.coverage.html]
+directory = "temp/reports/coverage"
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "N", "W", "RUF", "S", "C901"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 12
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "S105", "S106", "C901"]
+"src/mcp_database/adapters/*" = ["S608"]

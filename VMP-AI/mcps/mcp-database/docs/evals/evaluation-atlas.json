@@ -1,0 +1,18 @@
+[
+  {
+    "question": "On the atlas_app connection, using vector search on the articles collection with the articles_vec index and the vector [0,0,1], what is the title of the top result?",
+    "answer": "gamma"
+  },
+  {
+    "question": "On the atlas_app connection, which article title is the top text search result for the word postgres in the articles collection?",
+    "answer": "alpha"
+  },
+  {
+    "question": "On the atlas_app connection, how many search indexes exist on the articles collection?",
+    "answer": "2"
+  },
+  {
+    "question": "On the atlas_app connection, how many dimensions does the articles_vec vector search index have?",
+    "answer": "3"
+  }
+]

@@ -1,0 +1,10 @@
+# Security-sensitive paths — changes here require the owner's review before merge.
+# Enforce by enabling branch protection on `main` with "Require review from Code Owners".
+# This stops a PR (or a careless commit) from adding/altering a workflow, the Docker build, or the
+# dependency set without an explicit approval.
+
+/.github/**        @DiegoBulhoes
+/Dockerfile        @DiegoBulhoes
+/.dockerignore     @DiegoBulhoes
+/pyproject.toml    @DiegoBulhoes
+/uv.lock           @DiegoBulhoes

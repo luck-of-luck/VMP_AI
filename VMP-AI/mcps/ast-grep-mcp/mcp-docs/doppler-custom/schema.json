@@ -1,0 +1,18 @@
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Doppler-Custom MCP Server",
+  "description": "Doppler secrets management and configuration",
+  "applicationCategory": "DeveloperApplication",
+  "applicationSubCategory": "Security",
+  "operatingSystem": "Cross-platform",
+  "softwareVersion": "latest",
+  "programmingLanguage": [
+    "JavaScript"
+  ],
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}

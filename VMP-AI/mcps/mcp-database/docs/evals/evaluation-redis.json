@@ -1,0 +1,14 @@
+[
+  {
+    "question": "On the redis_app connection, what is the value of the key named greeting?",
+    "answer": "hello"
+  },
+  {
+    "question": "On the redis_app connection, how many keys start with user: ?",
+    "answer": "20"
+  },
+  {
+    "question": "On the redis_app connection, which member of the ranking sorted set has the highest score?",
+    "answer": "caro"
+  }
+]

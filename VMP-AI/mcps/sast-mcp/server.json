@@ -1,0 +1,52 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.Skyrxin/sast-mcp-server",
+  "title": "SAST MCP Server",
+  "description": "11-scanner SAST/DAST MCP server with closed-loop remediation, SBOM/SARIF, and CI integrations",
+  "version": "0.8.3",
+  "websiteUrl": "https://github.com/Skyrxin/sast-mcp-server#readme",
+  "repository": {
+    "url": "https://github.com/Skyrxin/sast-mcp-server",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "pypi",
+      "registryBaseUrl": "https://pypi.org",
+      "identifier": "sast-mcp-server",
+      "version": "0.8.3",
+      "runtimeHint": "uvx",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "SAST_MCP_TIMEOUT",
+          "description": "Per-scan timeout in seconds (default: 300).",
+          "isRequired": false,
+          "isSecret": false,
+          "default": "300"
+        },
+        {
+          "name": "SAST_MCP_LOG_LEVEL",
+          "description": "Logging level: DEBUG, INFO, WARNING, ERROR (default: INFO).",
+          "isRequired": false,
+          "isSecret": false,
+          "default": "INFO"
+        },
+        {
+          "name": "SAST_MCP_API_KEY",
+          "description": "Optional static API key to require auth (legacy mode; HTTP transports).",
+          "isRequired": false,
+          "isSecret": true
+        },
+        {
+          "name": "SAST_MCP_JWT_SECRET",
+          "description": "Optional HMAC secret to require JWT auth with scopes (HTTP transports).",
+          "isRequired": false,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}

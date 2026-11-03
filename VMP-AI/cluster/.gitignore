@@ -1,0 +1,9 @@
+# Artefatos de execucao do cluster: handoffs, logs e o arquivo-alvo de teste.
+# Sao saida, nao fonte. O codigo do cluster vive um nivel acima.
+runs/
+alvo_e2e.py
+alvo_e2e.py.origem
+
+# __pycache__
+__pycache__/
+*.pyc

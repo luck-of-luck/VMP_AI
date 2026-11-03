@@ -1,0 +1,27 @@
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Redis MCP Server",
+  "description": "Redis in-memory data store for caching and queuing",
+  "applicationCategory": "DeveloperApplication",
+  "applicationSubCategory": "Database",
+  "operatingSystem": "Cross-platform",
+  "softwareVersion": "latest",
+  "programmingLanguage": [
+    "JavaScript"
+  ],
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "softwareHelp": {
+    "@type": "WebPage",
+    "url": "https://www.npmjs.com/package/@redis/redis-mcp-server"
+  },
+  "softwareRequirements": {
+    "@type": "SoftwareApplication",
+    "name": "Environment Variables",
+    "description": "Required environment variables: REDIS_URL"
+  }
+}

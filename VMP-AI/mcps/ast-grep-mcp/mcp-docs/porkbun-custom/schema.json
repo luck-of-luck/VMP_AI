@@ -1,0 +1,23 @@
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Porkbun-Custom MCP Server",
+  "description": "Custom Porkbun DNS management implementation",
+  "applicationCategory": "DeveloperApplication",
+  "applicationSubCategory": "Infrastructure",
+  "operatingSystem": "Cross-platform",
+  "softwareVersion": "latest",
+  "programmingLanguage": [
+    "JavaScript"
+  ],
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "softwareRequirements": {
+    "@type": "SoftwareApplication",
+    "name": "Environment Variables",
+    "description": "Required environment variables: PORKBUN_API_KEY, PORKBUN_SECRET_API_KEY"
+  }
+}

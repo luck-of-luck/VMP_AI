@@ -1,0 +1,276 @@
+name: Release
+
+# The only workflow with write access. It runs on a push to main; if that push bumped the version
+# (i.e. the release PR was merged), it publishes: the multi-arch image to GHCR, the standalone
+# binaries, and a draft GitHub release. The gates already ran on the release PR and again on this
+# push via test.yml, so publishing does not re-run them. An ordinary push never publishes.
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "**.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Release detection
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.release.outputs.VERSION }}
+      is_release: ${{ steps.release.outputs.IS_RELEASE }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+          fetch-depth: 2 # HEAD~1 for the version-bump diff
+      - name: Detect a release (this push bumped the version, no tag yet)
+        id: release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          VERSION=$(grep -m1 -oP '^version\s*=\s*"\K[^"]+' pyproject.toml)
+          echo "VERSION=${VERSION}" >> "$GITHUB_OUTPUT"
+          IS_RELEASE=false
+          if git diff HEAD~1 HEAD -- pyproject.toml | grep -qE '^\+version\s*='; then
+            if ! gh api "repos/${REPO}/git/ref/tags/v${VERSION}" >/dev/null 2>&1; then
+              IS_RELEASE=true
+            fi
+          fi
+          echo "IS_RELEASE=${IS_RELEASE}" >> "$GITHUB_OUTPUT"
+          echo "version=${VERSION} is_release=${IS_RELEASE}"
+
+  docker:
+    name: Docker image (GHCR)
+    needs: [check]
+    if: ${{ needs.check.outputs.is_release == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write # OIDC token for signing the build provenance attestation
+      attestations: write # write the attestation back to the repo/registry
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - name: Set up QEMU (arm64 emulation)
+        uses: docker/setup-qemu-action@96fe6ef7f33517b61c61be40b68a1882f3264fb8 # v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4
+      - name: Log in to GHCR
+        uses: docker/login-action@af1e73f918a031802d376d3c8bbc3fe56130a9b0 # v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Generate image tags and labels
+        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6
+        id: meta
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=raw,value=${{ needs.check.outputs.version }}
+            type=sha
+            type=raw,value=latest
+      - name: Build amd64 image for scanning
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7
+        id: scan-build
+        with:
+          context: .
+          load: true
+          tags: mcp-database:scan
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Smoke test the image entrypoint
+        run: |
+          set -euo pipefail
+          set +e
+          OUTPUT=$(docker run --rm mcp-database:scan 2>&1)
+          STATUS=$?
+          set -e
+          if [ "$STATUS" -ne 2 ]; then
+            echo "expected exit code 2 without env, got ${STATUS}: ${OUTPUT}"
+            exit 1
+          fi
+          echo "$OUTPUT" | grep -q "URI is required"
+      - name: Scan image (block CRITICAL/HIGH with available fix)
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          scan-type: image
+          image-ref: mcp-database:scan
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          exit-code: "1"
+      - name: Generate SPDX SBOM
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          scan-type: image
+          image-ref: mcp-database:scan
+          format: spdx-json
+          output: sbom.spdx.json
+      - name: Upload SBOM artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: sbom
+          path: sbom.spdx.json
+      - name: Build and push multi-arch image
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7
+        id: build
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      # SLSA provenance storage is unavailable for user-owned private repos, so only attest when the
+      # repository is public. On a private repo this step is skipped (the image still publishes).
+      - name: Attest build provenance (SLSA) for the published image
+        if: ${{ !github.event.repository.private }}
+        uses: actions/attest-build-provenance@0f67c3f4856b2e3261c31976d6725780e5e4c373 # v4.1.1
+        with:
+          subject-name: ghcr.io/${{ github.repository }}
+          subject-digest: ${{ steps.build.outputs.digest }}
+          push-to-registry: true
+
+  binaries:
+    name: Standalone binaries (release assets)
+    needs: [check]
+    if: ${{ needs.check.outputs.is_release == 'true' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            asset: mcp-database-linux-x86_64
+          - os: windows-latest
+            asset: mcp-database-windows-x86_64.exe
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - name: Set up uv and Python 3.12
+        uses: astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990 # v8.3.2
+        with:
+          python-version: "3.12"
+      - name: Install dependencies (frozen)
+        run: uv sync --frozen
+      - name: Build the standalone binary (PyInstaller, bundling every driver)
+        run: uv run --with pyinstaller python scripts/build_binary.py
+      - name: Smoke test the binary (no env must exit 2 with "URI is required")
+        shell: bash
+        run: |
+          set +e
+          BIN=dist/mcp-database; [ -f "$BIN.exe" ] && BIN="$BIN.exe"
+          OUTPUT=$("$BIN" 2>&1); STATUS=$?
+          set -e
+          [ "$STATUS" -eq 2 ] || { echo "expected exit 2, got ${STATUS}: ${OUTPUT}"; exit 1; }
+          echo "$OUTPUT" | grep -q "URI is required"
+      - name: Rename and checksum
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          SRC=dist/mcp-database; [ -f "$SRC.exe" ] && SRC="$SRC.exe"
+          cp "$SRC" "out/${{ matrix.asset }}"
+          cd out && sha256sum "${{ matrix.asset }}" > "${{ matrix.asset }}.sha256"
+      - name: Upload binary artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: binary-${{ matrix.asset }}
+          path: out/*
+
+  release:
+    name: GitHub release
+    needs: [check, docker, binaries]
+    if: ${{ needs.check.outputs.is_release == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout (full history and tags, for the commit-log changelog)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Download SBOM artifact
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: sbom
+      - name: Download binary artifacts
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: binary-*
+          path: binaries
+          merge-multiple: true
+      - name: Build release notes grouped by Conventional Commit type since the previous tag
+        env:
+          TAG: v${{ needs.check.outputs.version }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          PREV_TAG=$(git tag --list 'v*' --sort=-version:refname | grep -vFx "$TAG" | head -1 || true)
+          RANGE=${PREV_TAG:+${PREV_TAG}..}HEAD
+          TAB=$'\t'
+          SCOPE='(\([^)]*\))?!?: ' # optional (scope), optional ! breaking marker, then ": "
+          KNOWN='feat|fix|perf|docs|chore|refactor|test|build|ci|style'
+          # hash<TAB>subject, newest first, dropping the release-bump commit itself.
+          LOG=$(git log "$RANGE" --no-merges --pretty='%h%x09%s' \
+                | grep -vE "${TAB}chore${SCOPE}release" || true)
+
+          strip="s/^([0-9a-f]+)${TAB}[a-z]+${SCOPE}(.*)\$/- \\3 (\`\\1\`)/"
+          section() { # $1 = ERE alternation of types, $2 = heading
+            local rows
+            rows=$(grep -E "${TAB}($1)${SCOPE}" <<<"$LOG" || true)
+            [ -z "$rows" ] && return 0
+            printf '\n### %s\n' "$2"
+            sed -E "$strip" <<<"$rows"
+          }
+
+          {
+            echo "## What's changed"
+            section 'feat' 'Features'
+            section 'fix' 'Bug fixes'
+            section 'perf' 'Performance'
+            section 'docs' 'Documentation'
+            section 'chore|refactor|test|build|ci|style' 'Maintenance'
+            other=$(grep -vE "${TAB}(${KNOWN})${SCOPE}" <<<"$LOG" || true)
+            if [ -n "$other" ]; then
+              printf '\n### Other changes\n'
+              sed -E "s/^([0-9a-f]+)${TAB}(.*)\$/- \\2 (\`\\1\`)/" <<<"$other"
+            fi
+            if [ -n "$PREV_TAG" ]; then
+              printf '\n**Full changelog**: https://github.com/%s/compare/%s...%s\n' "$REPO" "$PREV_TAG" "$TAG"
+            fi
+          } > release-notes.md
+          echo "Notes since ${PREV_TAG:-the first commit}:"; cat release-notes.md
+      - name: Tag the release commit and create the draft release with SBOM and binaries
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: v${{ needs.check.outputs.version }}
+          TARGET: ${{ github.sha }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          mv sbom.spdx.json "mcp-database-${TAG#v}-sbom.spdx.json"
+          if ! gh api "repos/${REPO}/git/ref/tags/${TAG}" >/dev/null 2>&1; then
+            gh api "repos/${REPO}/git/refs" -f ref="refs/tags/${TAG}" -f sha="${TARGET}"
+          fi
+          gh release create "$TAG" \
+            "mcp-database-${TAG#v}-sbom.spdx.json" \
+            binaries/* \
+            --repo "$REPO" \
+            --title "$TAG" \
+            --notes-file release-notes.md \
+            --draft \
+            --target "$TARGET"

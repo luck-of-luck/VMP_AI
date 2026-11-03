@@ -1,0 +1,75 @@
+# AST-grep Rules for Zod Import Enforcement
+# Generated from eslint-plugin-import-zod patterns
+# Enforces namespace imports for better tree-shaking and bundle optimization
+
+---
+# Rule 1: Named imports of z → namespace
+id: import-zod-named-to-namespace
+language: typescript
+rule:
+  pattern: import { z } from "zod"
+message: 'Use namespace import: import * as z from "zod"'
+severity: warning
+fix: import * as z from "zod"
+
+---
+# Rule 2: Default imports of z → namespace
+id: import-zod-default-to-namespace
+language: typescript
+rule:
+  pattern: import z from "zod"
+message: 'Use namespace import: import * as z from "zod"'
+severity: warning
+fix: import * as z from "zod"
+
+---
+# Rule 3: Default imports with any name → namespace
+id: import-zod-default-renamed-to-namespace
+language: typescript
+rule:
+  pattern: import $NAME from "zod"
+message: Use namespace import instead of default import for zod
+severity: warning
+
+---
+# Rule 4: Type default imports → namespace type import
+id: import-zod-type-default-to-namespace
+language: typescript
+rule:
+  pattern: import type z from "zod"
+message: 'Use namespace type import: import type * as z from "zod"'
+severity: warning
+fix: import type * as z from "zod"
+
+---
+# Rule 5: Mixed default and named imports → separate imports
+id: import-zod-mixed-to-namespace
+language: typescript
+rule:
+  pattern: import z, { $$EXPORTS } from "zod"
+message: Use namespace import for z and separate import for other exports
+severity: warning
+
+---
+# Rule 6: Subpath imports of z → namespace
+id: import-zod-subpath-to-namespace
+language: typescript
+rule:
+  pattern: import { z } from "zod/$$SUBPATH"
+message: 'Use namespace import for zod subpath: import * as z from "zod/..."'
+severity: warning
+
+---
+# Rule 7: Type-only mixed imports → namespace type import
+id: import-zod-type-mixed-to-namespace
+language: typescript
+rule:
+  pattern: import type { $$TYPES, z } from "zod"
+message: 'Use namespace import for z: import type * as z from "zod"'
+severity: warning
+
+---
+# Rule 8: Non-z exports are OK (this is a negative pattern)
+# Valid: import { ZodError } from "zod"
+# Valid: import type { ZodError } from "zod"
+# These don't need to be namespace imports

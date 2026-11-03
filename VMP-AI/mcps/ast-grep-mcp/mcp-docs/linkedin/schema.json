@@ -1,0 +1,16 @@
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Linkedin MCP Server",
+  "description": "LinkedIn integration MCP server running locally",
+  "applicationCategory": "DeveloperApplication",
+  "applicationSubCategory": "Social Media",
+  "operatingSystem": "Cross-platform",
+  "softwareVersion": "latest",
+  "programmingLanguage": [],
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}

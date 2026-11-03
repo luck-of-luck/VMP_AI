@@ -1,0 +1,87 @@
+{
+  "SchemaVersion": 2,
+  "CreatedAt": "2026-01-15T10:30:00Z",
+  "ArtifactName": "tests/fixtures",
+  "ArtifactType": "filesystem",
+  "Results": [
+    {
+      "Target": "requirements.txt",
+      "Class": "lang-pkgs",
+      "Type": "pip",
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2024-12345",
+          "PkgName": "requests",
+          "InstalledVersion": "2.28.0",
+          "FixedVersion": "2.31.0",
+          "Severity": "HIGH",
+          "Title": "SSRF vulnerability in requests library",
+          "Description": "The requests library before 2.31.0 is vulnerable to Server-Side Request Forgery."
+        },
+        {
+          "VulnerabilityID": "CVE-2024-67890",
+          "PkgName": "flask",
+          "InstalledVersion": "2.2.0",
+          "FixedVersion": "2.3.3",
+          "Severity": "MEDIUM",
+          "Title": "Open redirect in Flask",
+          "Description": "Flask before 2.3.3 allows open redirect via crafted URL."
+        }
+      ]
+    },
+    {
+      "Target": "app/config.py",
+      "Class": "secret",
+      "Secrets": [
+        {
+          "RuleID": "aws-access-key-id",
+          "Title": "AWS Access Key ID",
+          "Severity": "CRITICAL",
+          "StartLine": 5,
+          "EndLine": 5,
+          "Match": "AKIA**************"
+        }
+      ]
+    },
+    {
+      "Target": "Dockerfile",
+      "Class": "config",
+      "Misconfigurations": [
+        {
+          "ID": "DS002",
+          "AVDID": "AVD-DS-0002",
+          "Title": "Image user should not be root",
+          "Description": "Running containers as root is a security risk.",
+          "Resolution": "Add a USER instruction to switch to a non-root user.",
+          "Severity": "HIGH",
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "StartLine": 1,
+            "EndLine": 1,
+            "Code": {
+              "Lines": [
+                {"Content": "FROM python:3.11-slim"},
+                {"Content": "WORKDIR /app"},
+                {"Content": "COPY . ."},
+                {"Content": "RUN pip install -r requirements.txt"}
+              ]
+            }
+          }
+        },
+        {
+          "ID": "DS026",
+          "AVDID": "AVD-DS-0026",
+          "Title": "No healthcheck defined",
+          "Description": "Docker container should define a HEALTHCHECK instruction.",
+          "Resolution": "Add HEALTHCHECK instruction.",
+          "Severity": "LOW",
+          "Status": "FAIL",
+          "CauseMetadata": {
+            "StartLine": 1,
+            "EndLine": 8
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -32,7 +32,7 @@ VMP-AI/  (repo que o usuário clona)
 └─ SOUL.md / AGENTS.md    # persona e invariants (prompt caching sagrado)
 ```
 
-**Windows home:** `%LOCALAPPDATA%\hermes` (`C:\Users\lucas\AppData\Local\hermes`), **não** `~/.hermes`.
+**Windows home:** %LOCALAPPDATA%\hermes, **não** ~/.hermes.
 Após editar `opencode.jsonc`, **reinicie o opencode** (config não hot-reload).
 
 ## MCP — Hermes dentro do OpenCode
@@ -56,6 +56,14 @@ Após editar `opencode.jsonc`, **reinicie o opencode** (config não hot-reload).
 opencode mcp list                 # deve mostrar hermes conectado
 opencode mcp invoke hermes tools  # lista skills/tools Hermes
 ```
+
+**Navegador da IA (novo):** além da ponte de mensagens, o `hermes mcp serve` agora
+também expõe as **ferramentas de navegador** nativas do Hermes ao OpenCode:
+`browser_navigate`, `browser_snapshot`, `browser_click`, `browser_type`,
+`browser_vision`, **`browser_pointer`** (cursor por coordenadas) e
+**`browser_record`** (gravar a tela). Veja a skill `browser-ai-cursor`
+(`.opencode/skills/browser-ai-cursor/SKILL.md`) para o fluxo completo.
+
 
 **Habilitar opcionais:**
 - `context7`: mude `"enabled": false` → `true` em `opencode.jsonc` e reinicie opencode. Para docs atualizadas: `mcp invoke context7 resolve-library-id` + `query-docs`.
@@ -98,23 +106,12 @@ Skills são **instruções** que o modelo deve ler antes de agir. No opencode, o
 
 Troque com `/model` no opencode ou edite `opencode.jsonc` → reinicie. O `setup.ps1 -VerifyOnly` valida tudo (10 checks).
 
-## CROWORK — Sempre Ativo (novo)
-
-**CROWORK é conhecimento permanente do Hermes e do opencode.** Sala padrão `ampliagro-sprint` é criada no startup de qualquer launcher (`Iniciar.ps1`, `Abrir-Hermes.bat`, `Abrir-Hermes-TUI.bat`) via `hermes crowork create/join`. O agente **sempre** conhece:
-- CLI `hermes crowork` (aliases `crow`, `cw`)
-- TUI `/crowork` | Web `/cowork` | Desktop `hermes-crowork` | Tools `crowork_*` | Skill `crowork`
-- Dados em `HERMES_HOME/crowork/*.json`, presença TTL 5min
-
-**opencode já carrega `hermes-agent/skills/crowork/SKILL.md`** via `opencode.jsonc` `instructions` — então opencode também sabe usar `hermes crowork` via terminal e propor salas compartilhadas.
-
-**Use quando usuário disser:** `crowork`, `sala compartilhada`, `pair programming`, `vamos codar juntos`.
-
 ## Delegação Cruzada (Hermes ↔ OpenCode)
 
 **OpenCode → Hermes (este skill):**
-- Via MCP `hermes`: `hermes_chat`, `hermes_delegate_task`, `hermes_browser_*`, `crowork_*`
+- Via MCP `hermes`: `hermes_chat`, `hermes_delegate_task`, `hermes_browser_*`
+  (incl. `browser_pointer` cursor e `browser_record` gravação)
 - Hermes roda com `HERMES_HOME` da raiz VORTEX e tem acesso a `config.yaml` + `.env`
-- Para CROWORK via opencode: `terminal: hermes crowork create sala-01` ou `hermes crowork join sala-01`
 
 **Hermes → OpenCode (oposto):**
 - Hermes tem skill `autonomous-ai-agents/opencode` em `%LOCALAPPDATA%\hermes\skills\opencode\SKILL.md`
@@ -124,13 +121,12 @@ Troque com `/model` no opencode ou edite `opencode.jsonc` → reinicie. O `setup
   opencode run "fix Y" -f file.ts    # com contexto
   ```
 - Hermes sabe que `opencode mcp serve` vive em `bin/hermes.exe`
-- Ao delegar, inclua contexto CROWORK se a tarefa for colaborativa: `opencode run "continue na sala ampliagro-sprint: implemente feature X"`
 
 ## Pitfalls
 
 - **Prompt caching sagrado:** não troque `toolsets` mid-conversation, não mute contexto passado.
 - **Não quebre `hermes-agent/` sem motivo:** prefira CLI+skill > plugin > MCP > core tool (Footprint Ladder). Leia `hermes-agent/AGENTS.md` antes.
-- **Windows home:** use `%LOCALAPPDATA%\hermes`, não `~/.hermes`. `get_hermes_home()` no código, `display_hermes_home()` para logs.
+**Windows home:** %LOCALAPPDATA%\hermes, **não** ~/.hermes.
 - **MCP hermes desabilitado?** Verifique `opencode.jsonc` → `"hermes": {"enabled": true}` e `bin/hermes.exe` existe (rode `setup.bat`).
 - **Skills não aparecem?** `opencode mcp list` deve mostrar `hermes`. Se não, `hermes mcp serve` falhou — cheque `.env` tem 1 chave e `config.yaml` válido (`python -c "import yaml; yaml.safe_load(open('config.yaml'))"`).
 - **Após editar `opencode.jsonc`, reinicie opencode.**

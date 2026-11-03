@@ -1,0 +1,24 @@
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Porkbun MCP Server",
+  "description": "DNS management and domain registration via Porkbun API",
+  "applicationCategory": "DeveloperApplication",
+  "applicationSubCategory": "Infrastructure",
+  "operatingSystem": "Cross-platform",
+  "softwareVersion": "latest",
+  "programmingLanguage": [
+    "JavaScript"
+  ],
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "url": "https://github.com/modelcontextprotocol/server-porkbun",
+  "softwareRequirements": {
+    "@type": "SoftwareApplication",
+    "name": "Environment Variables",
+    "description": "Required environment variables: PORKBUN_API_KEY, PORKBUN_SECRET_API_KEY"
+  }
+}

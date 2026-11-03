@@ -1,0 +1,394 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/main/sarif-2.1/schema/sarif-schema-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "sast-mcp-server (sast-mcp-server)",
+          "version": "0.8.1",
+          "informationUri": "https://github.com/abdellah/sast-mcp-server",
+          "rules": [
+            {
+              "id": "blacklist",
+              "shortDescription": {
+                "text": "blacklist"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "fullDescription": {
+                "text": "Audit url open for permitted schemes. Allowing use of file:/ or custom schemes is often unexpected."
+              },
+              "properties": {
+                "tags": [
+                  "CWE-22"
+                ]
+              },
+              "helpUri": "https://cwe.mitre.org/data/definitions/22.html"
+            },
+            {
+              "id": "hardcoded_bind_all_interfaces",
+              "shortDescription": {
+                "text": "hardcoded_bind_all_interfaces"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "fullDescription": {
+                "text": "Possible binding to all interfaces."
+              },
+              "properties": {
+                "tags": [
+                  "CWE-605"
+                ]
+              },
+              "helpUri": "https://cwe.mitre.org/data/definitions/605.html"
+            },
+            {
+              "id": "hardcoded_password_string",
+              "shortDescription": {
+                "text": "hardcoded_password_string"
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "fullDescription": {
+                "text": "Possible hardcoded password: 'SAST_MCP_JWT_SECRET'"
+              },
+              "properties": {
+                "tags": [
+                  "CWE-259"
+                ]
+              },
+              "helpUri": "https://cwe.mitre.org/data/definitions/259.html"
+            },
+            {
+              "id": "try_except_pass",
+              "shortDescription": {
+                "text": "try_except_pass"
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "fullDescription": {
+                "text": "Try, Except, Pass detected."
+              },
+              "properties": {
+                "tags": [
+                  "CWE-703"
+                ]
+              },
+              "helpUri": "https://cwe.mitre.org/data/definitions/703.html"
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "blacklist",
+          "level": "warning",
+          "message": {
+            "text": "Audit url open for permitted schemes. Allowing use of file:/ or custom schemes is often unexpected."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "sast_mcp_server/scanners/zap.py"
+                },
+                "region": {
+                  "startLine": 174,
+                  "endLine": 187
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationHash": "77860f6c04467028ebf065d877dc04ddaa3ae5c53c1fe529ab946f4d7949ee9b"
+          },
+          "properties": {
+            "scanner": "bandit",
+            "confidence": "HIGH",
+            "cwe": "CWE-22",
+            "references": [
+              "https://cwe.mitre.org/data/definitions/22.html",
+              "https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_calls.html#b310-urllib-urlopen"
+            ]
+          },
+          "taxa": [
+            {
+              "id": "CWE-22",
+              "toolComponent": {
+                "name": "CWE"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "hardcoded_bind_all_interfaces",
+          "level": "warning",
+          "message": {
+            "text": "Possible binding to all interfaces."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "sast_mcp_server/server.py"
+                },
+                "region": {
+                  "startLine": 2259,
+                  "endLine": 2291
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationHash": "b29781756325001f623643f0c1e5072caf3a5bbbf0e985bb02c1b065f1c44b25"
+          },
+          "properties": {
+            "scanner": "bandit",
+            "confidence": "MEDIUM",
+            "cwe": "CWE-605",
+            "references": [
+              "https://cwe.mitre.org/data/definitions/605.html",
+              "https://bandit.readthedocs.io/en/1.9.4/plugins/b104_hardcoded_bind_all_interfaces.html"
+            ]
+          },
+          "taxa": [
+            {
+              "id": "CWE-605",
+              "toolComponent": {
+                "name": "CWE"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "hardcoded_password_string",
+          "level": "note",
+          "message": {
+            "text": "Possible hardcoded password: 'SAST_MCP_JWT_SECRET'"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "sast_mcp_server/config.py"
+                },
+                "region": {
+                  "startLine": 24,
+                  "endLine": 44
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationHash": "9f6dd3f796ed583a73bd64620ae76bbc65cead47463ba8382b130c7720498587"
+          },
+          "properties": {
+            "scanner": "bandit",
+            "confidence": "MEDIUM",
+            "cwe": "CWE-259",
+            "references": [
+              "https://cwe.mitre.org/data/definitions/259.html",
+              "https://bandit.readthedocs.io/en/1.9.4/plugins/b105_hardcoded_password_string.html"
+            ]
+          },
+          "taxa": [
+            {
+              "id": "CWE-259",
+              "toolComponent": {
+                "name": "CWE"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "hardcoded_password_string",
+          "level": "note",
+          "message": {
+            "text": "Possible hardcoded password: 'GITHUB_TOKEN'"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "sast_mcp_server/integrations/github.py"
+                },
+                "region": {
+                  "startLine": 13,
+                  "endLine": 33
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationHash": "f53d164acc67f3a3cc0e9989258fdbeedb81e0c6d7d7777fadfab9224ead8050"
+          },
+          "properties": {
+            "scanner": "bandit",
+            "confidence": "MEDIUM",
+            "cwe": "CWE-259",
+            "references": [
+              "https://cwe.mitre.org/data/definitions/259.html",
+              "https://bandit.readthedocs.io/en/1.9.4/plugins/b105_hardcoded_password_string.html"
+            ]
+          },
+          "taxa": [
+            {
+              "id": "CWE-259",
+              "toolComponent": {
+                "name": "CWE"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "hardcoded_password_string",
+          "level": "note",
+          "message": {
+            "text": "Possible hardcoded password: 'GITLAB_TOKEN'"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "sast_mcp_server/integrations/gitlab.py"
+                },
+                "region": {
+                  "startLine": 10,
+                  "endLine": 30
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationHash": "c42d23968edc292e8487284b57054bfa948237dad1f44233397eaa308bacf6b3"
+          },
+          "properties": {
+            "scanner": "bandit",
+            "confidence": "MEDIUM",
+            "cwe": "CWE-259",
+            "references": [
+              "https://cwe.mitre.org/data/definitions/259.html",
+              "https://bandit.readthedocs.io/en/1.9.4/plugins/b105_hardcoded_password_string.html"
+            ]
+          },
+          "taxa": [
+            {
+              "id": "CWE-259",
+              "toolComponent": {
+                "name": "CWE"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "hardcoded_password_string",
+          "level": "note",
+          "message": {
+            "text": "Possible hardcoded password: 'JIRA_API_TOKEN'"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "sast_mcp_server/integrations/jira.py"
+                },
+                "region": {
+                  "startLine": 11,
+                  "endLine": 31
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationHash": "486f29b266f10595ba7dae3fd7e938d17909c1fef55f37aa02a0c705e55cacc8"
+          },
+          "properties": {
+            "scanner": "bandit",
+            "confidence": "MEDIUM",
+            "cwe": "CWE-259",
+            "references": [
+              "https://cwe.mitre.org/data/definitions/259.html",
+              "https://bandit.readthedocs.io/en/1.9.4/plugins/b105_hardcoded_password_string.html"
+            ]
+          },
+          "taxa": [
+            {
+              "id": "CWE-259",
+              "toolComponent": {
+                "name": "CWE"
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "try_except_pass",
+          "level": "note",
+          "message": {
+            "text": "Try, Except, Pass detected."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "sast_mcp_server/server.py"
+                },
+                "region": {
+                  "startLine": 125,
+                  "endLine": 134
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "primaryLocationHash": "ca5fc190d915ceb8a92cc4fb710b48d721c134ccd210307c1077dfc5a0427a3f"
+          },
+          "properties": {
+            "scanner": "bandit",
+            "confidence": "HIGH",
+            "cwe": "CWE-703",
+            "references": [
+              "https://cwe.mitre.org/data/definitions/703.html",
+              "https://bandit.readthedocs.io/en/1.9.4/plugins/b110_try_except_pass.html"
+            ]
+          },
+          "taxa": [
+            {
+              "id": "CWE-703",
+              "toolComponent": {
+                "name": "CWE"
+              }
+            }
+          ]
+        }
+      ],
+      "taxonomies": [
+        {
+          "name": "CWE",
+          "organization": "MITRE",
+          "shortDescription": {
+            "text": "Common Weakness Enumeration"
+          },
+          "taxa": [
+            {
+              "id": "CWE-22"
+            },
+            {
+              "id": "CWE-605"
+            },
+            {
+              "id": "CWE-259"
+            },
+            {
+              "id": "CWE-703"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

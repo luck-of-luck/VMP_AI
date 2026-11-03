@@ -1,0 +1,2152 @@
+{
+  "javascript": {
+    "function": [
+      {
+        "pattern": "function $NAME($$$PARAMS) { $$$BODY }",
+        "description": "Function declaration",
+        "notes": "Use $$$PARAMS for any number of parameters"
+      },
+      {
+        "pattern": "const $NAME = ($$$PARAMS) => $BODY",
+        "description": "Arrow function (expression body)"
+      },
+      {
+        "pattern": "const $NAME = ($$$PARAMS) => { $$$BODY }",
+        "description": "Arrow function (block body)"
+      },
+      {
+        "pattern": "async function $NAME($$$PARAMS) { $$$BODY }",
+        "description": "Async function declaration"
+      },
+      {
+        "pattern": "$OBJ.$METHOD($$$ARGS)",
+        "description": "Method call on object",
+        "notes": "Matches console.log(), arr.push(), etc."
+      }
+    ],
+    "class": [
+      {
+        "pattern": "class $NAME { $$$BODY }",
+        "description": "Class declaration"
+      },
+      {
+        "pattern": "class $NAME extends $PARENT { $$$BODY }",
+        "description": "Class with inheritance"
+      },
+      {
+        "pattern": "constructor($$$PARAMS) { $$$BODY }",
+        "description": "Class constructor"
+      }
+    ],
+    "import": [
+      {
+        "pattern": "import $NAME from '$PATH'",
+        "description": "Default import"
+      },
+      {
+        "pattern": "import { $$$NAMES } from '$PATH'",
+        "description": "Named imports"
+      },
+      {
+        "pattern": "import * as $NAME from '$PATH'",
+        "description": "Namespace import"
+      },
+      {
+        "pattern": "require('$PATH')",
+        "description": "CommonJS require"
+      }
+    ],
+    "variable": [
+      {
+        "pattern": "const $NAME = $VALUE",
+        "description": "Const declaration"
+      },
+      {
+        "pattern": "let $NAME = $VALUE",
+        "description": "Let declaration"
+      },
+      {
+        "pattern": "var $NAME = $VALUE",
+        "description": "Var declaration (legacy)"
+      },
+      {
+        "pattern": "const { $$$PROPS } = $OBJ",
+        "description": "Object destructuring"
+      },
+      {
+        "pattern": "const [$$$ITEMS] = $ARR",
+        "description": "Array destructuring"
+      }
+    ],
+    "control_flow": [
+      {
+        "pattern": "if ($COND) { $$$BODY }",
+        "description": "If statement"
+      },
+      {
+        "pattern": "if ($COND) { $$$THEN } else { $$$ELSE }",
+        "description": "If-else statement"
+      },
+      {
+        "pattern": "for (const $ITEM of $ITERABLE) { $$$BODY }",
+        "description": "For-of loop"
+      },
+      {
+        "pattern": "while ($COND) { $$$BODY }",
+        "description": "While loop"
+      },
+      {
+        "pattern": "$COND ? $THEN : $ELSE",
+        "description": "Ternary expression"
+      }
+    ],
+    "error_handling": [
+      {
+        "pattern": "try { $$$TRY } catch ($ERR) { $$$CATCH }",
+        "description": "Try-catch block"
+      },
+      {
+        "pattern": "throw new Error($MSG)",
+        "description": "Throw error"
+      },
+      {
+        "pattern": "throw $ERR",
+        "description": "Throw any value"
+      }
+    ],
+    "async": [
+      {
+        "pattern": "await $PROMISE",
+        "description": "Await expression"
+      },
+      {
+        "pattern": "Promise.all([$$$PROMISES])",
+        "description": "Promise.all"
+      },
+      {
+        "pattern": "new Promise(($RESOLVE, $REJECT) => { $$$BODY })",
+        "description": "Promise constructor"
+      },
+      {
+        "pattern": "$PROMISE.then($HANDLER)",
+        "description": "Promise then"
+      },
+      {
+        "pattern": "$PROMISE.catch($HANDLER)",
+        "description": "Promise catch"
+      }
+    ]
+  },
+  "typescript": {
+    "function": [
+      {
+        "pattern": "function $NAME($$$PARAMS) { $$$BODY }",
+        "description": "Function declaration"
+      },
+      {
+        "pattern": "function $NAME($$$PARAMS): $RET { $$$BODY }",
+        "description": "Typed function declaration"
+      },
+      {
+        "pattern": "const $NAME = ($$$PARAMS) => $BODY",
+        "description": "Arrow function (expression body)"
+      },
+      {
+        "pattern": "const $NAME = ($$$PARAMS) => { $$$BODY }",
+        "description": "Arrow function (block body)"
+      },
+      {
+        "pattern": "const $NAME = ($$$PARAMS): $RET => $BODY",
+        "description": "Typed arrow function (expression body)"
+      },
+      {
+        "pattern": "const $NAME = ($$$PARAMS): $RET => { $$$BODY }",
+        "description": "Typed arrow function (block body)"
+      },
+      {
+        "pattern": "async function $NAME($$$PARAMS) { $$$BODY }",
+        "description": "Async function declaration"
+      },
+      {
+        "pattern": "async function $NAME($$$PARAMS): Promise<$T> { $$$BODY }",
+        "description": "Async function with Promise return type"
+      },
+      {
+        "pattern": "$OBJ.$METHOD($$$ARGS)",
+        "description": "Method call on object"
+      }
+    ],
+    "class": [
+      {
+        "pattern": "class $NAME { $$$BODY }",
+        "description": "Class declaration"
+      },
+      {
+        "pattern": "class $NAME extends $PARENT { $$$BODY }",
+        "description": "Class with inheritance"
+      },
+      {
+        "pattern": "class $NAME implements $INTERFACE { $$$BODY }",
+        "description": "Class implementing interface"
+      },
+      {
+        "pattern": "constructor($$$PARAMS) { $$$BODY }",
+        "description": "Class constructor"
+      },
+      {
+        "pattern": "private $NAME: $TYPE",
+        "description": "Private property declaration"
+      },
+      {
+        "pattern": "public $NAME: $TYPE",
+        "description": "Public property declaration"
+      },
+      {
+        "pattern": "protected $NAME: $TYPE",
+        "description": "Protected property declaration"
+      },
+      {
+        "pattern": "readonly $NAME: $TYPE",
+        "description": "Readonly property declaration"
+      }
+    ],
+    "import": [
+      {
+        "pattern": "import $NAME from '$PATH'",
+        "description": "Default import"
+      },
+      {
+        "pattern": "import { $$$NAMES } from '$PATH'",
+        "description": "Named imports"
+      },
+      {
+        "pattern": "import * as $NAME from '$PATH'",
+        "description": "Namespace import"
+      },
+      {
+        "pattern": "import type { $$$NAMES } from '$PATH'",
+        "description": "Type-only import"
+      },
+      {
+        "pattern": "import { type $NAME } from '$PATH'",
+        "description": "Inline type import"
+      },
+      {
+        "pattern": "require('$PATH')",
+        "description": "CommonJS require"
+      }
+    ],
+    "variable": [
+      {
+        "pattern": "const $NAME = $VALUE",
+        "description": "Const declaration"
+      },
+      {
+        "pattern": "let $NAME = $VALUE",
+        "description": "Let declaration"
+      },
+      {
+        "pattern": "var $NAME = $VALUE",
+        "description": "Var declaration (legacy)"
+      },
+      {
+        "pattern": "const $NAME: $TYPE = $VALUE",
+        "description": "Typed const declaration"
+      },
+      {
+        "pattern": "let $NAME: $TYPE = $VALUE",
+        "description": "Typed let declaration"
+      },
+      {
+        "pattern": "const { $$$PROPS } = $OBJ",
+        "description": "Object destructuring"
+      },
+      {
+        "pattern": "const [$$$ITEMS] = $ARR",
+        "description": "Array destructuring"
+      },
+      {
+        "pattern": "$VAR as $TYPE",
+        "description": "Type assertion"
+      },
+      {
+        "pattern": "<$TYPE>$VAR",
+        "description": "Type assertion (angle bracket)"
+      }
+    ],
+    "control_flow": [
+      {
+        "pattern": "if ($COND) { $$$BODY }",
+        "description": "If statement"
+      },
+      {
+        "pattern": "if ($COND) { $$$THEN } else { $$$ELSE }",
+        "description": "If-else statement"
+      },
+      {
+        "pattern": "for (const $ITEM of $ITERABLE) { $$$BODY }",
+        "description": "For-of loop"
+      },
+      {
+        "pattern": "while ($COND) { $$$BODY }",
+        "description": "While loop"
+      },
+      {
+        "pattern": "$COND ? $THEN : $ELSE",
+        "description": "Ternary expression"
+      },
+      {
+        "pattern": "if ($VAR !== null && $VAR !== undefined) { $$$BODY }",
+        "description": "Null/undefined check pattern"
+      },
+      {
+        "pattern": "switch ($EXPR) { $$$CASES }",
+        "description": "Switch statement"
+      }
+    ],
+    "error_handling": [
+      {
+        "pattern": "try { $$$TRY } catch ($ERR) { $$$CATCH }",
+        "description": "Try-catch block"
+      },
+      {
+        "pattern": "try { $$$TRY } catch ($ERR: unknown) { $$$CATCH }",
+        "description": "Typed catch clause"
+      },
+      {
+        "pattern": "throw new Error($MSG)",
+        "description": "Throw Error"
+      },
+      {
+        "pattern": "throw $ERR",
+        "description": "Throw any value"
+      }
+    ],
+    "async": [
+      {
+        "pattern": "await $PROMISE",
+        "description": "Await expression"
+      },
+      {
+        "pattern": "await $PROMISE as $TYPE",
+        "description": "Await with type assertion"
+      },
+      {
+        "pattern": "Promise.all([$$$PROMISES])",
+        "description": "Promise.all"
+      },
+      {
+        "pattern": "$PROMISE.then($HANDLER)",
+        "description": "Promise then"
+      },
+      {
+        "pattern": "$PROMISE.catch($HANDLER)",
+        "description": "Promise catch"
+      },
+      {
+        "pattern": "new Promise(($RESOLVE, $REJECT) => { $$$BODY })",
+        "description": "Promise constructor"
+      }
+    ],
+    "schema": [
+      {
+        "pattern": "z.object({ $$$FIELDS })",
+        "description": "Zod object schema definition"
+      },
+      {
+        "pattern": "z.strictObject({ $$$FIELDS })",
+        "description": "Zod strict object (no extra keys allowed)"
+      },
+      {
+        "pattern": "z.looseObject({ $$$FIELDS })",
+        "description": "Zod loose object (extra keys ignored)"
+      },
+      {
+        "pattern": "z.string()",
+        "description": "Zod string schema"
+      },
+      {
+        "pattern": "z.number()",
+        "description": "Zod number schema"
+      },
+      {
+        "pattern": "z.boolean()",
+        "description": "Zod boolean schema"
+      },
+      {
+        "pattern": "z.array($SCHEMA)",
+        "description": "Zod array schema"
+      },
+      {
+        "pattern": "z.string().email()",
+        "description": "Zod string with email validation"
+      },
+      {
+        "pattern": "z.string().min($N)",
+        "description": "Zod string with minimum length"
+      },
+      {
+        "pattern": "z.string().max($N)",
+        "description": "Zod string with maximum length"
+      },
+      {
+        "pattern": "z.string().length($N)",
+        "description": "Zod string with exact length"
+      },
+      {
+        "pattern": "z.string().regex($PATTERN)",
+        "description": "Zod string with regex validation"
+      },
+      {
+        "pattern": "z.string().startsWith($STR)",
+        "description": "Zod string starts with"
+      },
+      {
+        "pattern": "z.string().endsWith($STR)",
+        "description": "Zod string ends with"
+      },
+      {
+        "pattern": "z.string().includes($STR)",
+        "description": "Zod string includes substring"
+      },
+      {
+        "pattern": "z.email()",
+        "description": "Zod email validation (top-level, v4 preferred)"
+      },
+      {
+        "pattern": "z.string().email()",
+        "description": "Zod string email validation (deprecated in v4)"
+      },
+      {
+        "pattern": "z.uuid()",
+        "description": "Zod UUID validation (top-level, v4 preferred)"
+      },
+      {
+        "pattern": "z.string().uuid()",
+        "description": "Zod string UUID validation (deprecated in v4)"
+      },
+      {
+        "pattern": "z.url()",
+        "description": "Zod URL validation (top-level, v4 preferred)"
+      },
+      {
+        "pattern": "z.string().url()",
+        "description": "Zod string URL validation (deprecated in v4)"
+      },
+      {
+        "pattern": "z.ipv4()",
+        "description": "Zod IPv4 validation (top-level, v4 preferred)"
+      },
+      {
+        "pattern": "z.string().ipv4()",
+        "description": "Zod string IPv4 validation (deprecated in v4)"
+      },
+      {
+        "pattern": "z.ipv6()",
+        "description": "Zod IPv6 validation (top-level, v4 preferred)"
+      },
+      {
+        "pattern": "z.string().ipv6()",
+        "description": "Zod string IPv6 validation (deprecated in v4)"
+      },
+      {
+        "pattern": "z.base64()",
+        "description": "Zod base64 validation (top-level, v4 preferred)"
+      },
+      {
+        "pattern": "z.string().base64()",
+        "description": "Zod string base64 validation (deprecated in v4)"
+      },
+      {
+        "pattern": "z.emoji()",
+        "description": "Zod emoji validation (top-level, v4 preferred)"
+      },
+      {
+        "pattern": "z.string().emoji()",
+        "description": "Zod string emoji validation (deprecated in v4)"
+      },
+      {
+        "pattern": "z.string().trim()",
+        "description": "Zod string trim whitespace"
+      },
+      {
+        "pattern": "z.string().toLowerCase()",
+        "description": "Zod string to lowercase transformation"
+      },
+      {
+        "pattern": "z.string().toUpperCase()",
+        "description": "Zod string to uppercase transformation"
+      },
+      {
+        "pattern": "z.number().positive()",
+        "description": "Zod number positive validation"
+      },
+      {
+        "pattern": "z.number().nonnegative()",
+        "description": "Zod number non-negative validation"
+      },
+      {
+        "pattern": "z.number().negative()",
+        "description": "Zod number negative validation"
+      },
+      {
+        "pattern": "z.number().nonpositive()",
+        "description": "Zod number non-positive validation"
+      },
+      {
+        "pattern": "z.number().gt($N)",
+        "description": "Zod number greater than"
+      },
+      {
+        "pattern": "z.number().gte($N)",
+        "description": "Zod number greater than or equal"
+      },
+      {
+        "pattern": "z.number().lt($N)",
+        "description": "Zod number less than"
+      },
+      {
+        "pattern": "z.number().lte($N)",
+        "description": "Zod number less than or equal"
+      },
+      {
+        "pattern": "z.number().multipleOf($N)",
+        "description": "Zod number multiple of"
+      },
+      {
+        "pattern": "z.union([$$$SCHEMAS])",
+        "description": "Zod union type"
+      },
+      {
+        "pattern": "z.discriminatedUnion('$FIELD', [$$$OPTIONS])",
+        "description": "Zod discriminated union (basic)"
+      },
+      {
+        "pattern": "z.discriminatedUnion('$FIELD', [$$$UNIONS])",
+        "description": "Zod discriminated union with union types"
+      },
+      {
+        "pattern": "$SCHEMA.refine($VALIDATOR)",
+        "description": "Zod refinement (basic validation)"
+      },
+      {
+        "pattern": "$SCHEMA.refine($VALIDATOR).min($N)",
+        "description": "Zod refinement chained with other methods"
+      },
+      {
+        "pattern": "$SCHEMA.superRefine(($DATA, $CTX) => { $$$BODY })",
+        "description": "Zod super refinement with context"
+      },
+      {
+        "pattern": "$SCHEMA.check($$$VALIDATORS)",
+        "description": "Zod Mini check (multiple refinements)"
+      },
+      {
+        "pattern": "$SCHEMA.overwrite($VALUE)",
+        "description": "Zod overwrite for type-preserving transforms"
+      },
+      {
+        "pattern": "type $NAME = z.infer<typeof $SCHEMA>",
+        "description": "Zod type inference from schema"
+      },
+      {
+        "pattern": "$SCHEMA.parse($DATA)",
+        "description": "Zod schema validation (throws on error)"
+      },
+      {
+        "pattern": "$SCHEMA.safeParse($DATA)",
+        "description": "Zod schema safe validation (returns result)"
+      },
+      {
+        "pattern": "$SCHEMA.extend({ $$$FIELDS })",
+        "description": "Zod schema extension"
+      },
+      {
+        "pattern": "$SCHEMA.pick({ $$$KEYS })",
+        "description": "Zod object pick (select fields)"
+      },
+      {
+        "pattern": "$SCHEMA.omit({ $$$KEYS })",
+        "description": "Zod object omit (exclude fields)"
+      },
+      {
+        "pattern": "$SCHEMA.partial()",
+        "description": "Zod object partial (all fields optional)"
+      },
+      {
+        "pattern": "$SCHEMA.required()",
+        "description": "Zod object required (remove optional)"
+      },
+      {
+        "pattern": "$SCHEMA.catchall($SCHEMA)",
+        "description": "Zod object catchall (validate extra keys)"
+      },
+      {
+        "pattern": "$SCHEMA.keyof()",
+        "description": "Zod object keyof (union of keys)"
+      },
+      {
+        "pattern": "$SCHEMA.readonly()",
+        "description": "Zod schema readonly"
+      },
+      {
+        "pattern": "$SCHEMA.brand($BRAND)",
+        "description": "Zod schema brand (nominal typing)"
+      },
+      {
+        "pattern": "z.pipe($SCHEMA, $TRANSFORM)",
+        "description": "Zod pipe (chain schemas)"
+      },
+      {
+        "pattern": "z.lazy(() => $SCHEMA)",
+        "description": "Zod lazy (recursive types)"
+      },
+      {
+        "pattern": "z.union([$$$SCHEMAS])",
+        "description": "Zod union type"
+      },
+      {
+        "pattern": "z.intersection($SCHEMA1, $SCHEMA2)",
+        "description": "Zod intersection"
+      },
+      {
+        "pattern": "z.xor($SCHEMA1, $SCHEMA2)",
+        "description": "Zod exclusive or (XOR)"
+      },
+      {
+        "pattern": "$SCHEMA.transform(($VAL) => $OUTPUT)",
+        "description": "Zod transform (custom transformation)"
+      },
+      {
+        "pattern": "$SCHEMA.preprocess(($VAL) => $PROCESSED)",
+        "description": "Zod preprocess (transform before validation)"
+      },
+      {
+        "pattern": "$SCHEMA.default($VALUE)",
+        "description": "Zod schema default value"
+      },
+      {
+        "pattern": "$SCHEMA.catch($VALUE)",
+        "description": "Zod schema catch (fallback on error)"
+      },
+      {
+        "pattern": "$SCHEMA.error($ERROR_MAP)",
+        "description": "Zod unified error API (v4)"
+      },
+      {
+        "pattern": "$RESULT.error.format()",
+        "description": "Zod error format (deprecated in v4, use z.treeifyError())"
+      },
+      {
+        "pattern": "z.treeifyError($ERROR)",
+        "description": "Zod tree format for errors (v4 preferred)"
+      },
+      {
+        "pattern": "z.optional($SCHEMA)",
+        "description": "Zod optional field"
+      },
+      {
+        "pattern": "z.nullable($SCHEMA)",
+        "description": "Zod nullable field"
+      }
+    ],
+    "codec": [
+      {
+        "pattern": "z.schema($INPUT).codec(($VAL) => $OUTPUT)",
+        "description": "Zod codec (bidirectional transformation)"
+      },
+      {
+        "pattern": "z.stringToNumber()",
+        "description": "Codec: convert string to number"
+      },
+      {
+        "pattern": "z.stringToBigInt()",
+        "description": "Codec: convert string to BigInt"
+      },
+      {
+        "pattern": "z.numberToBigInt()",
+        "description": "Codec: convert number to BigInt"
+      },
+      {
+        "pattern": "z.isoDatetimeToDate()",
+        "description": "Codec: convert ISO datetime string to Date"
+      },
+      {
+        "pattern": "z.epochSecondsToDate()",
+        "description": "Codec: convert epoch seconds to Date"
+      },
+      {
+        "pattern": "z.epochMillisToDate()",
+        "description": "Codec: convert epoch milliseconds to Date"
+      },
+      {
+        "pattern": "z.base64ToBytes()",
+        "description": "Codec: convert base64 string to bytes"
+      },
+      {
+        "pattern": "z.hexToBytes()",
+        "description": "Codec: convert hex string to bytes"
+      },
+      {
+        "pattern": "z.utf8ToBytes()",
+        "description": "Codec: convert UTF-8 string to bytes"
+      },
+      {
+        "pattern": "z.json($SCHEMA)",
+        "description": "Codec: JSON string to object with schema validation"
+      },
+      {
+        "pattern": "z.stringToURL()",
+        "description": "Codec: convert string to URL object"
+      },
+      {
+        "pattern": "z.uriComponent()",
+        "description": "Codec: URI component encoding/decoding"
+      },
+      {
+        "pattern": "$CODEC.decode($INPUT)",
+        "description": "Codec decode (transform input to output)"
+      },
+      {
+        "pattern": "$CODEC.encode($OUTPUT)",
+        "description": "Codec encode (transform output back to input)"
+      },
+      {
+        "pattern": "$CODEC.decodeAsync($INPUT)",
+        "description": "Codec async decode"
+      },
+      {
+        "pattern": "$CODEC.encodeAsync($OUTPUT)",
+        "description": "Codec async encode"
+      }
+    ],
+    "utility": [
+      {
+        "pattern": "z.enum(['$$$VALUES'])",
+        "description": "Zod enum (union of string literals)"
+      },
+      {
+        "pattern": "z.literal($VALUE)",
+        "description": "Zod literal (exact value match)"
+      },
+      {
+        "pattern": "z.date()",
+        "description": "Zod Date object validation"
+      },
+      {
+        "pattern": "z.function()",
+        "description": "Zod function type validation"
+      },
+      {
+        "pattern": "z.instanceof($CLASS)",
+        "description": "Zod instanceof type validation"
+      },
+      {
+        "pattern": "z.any()",
+        "description": "Zod any (accepts any value)"
+      },
+      {
+        "pattern": "z.unknown()",
+        "description": "Zod unknown (requires explicit type check)"
+      },
+      {
+        "pattern": "z.never()",
+        "description": "Zod never (no valid value)"
+      },
+      {
+        "pattern": "z.nullish()",
+        "description": "Zod nullish (null | undefined)"
+      },
+      {
+        "pattern": "z.tuple([$$$SCHEMAS])",
+        "description": "Zod tuple (fixed-length array)"
+      },
+      {
+        "pattern": "z.array($SCHEMA).nonempty()",
+        "description": "Zod non-empty array (v4: use .min(1) for new code)"
+      },
+      {
+        "pattern": "z.array($SCHEMA).min(1)",
+        "description": "Zod array minimum length (v4 preferred over .nonempty())"
+      },
+      {
+        "pattern": "z.record($SCHEMA)",
+        "description": "Zod record (string key object)"
+      },
+      {
+        "pattern": "z.partialRecord($SCHEMA)",
+        "description": "Zod partial record (optional keys, v4)"
+      },
+      {
+        "pattern": "$SCHEMA.merge($OTHER)",
+        "description": "Zod merge (deprecated in v4, use .extend())"
+      },
+      {
+        "pattern": "z.set($SCHEMA)",
+        "description": "Zod Set type validation"
+      },
+      {
+        "pattern": "z.map($KEY_SCHEMA, $VAL_SCHEMA)",
+        "description": "Zod Map type validation"
+      },
+      {
+        "pattern": "z.custom(($VAL) => $BOOL)",
+        "description": "Zod custom type validation"
+      },
+      {
+        "pattern": "z.coerce.string()",
+        "description": "Zod coerce to string"
+      },
+      {
+        "pattern": "z.coerce.number()",
+        "description": "Zod coerce to number"
+      },
+      {
+        "pattern": "z.coerce.boolean()",
+        "description": "Zod coerce to boolean"
+      },
+      {
+        "pattern": "z.coerce.date()",
+        "description": "Zod coerce to Date"
+      },
+      {
+        "pattern": "z.function({ input: $SCHEMA, output: $SCHEMA })",
+        "description": "Zod function factory (v4 redesigned)"
+      },
+      {
+        "pattern": "$FUNC.implement(($ARGS) => $RESULT)",
+        "description": "Zod function implement"
+      },
+      {
+        "pattern": "$FUNC.implementAsync(async ($ARGS) => $RESULT)",
+        "description": "Zod function implementAsync (v4)"
+      },
+      {
+        "pattern": "z.promise($SCHEMA)",
+        "description": "Zod promise (deprecated in v4)"
+      },
+      {
+        "pattern": "z.nativeEnum($ENUM)",
+        "description": "Zod nativeEnum (deprecated in v4, use z.enum())"
+      },
+      {
+        "pattern": "$SCHEMA.strict()",
+        "description": "Zod strict (deprecated in v4, use z.strictObject())"
+      },
+      {
+        "pattern": "$SCHEMA.passthrough()",
+        "description": "Zod passthrough (removed in v4, use z.looseObject())"
+      },
+      {
+        "pattern": "$SCHEMA.strip()",
+        "description": "Zod strip (removed in v4, default behavior)"
+      },
+      {
+        "pattern": "$SCHEMA.deepPartial()",
+        "description": "Zod deepPartial (removed in v4)"
+      },
+      {
+        "pattern": "z.core.$UTILITY",
+        "description": "Zod core sub-package for utilities (v4)"
+      },
+      {
+        "pattern": "z.nanoid()",
+        "description": "Zod Nanoid validation (top-level, v4 preferred)"
+      },
+      {
+        "pattern": "z.string().nanoid()",
+        "description": "Zod string Nanoid validation (deprecated in v4)"
+      },
+      {
+        "pattern": "z.cuid()",
+        "description": "Zod CUID validation (top-level, v4 preferred)"
+      },
+      {
+        "pattern": "z.string().cuid()",
+        "description": "Zod string CUID validation (deprecated in v4)"
+      },
+      {
+        "pattern": "z.cuid2()",
+        "description": "Zod CUID2 validation (top-level, v4 preferred)"
+      },
+      {
+        "pattern": "z.string().cuid2()",
+        "description": "Zod string CUID2 validation (deprecated in v4)"
+      },
+      {
+        "pattern": "z.ulid()",
+        "description": "Zod ULID validation (top-level, v4 preferred)"
+      },
+      {
+        "pattern": "z.string().ulid()",
+        "description": "Zod string ULID validation (deprecated in v4)"
+      }
+    ],
+    "linting": [
+      {
+        "pattern": "z.any()",
+        "description": "Zod any (linting: avoid per eslint-plugin-zod)"
+      },
+      {
+        "pattern": "z.unknown()",
+        "description": "Zod unknown (linting: avoid per eslint-plugin-zod)"
+      },
+      {
+        "pattern": "$SCHEMA.describe($MSG)",
+        "description": "Zod describe (deprecated, use .meta() per linting)"
+      },
+      {
+        "pattern": "$SCHEMA.meta($META)",
+        "description": "Zod meta (preferred over .describe())"
+      },
+      {
+        "pattern": "$SCHEMA.optional().default($VALUE)",
+        "description": "Zod optional + default (linting: avoid combining)"
+      },
+      {
+        "pattern": "z.string().uuid()",
+        "description": "Zod string uuid (deprecated, use z.uuid())"
+      },
+      {
+        "pattern": "z.number().int()",
+        "description": "Zod number int (legacy, use z.int())"
+      },
+      {
+        "pattern": "z.union([$VAL1, $VAL2, $VAL3])",
+        "description": "Zod string literal union (linting: prefer z.enum())"
+      },
+      {
+        "pattern": "z.record($SCHEMA.transform($FUNC))",
+        "description": "Zod record with transform in key (linting: disallowed)"
+      },
+      {
+        "pattern": "$SCHEMA.refine(($VAL) => { throw new Error($MSG) })",
+        "description": "Zod refine with throw (linting: use ctx.addIssue())"
+      },
+      {
+        "pattern": "$SCHEMA.refine(($VAL) => $BOOL)",
+        "description": "Zod refine without error message (linting: add message)"
+      },
+      {
+        "pattern": "import z from 'zod'",
+        "description": "Zod default import (linting: prefer namespace import)"
+      },
+      {
+        "pattern": "import * as z from 'zod'",
+        "description": "Zod namespace import (linting: preferred)"
+      },
+      {
+        "pattern": "const $VAR = z.$TYPE",
+        "description": "Zod schema without suffix (linting: add 'Schema' suffix)"
+      },
+      {
+        "pattern": "const $NAMESchema = z.$TYPE",
+        "description": "Zod schema with suffix (linting: preferred)"
+      },
+      {
+        "pattern": "$SCHEMA.brand($BRAND)",
+        "description": "Zod brand without type parameter (linting: add type)"
+      },
+      {
+        "pattern": "z.string().trim()",
+        "description": "Zod string trim (linting: recommended best practice)"
+      }
+    ],
+    "codegen": [
+      {
+        "pattern": "import ts from 'typescript'",
+        "description": "TypeScript compiler API import"
+      },
+      {
+        "pattern": "ts.createSourceFile($FILE, $CONTENT, $LANG_VERSION)",
+        "description": "Create source file from code string (TS compiler API)"
+      },
+      {
+        "pattern": "ts.factory.createVariableStatement($MODS, $DECLS)",
+        "description": "Create variable statement via factory (TS compiler API)"
+      },
+      {
+        "pattern": "ts.factory.createFunctionDeclaration($MODS, $NAME, $PARAMS, $RETURN, $BODY)",
+        "description": "Create function declaration via factory"
+      },
+      {
+        "pattern": "ts.factory.createInterfaceDeclaration($MODS, $NAME, $PARAMS, $EXTENDS, $MEMBERS)",
+        "description": "Create interface declaration via factory"
+      },
+      {
+        "pattern": "ts.factory.createTypeAliasDeclaration($MODS, $NAME, $PARAMS, $TYPE)",
+        "description": "Create type alias via factory"
+      },
+      {
+        "pattern": "const printer = ts.createPrinter()",
+        "description": "Create AST printer for code generation"
+      },
+      {
+        "pattern": "printer.printNode(ts.EmitHint.Unspecified, $NODE, $SOURCE_FILE)",
+        "description": "Print AST node to code string"
+      },
+      {
+        "pattern": "type $NAME<$PARAM> = $PARAM extends $TYPE ? $TRUE : $FALSE",
+        "description": "Conditional type (type-level if)"
+      },
+      {
+        "pattern": "type $NAME<$KEY in keyof $OBJ> = $TRANSFORM",
+        "description": "Mapped type (iterate object keys)"
+      },
+      {
+        "pattern": "type $NAME = Partial<$SCHEMA>",
+        "description": "Utility type Partial (all fields optional)"
+      },
+      {
+        "pattern": "type $NAME = Pick<$SCHEMA, '$FIELD1' | '$FIELD2'>",
+        "description": "Utility type Pick (select fields)"
+      },
+      {
+        "pattern": "type $NAME = Omit<$SCHEMA, '$FIELD'>",
+        "description": "Utility type Omit (exclude fields)"
+      },
+      {
+        "pattern": "type $NAME = Record<$KEY, $VALUE>",
+        "description": "Utility type Record (object with specified keys)"
+      },
+      {
+        "pattern": "type $NAME = Exclude<$UNION, $TYPE>",
+        "description": "Utility type Exclude (remove type from union)"
+      },
+      {
+        "pattern": "type $NAME = Extract<$UNION, $TYPE>",
+        "description": "Utility type Extract (select type from union)"
+      },
+      {
+        "pattern": "type $NAME = ReturnType<$FUNC>",
+        "description": "Utility type ReturnType (extract function return)"
+      },
+      {
+        "pattern": "type $NAME = Parameters<$FUNC>",
+        "description": "Utility type Parameters (extract function params)"
+      },
+      {
+        "pattern": "type $NAME = $OBJ is $TYPE",
+        "description": "Type guard (type predicate)"
+      },
+      {
+        "pattern": "function $FUNC($ARG): $ARG is $TYPE { $$$BODY }",
+        "description": "Type guard function implementation"
+      },
+      {
+        "pattern": "@$DECORATOR\\nclass $NAME { $$$BODY }",
+        "description": "Class decorator"
+      },
+      {
+        "pattern": "@$DECORATOR\\n$MODIFIER $PROPERTY: $TYPE",
+        "description": "Property decorator"
+      },
+      {
+        "pattern": "@$DECORATOR\\n$METHOD($$$PARAMS) { $$$BODY }",
+        "description": "Method decorator"
+      },
+      {
+        "pattern": "export namespace $NAME { $$$EXPORTS }",
+        "description": "Namespace declaration"
+      },
+      {
+        "pattern": "export { $$$EXPORTS } from '$PATH'",
+        "description": "Barrel export (re-export module)"
+      },
+      {
+        "pattern": "interface $NAME { $$$BODY }\\ninterface $NAME { $$$BODY }",
+        "description": "Declaration merging (interface)"
+      },
+      {
+        "pattern": "namespace $NAME { $$$A }\\nnamespace $NAME { $$$B }",
+        "description": "Declaration merging (namespace)"
+      },
+      {
+        "pattern": "type $NAME = $A | $B | $C",
+        "description": "Discriminated union type"
+      },
+      {
+        "pattern": "interface $NAME extends $TEMPLATE<$PARAM> { $$$BODY }",
+        "description": "Generic interface implementation"
+      },
+      {
+        "pattern": "const $FACTORY = <$PARAM,>($ARG: $PARAM): $PARAM => $ARG",
+        "description": "Generic factory function"
+      }
+    ],
+    "ast": [
+      {
+        "pattern": "import ts from 'typescript'",
+        "description": "Import TypeScript compiler for AST analysis"
+      },
+      {
+        "pattern": "ts.isSourceFile($NODE)",
+        "description": "Check if node is source file"
+      },
+      {
+        "pattern": "ts.isFunctionDeclaration($NODE)",
+        "description": "Check if node is function declaration"
+      },
+      {
+        "pattern": "ts.isClassDeclaration($NODE)",
+        "description": "Check if node is class declaration"
+      },
+      {
+        "pattern": "ts.isInterfaceDeclaration($NODE)",
+        "description": "Check if node is interface declaration"
+      },
+      {
+        "pattern": "ts.isTypeAliasDeclaration($NODE)",
+        "description": "Check if node is type alias"
+      },
+      {
+        "pattern": "ts.isVariableDeclaration($NODE)",
+        "description": "Check if node is variable declaration"
+      },
+      {
+        "pattern": "$NODE.kind === ts.SyntaxKind.$KIND_NAME",
+        "description": "Match AST node by kind/syntax type"
+      },
+      {
+        "pattern": "ts.forEachChild($NODE, ($CHILD) => { $$$BODY })",
+        "description": "Traverse immediate child nodes (visitor pattern)"
+      },
+      {
+        "pattern": "function visit($NODE: ts.Node): void { $$$BODY } ts.forEachChild($SOURCE, visit)",
+        "description": "Recursive AST traversal (depth-first)"
+      },
+      {
+        "pattern": "$NODE.getText($SOURCE_FILE)",
+        "description": "Get text content of AST node"
+      },
+      {
+        "pattern": "$NODE.getStart($SOURCE_FILE)",
+        "description": "Get start position of node in source"
+      },
+      {
+        "pattern": "$NODE.getEnd()",
+        "description": "Get end position of node in source"
+      },
+      {
+        "pattern": "$NODE.getLeadingTriviaWidth($SOURCE_FILE)",
+        "description": "Get leading whitespace/comments width"
+      },
+      {
+        "pattern": "ts.getJSDocComments($NODE)",
+        "description": "Extract JSDoc comments from node"
+      },
+      {
+        "pattern": "$FUNC.name.text",
+        "description": "Access function name property from AST"
+      },
+      {
+        "pattern": "$CLASS.members",
+        "description": "Access class members array"
+      },
+      {
+        "pattern": "$INTERFACE.heritageClauses",
+        "description": "Access interface extends/implements clauses"
+      },
+      {
+        "pattern": "ts.createSourceFile($FILE, $CONTENT, $LANG, true, ts.ScriptKind.$TYPE)",
+        "description": "Parse source with language detection"
+      },
+      {
+        "pattern": "const typeChecker = $PROGRAM.getTypeChecker()",
+        "description": "Get type checker from program (static analysis)"
+      },
+      {
+        "pattern": "typeChecker.getTypeAtLocation($NODE)",
+        "description": "Get type of node (type checking/analysis)"
+      },
+      {
+        "pattern": "typeChecker.getSymbolAtLocation($NODE)",
+        "description": "Get symbol at location (symbol table)"
+      },
+      {
+        "pattern": "$SYMBOL.getDeclarations()",
+        "description": "Get all declarations of a symbol"
+      },
+      {
+        "pattern": "$SYMBOL.valueDeclaration",
+        "description": "Get value declaration of symbol"
+      },
+      {
+        "pattern": "typeChecker.getPropertiesOfType($TYPE)",
+        "description": "Get properties of type (structural analysis)"
+      },
+      {
+        "pattern": "$PROGRAM.getSourceFiles()",
+        "description": "Get all source files in program"
+      },
+      {
+        "pattern": "const diagnostics = ts.getPreEmitDiagnostics($PROGRAM)",
+        "description": "Get compilation diagnostics (error checking)"
+      },
+      {
+        "pattern": "$NODE.parent",
+        "description": "Access parent node in AST tree"
+      },
+      {
+        "pattern": "$NODE.decorators",
+        "description": "Access decorator nodes on declaration"
+      },
+      {
+        "pattern": "$NODE.modifiers",
+        "description": "Access modifier nodes (public, private, etc.)"
+      }
+    ],
+    "ast-grep": [
+      {
+        "pattern": "pattern: '$CODE'",
+        "description": "ast-grep simple pattern rule"
+      },
+      {
+        "pattern": "pattern:\\n  context: '$CODE'\\n  selector: 'node_kind'",
+        "description": "ast-grep pattern object (context + selector)"
+      },
+      {
+        "pattern": "rule:\\n  inside: 'class $NAME { $$BODY }'",
+        "description": "ast-grep relational rule: inside (match within parent)"
+      },
+      {
+        "pattern": "rule:\\n  has: 'pattern: $MATCH'",
+        "description": "ast-grep relational rule: has (contains child)"
+      },
+      {
+        "pattern": "rule:\\n  follows: 'const $VAR = $VALUE'",
+        "description": "ast-grep relational rule: follows (comes after)"
+      },
+      {
+        "pattern": "rule:\\n  precedes: 'return $VALUE'",
+        "description": "ast-grep relational rule: precedes (comes before)"
+      },
+      {
+        "pattern": "rule:\\n  all:\\n    - pattern: $A\\n    - pattern: $B",
+        "description": "ast-grep composite rule: all (AND logic)"
+      },
+      {
+        "pattern": "rule:\\n  any:\\n    - pattern: $A\\n    - pattern: $B",
+        "description": "ast-grep composite rule: any (OR logic)"
+      },
+      {
+        "pattern": "rule:\\n  not: 'pattern: $EXCLUDE'",
+        "description": "ast-grep composite rule: not (negation)"
+      },
+      {
+        "pattern": "strictness: 'strict'",
+        "description": "ast-grep strictness: strict matching (exact types)"
+      },
+      {
+        "pattern": "strictness: 'lenient'",
+        "description": "ast-grep strictness: lenient matching (flexible)"
+      },
+      {
+        "pattern": "id: 'rule-id'\\nlanguage: 'typescript'",
+        "description": "ast-grep rule metadata (id and language)"
+      },
+      {
+        "pattern": "fix: 'replacement code'",
+        "description": "ast-grep auto-fix template"
+      },
+      {
+        "pattern": "fix: 'rewrite($A, $B)'",
+        "description": "ast-grep fix with helper function"
+      },
+      {
+        "pattern": "message: 'Human-readable error message'",
+        "description": "ast-grep rule message"
+      },
+      {
+        "pattern": "severity: 'error|warning|info|hint'",
+        "description": "ast-grep rule severity level"
+      },
+      {
+        "pattern": "utils:\\n  rule-name:\\n    pattern: $PATTERN",
+        "description": "ast-grep utility rule (reusable)"
+      },
+      {
+        "pattern": "rule:\\n  matches: 'utility-rule-id'",
+        "description": "ast-grep rule reference (use utility)"
+      },
+      {
+        "pattern": "kind: 'function_declaration'",
+        "description": "ast-grep kind-based matching (specific node type)"
+      },
+      {
+        "pattern": "regex: '[a-z]+_[A-Z]+'",
+        "description": "ast-grep regex matching on node text"
+      },
+      {
+        "pattern": "stopBy: 'end'",
+        "description": "ast-grep relational rule: stopBy (limit traversal)"
+      },
+      {
+        "pattern": "ast-grep scan --inline-rules rule.yml",
+        "description": "ast-grep CLI: scan with inline rules"
+      },
+      {
+        "pattern": "ast-grep run --pattern '$PATTERN' --lang 'typescript'",
+        "description": "ast-grep CLI: run pattern search"
+      },
+      {
+        "pattern": "ast-grep run --pattern '$PATTERN' --json",
+        "description": "ast-grep CLI: output as JSON"
+      }
+    ]
+  },
+  "python": {
+    "function": [
+      {
+        "pattern": "def $NAME($$$PARAMS):\n    $$$BODY",
+        "description": "Function definition",
+        "notes": "Python patterns need proper indentation"
+      },
+      {
+        "pattern": "def $NAME($$$PARAMS) -> $RET:\n    $$$BODY",
+        "description": "Function with return type hint"
+      },
+      {
+        "pattern": "async def $NAME($$$PARAMS):\n    $$$BODY",
+        "description": "Async function definition"
+      },
+      {
+        "pattern": "lambda $PARAMS: $BODY",
+        "description": "Lambda expression"
+      },
+      {
+        "pattern": "@$DECORATOR\ndef $NAME($$$PARAMS):\n    $$$BODY",
+        "description": "Decorated function"
+      }
+    ],
+    "class": [
+      {
+        "pattern": "class $NAME:\n    $$$BODY",
+        "description": "Class definition"
+      },
+      {
+        "pattern": "class $NAME($PARENT):\n    $$$BODY",
+        "description": "Class with inheritance"
+      },
+      {
+        "pattern": "def __init__(self, $$$PARAMS):\n    $$$BODY",
+        "description": "Constructor method"
+      },
+      {
+        "pattern": "@dataclass\nclass $NAME:\n    $$$BODY",
+        "description": "Dataclass definition"
+      }
+    ],
+    "import": [
+      {
+        "pattern": "import $MODULE",
+        "description": "Simple import"
+      },
+      {
+        "pattern": "from $MODULE import $NAME",
+        "description": "From import"
+      },
+      {
+        "pattern": "from $MODULE import $$$NAMES",
+        "description": "Multiple from imports"
+      },
+      {
+        "pattern": "import $MODULE as $ALIAS",
+        "description": "Import with alias"
+      }
+    ],
+    "variable": [
+      {
+        "pattern": "$NAME = $VALUE",
+        "description": "Assignment"
+      },
+      {
+        "pattern": "$NAME: $TYPE = $VALUE",
+        "description": "Typed assignment"
+      },
+      {
+        "pattern": "$A, $B = $VALUE",
+        "description": "Tuple unpacking"
+      }
+    ],
+    "control_flow": [
+      {
+        "pattern": "if $COND:\n    $$$BODY",
+        "description": "If statement"
+      },
+      {
+        "pattern": "for $VAR in $ITERABLE:\n    $$$BODY",
+        "description": "For loop"
+      },
+      {
+        "pattern": "while $COND:\n    $$$BODY",
+        "description": "While loop"
+      },
+      {
+        "pattern": "[$EXPR for $VAR in $ITERABLE]",
+        "description": "List comprehension"
+      },
+      {
+        "pattern": "{$KEY: $VALUE for $VAR in $ITERABLE}",
+        "description": "Dict comprehension"
+      },
+      {
+        "pattern": "$THEN if $COND else $ELSE",
+        "description": "Ternary expression"
+      }
+    ],
+    "error_handling": [
+      {
+        "pattern": "try:\n    $$$TRY\nexcept $EXC:\n    $$$EXCEPT",
+        "description": "Try-except block"
+      },
+      {
+        "pattern": "raise $EXC",
+        "description": "Raise exception"
+      },
+      {
+        "pattern": "with $CTX as $VAR:\n    $$$BODY",
+        "description": "Context manager"
+      }
+    ],
+    "async": [
+      {
+        "pattern": "await $AWAITABLE",
+        "description": "Await expression"
+      },
+      {
+        "pattern": "async with $CTX as $VAR:\n    $$$BODY",
+        "description": "Async context manager"
+      },
+      {
+        "pattern": "async for $VAR in $ITERABLE:\n    $$$BODY",
+        "description": "Async for loop"
+      }
+    ],
+    "security": [
+      {
+        "pattern": "jwt.encode($ARG1, \"$SECRET\", $$ARGS)",
+        "description": "Hardcoded JWT secret (CWE-798)"
+      },
+      {
+        "pattern": "openai.api_key = \"$KEY\"",
+        "description": "Hardcoded OpenAI API key (CWE-798)"
+      },
+      {
+        "pattern": "requests.auth.HTTPBasicAuth(\"$USER\", \"$PASSWORD\")",
+        "description": "HTTP Basic Auth hardcoded (CWE-798)"
+      },
+      {
+        "pattern": "psycopg2.connect(..., password=\"$PASSWORD\", ...)",
+        "description": "PostgreSQL hardcoded password (CWE-798)"
+      },
+      {
+        "pattern": "pymysql.connect(..., password=\"$PASSWORD\", ...)",
+        "description": "MySQL hardcoded password (CWE-798)"
+      },
+      {
+        "pattern": "MongoClient(..., password=\"$PASSWORD\", ...)",
+        "description": "MongoDB hardcoded password (CWE-798)"
+      },
+      {
+        "pattern": "redis.Redis(..., password=\"$PASSWORD\", ...)",
+        "description": "Redis hardcoded password (CWE-798)"
+      },
+      {
+        "pattern": "couchbase.Cluster(..., password=\"$PASSWORD\", ...)",
+        "description": "CouchBase hardcoded password (CWE-798)"
+      },
+      {
+        "pattern": "psycopg2.connect(..., password=\"\", ...)",
+        "description": "Empty PostgreSQL password (CWE-521)"
+      },
+      {
+        "pattern": "pymysql.connect(..., password=\"\", ...)",
+        "description": "Empty MySQL password (CWE-521)"
+      },
+      {
+        "pattern": "MongoClient(..., password=\"\", ...)",
+        "description": "Empty MongoDB password (CWE-521)"
+      },
+      {
+        "pattern": "redis.Redis(..., password=\"\", ...)",
+        "description": "Empty Redis password (CWE-521)"
+      },
+      {
+        "pattern": "Cipher.new(AES.MODE_CBC, \"RC4\", ...)",
+        "description": "Insecure RC4 cipher (CWE-327)"
+      },
+      {
+        "pattern": "hashlib.md5($$$ARGS)",
+        "description": "Weak MD5 hash algorithm (CWE-327)"
+      },
+      {
+        "pattern": "hashlib.sha1($$$ARGS)",
+        "description": "Weak SHA1 hash algorithm (CWE-327)"
+      },
+      {
+        "pattern": "app.run(..., debug=True, ...)",
+        "description": "Flask debug mode enabled (CWE-489)"
+      },
+      {
+        "pattern": "flask.run(..., debug=True, ...)",
+        "description": "Flask.run() debug enabled (CWE-489)"
+      },
+      {
+        "pattern": "tempfile.mktemp()",
+        "description": "Insecure mktemp() race condition (CWE-377)"
+      },
+      {
+        "pattern": "mktemp()",
+        "description": "Direct mktemp() call (CWE-377)"
+      },
+      {
+        "pattern": "Elasticsearch(..., basic_auth=(\"$USER\", \"$PASSWORD\"), ...)",
+        "description": "Elasticsearch hardcoded basic_auth (CWE-798)"
+      },
+      {
+        "pattern": "Elasticsearch(..., api_key=\"$KEY\", ...)",
+        "description": "Elasticsearch hardcoded API key (CWE-798)"
+      },
+      {
+        "pattern": "requests.$METHOD(\"http://$USER:$PASSWORD@...\", ...)",
+        "description": "Credentials in HTTP URL (CWE-798)"
+      },
+      {
+        "pattern": "$VAR = \"$SECRET\"\nprecedes: jwt.encode(..., $VAR, ...)",
+        "description": "Secret var assignment then used (CWE-798)"
+      },
+      {
+        "pattern": "$VAR = \"http://$$$HOST\"\ninside: def connect(...)",
+        "description": "Unencrypted connection string (CWE-295)"
+      },
+      {
+        "pattern": "password = $STR1 + $STR2",
+        "description": "Credentials via concatenation (CWE-798)"
+      },
+      {
+        "pattern": "logger.info(..., $PASSWORD, ...)",
+        "description": "Secrets in logging (CWE-532)"
+      }
+    ]
+  },
+  "go": {
+    "function": [
+      {
+        "pattern": "func $NAME($$$PARAMS) $RET { $$$BODY }",
+        "description": "Function declaration"
+      },
+      {
+        "pattern": "func ($RECV $TYPE) $NAME($$$PARAMS) $RET { $$$BODY }",
+        "description": "Method with receiver"
+      },
+      {
+        "pattern": "func($$$PARAMS) $RET { $$$BODY }",
+        "description": "Anonymous function"
+      }
+    ],
+    "class": [
+      {
+        "pattern": "type $NAME struct { $$$FIELDS }",
+        "description": "Struct definition"
+      },
+      {
+        "pattern": "type $NAME interface { $$$METHODS }",
+        "description": "Interface definition"
+      }
+    ],
+    "import": [
+      {
+        "pattern": "import \"$PATH\"",
+        "description": "Single import"
+      },
+      {
+        "pattern": "import (\n$$$IMPORTS\n)",
+        "description": "Import block"
+      }
+    ],
+    "variable": [
+      {
+        "pattern": "$NAME := $VALUE",
+        "description": "Short variable declaration"
+      },
+      {
+        "pattern": "var $NAME $TYPE = $VALUE",
+        "description": "Full variable declaration"
+      },
+      {
+        "pattern": "const $NAME = $VALUE",
+        "description": "Constant declaration"
+      }
+    ],
+    "control_flow": [
+      {
+        "pattern": "if $COND { $$$BODY }",
+        "description": "If statement"
+      },
+      {
+        "pattern": "if $INIT; $COND { $$$BODY }",
+        "description": "If with initialization"
+      },
+      {
+        "pattern": "for $INIT; $COND; $POST { $$$BODY }",
+        "description": "For loop"
+      },
+      {
+        "pattern": "for $KEY, $VALUE := range $ITERABLE { $$$BODY }",
+        "description": "Range loop"
+      },
+      {
+        "pattern": "switch $EXPR { $$$CASES }",
+        "description": "Switch statement"
+      },
+      {
+        "pattern": "select { $$$CASES }",
+        "description": "Select statement"
+      }
+    ],
+    "error_handling": [
+      {
+        "pattern": "if err != nil { $$$BODY }",
+        "description": "Error check pattern"
+      },
+      {
+        "pattern": "$VAL, err := $CALL",
+        "description": "Error return pattern"
+      },
+      {
+        "pattern": "defer $CALL",
+        "description": "Defer statement"
+      },
+      {
+        "pattern": "panic($MSG)",
+        "description": "Panic call"
+      },
+      {
+        "pattern": "recover()",
+        "description": "Recover call"
+      }
+    ],
+    "async": [
+      {
+        "pattern": "go $FUNC($$$ARGS)",
+        "description": "Goroutine"
+      },
+      {
+        "pattern": "$CHAN <- $VALUE",
+        "description": "Channel send"
+      },
+      {
+        "pattern": "$VAR := <-$CHAN",
+        "description": "Channel receive"
+      },
+      {
+        "pattern": "make(chan $TYPE)",
+        "description": "Create channel"
+      }
+    ]
+  },
+  "rust": {
+    "function": [
+      {
+        "pattern": "fn $NAME($$$PARAMS) -> $RET { $$$BODY }",
+        "description": "Function with return type"
+      },
+      {
+        "pattern": "fn $NAME($$$PARAMS) { $$$BODY }",
+        "description": "Function without return"
+      },
+      {
+        "pattern": "pub fn $NAME($$$PARAMS) -> $RET { $$$BODY }",
+        "description": "Public function"
+      },
+      {
+        "pattern": "async fn $NAME($$$PARAMS) -> $RET { $$$BODY }",
+        "description": "Async function"
+      },
+      {
+        "pattern": "|$$$PARAMS| $BODY",
+        "description": "Closure"
+      }
+    ],
+    "class": [
+      {
+        "pattern": "struct $NAME { $$$FIELDS }",
+        "description": "Struct definition"
+      },
+      {
+        "pattern": "impl $NAME { $$$METHODS }",
+        "description": "Implementation block"
+      },
+      {
+        "pattern": "impl $TRAIT for $NAME { $$$METHODS }",
+        "description": "Trait implementation"
+      },
+      {
+        "pattern": "trait $NAME { $$$METHODS }",
+        "description": "Trait definition"
+      },
+      {
+        "pattern": "enum $NAME { $$$VARIANTS }",
+        "description": "Enum definition"
+      }
+    ],
+    "import": [
+      {
+        "pattern": "use $PATH;",
+        "description": "Use statement"
+      },
+      {
+        "pattern": "use $PATH::{$$$ITEMS};",
+        "description": "Multiple imports from path"
+      },
+      {
+        "pattern": "use $PATH::*;",
+        "description": "Glob import"
+      }
+    ],
+    "variable": [
+      {
+        "pattern": "let $NAME = $VALUE;",
+        "description": "Immutable binding"
+      },
+      {
+        "pattern": "let mut $NAME = $VALUE;",
+        "description": "Mutable binding"
+      },
+      {
+        "pattern": "let $NAME: $TYPE = $VALUE;",
+        "description": "Typed binding"
+      },
+      {
+        "pattern": "const $NAME: $TYPE = $VALUE;",
+        "description": "Constant"
+      }
+    ],
+    "control_flow": [
+      {
+        "pattern": "if $COND { $$$BODY }",
+        "description": "If expression"
+      },
+      {
+        "pattern": "match $EXPR { $$$ARMS }",
+        "description": "Match expression"
+      },
+      {
+        "pattern": "for $VAR in $ITER { $$$BODY }",
+        "description": "For loop"
+      },
+      {
+        "pattern": "while $COND { $$$BODY }",
+        "description": "While loop"
+      },
+      {
+        "pattern": "loop { $$$BODY }",
+        "description": "Infinite loop"
+      }
+    ],
+    "error_handling": [
+      {
+        "pattern": "$EXPR?",
+        "description": "Error propagation"
+      },
+      {
+        "pattern": "unwrap()",
+        "description": "Unwrap Result/Option"
+      },
+      {
+        "pattern": "expect($MSG)",
+        "description": "Expect with message"
+      },
+      {
+        "pattern": "Ok($VALUE)",
+        "description": "Ok variant"
+      },
+      {
+        "pattern": "Err($VALUE)",
+        "description": "Err variant"
+      },
+      {
+        "pattern": "panic!($MSG)",
+        "description": "Panic macro"
+      }
+    ],
+    "async": [
+      {
+        "pattern": "$FUTURE.await",
+        "description": "Await future"
+      },
+      {
+        "pattern": "tokio::spawn($FUTURE)",
+        "description": "Tokio spawn"
+      }
+    ]
+  },
+  "java": {
+    "function": [
+      {
+        "pattern": "public $RET $NAME($$$PARAMS) { $$$BODY }",
+        "description": "Public method"
+      },
+      {
+        "pattern": "private $RET $NAME($$$PARAMS) { $$$BODY }",
+        "description": "Private method"
+      },
+      {
+        "pattern": "public static $RET $NAME($$$PARAMS) { $$$BODY }",
+        "description": "Static method"
+      }
+    ],
+    "class": [
+      {
+        "pattern": "public class $NAME { $$$BODY }",
+        "description": "Public class"
+      },
+      {
+        "pattern": "public class $NAME extends $PARENT { $$$BODY }",
+        "description": "Class with inheritance"
+      },
+      {
+        "pattern": "public class $NAME implements $INTERFACE { $$$BODY }",
+        "description": "Class implementing interface"
+      },
+      {
+        "pattern": "public interface $NAME { $$$BODY }",
+        "description": "Interface definition"
+      }
+    ],
+    "import": [
+      {
+        "pattern": "import $PATH;",
+        "description": "Import statement"
+      },
+      {
+        "pattern": "import static $PATH;",
+        "description": "Static import"
+      }
+    ],
+    "variable": [
+      {
+        "pattern": "$TYPE $NAME = $VALUE;",
+        "description": "Variable declaration"
+      },
+      {
+        "pattern": "final $TYPE $NAME = $VALUE;",
+        "description": "Final variable"
+      },
+      {
+        "pattern": "private $TYPE $NAME;",
+        "description": "Private field"
+      }
+    ],
+    "control_flow": [
+      {
+        "pattern": "if ($COND) { $$$BODY }",
+        "description": "If statement"
+      },
+      {
+        "pattern": "for ($TYPE $VAR : $ITERABLE) { $$$BODY }",
+        "description": "Enhanced for loop"
+      },
+      {
+        "pattern": "switch ($EXPR) { $$$CASES }",
+        "description": "Switch statement"
+      }
+    ],
+    "error_handling": [
+      {
+        "pattern": "try { $$$TRY } catch ($TYPE $VAR) { $$$CATCH }",
+        "description": "Try-catch block"
+      },
+      {
+        "pattern": "throw new $TYPE($MSG);",
+        "description": "Throw exception"
+      }
+    ],
+    "async": [
+      {
+        "pattern": "CompletableFuture.supplyAsync($$$ARGS)",
+        "description": "Async computation"
+      },
+      {
+        "pattern": "$FUTURE.thenApply($FUNC)",
+        "description": "Future chain"
+      }
+    ]
+  },
+  "ruby": {
+    "function": [
+      {
+        "pattern": "def $NAME($$$PARAMS)\n  $$$BODY\nend",
+        "description": "Method definition"
+      },
+      {
+        "pattern": "def self.$NAME($$$PARAMS)\n  $$$BODY\nend",
+        "description": "Class method"
+      },
+      {
+        "pattern": "->($$$PARAMS) { $$$BODY }",
+        "description": "Lambda"
+      },
+      {
+        "pattern": "proc { |$$$PARAMS| $$$BODY }",
+        "description": "Proc"
+      }
+    ],
+    "class": [
+      {
+        "pattern": "class $NAME\n  $$$BODY\nend",
+        "description": "Class definition"
+      },
+      {
+        "pattern": "class $NAME < $PARENT\n  $$$BODY\nend",
+        "description": "Class with inheritance"
+      },
+      {
+        "pattern": "module $NAME\n  $$$BODY\nend",
+        "description": "Module definition"
+      }
+    ],
+    "import": [
+      {
+        "pattern": "require '$PATH'",
+        "description": "Require file"
+      },
+      {
+        "pattern": "require_relative '$PATH'",
+        "description": "Require relative"
+      },
+      {
+        "pattern": "include $MODULE",
+        "description": "Include module"
+      }
+    ],
+    "variable": [
+      {
+        "pattern": "$NAME = $VALUE",
+        "description": "Local variable"
+      },
+      {
+        "pattern": "@$NAME = $VALUE",
+        "description": "Instance variable"
+      },
+      {
+        "pattern": "@@$NAME = $VALUE",
+        "description": "Class variable"
+      }
+    ],
+    "control_flow": [
+      {
+        "pattern": "if $COND\n  $$$BODY\nend",
+        "description": "If statement"
+      },
+      {
+        "pattern": "unless $COND\n  $$$BODY\nend",
+        "description": "Unless statement"
+      },
+      {
+        "pattern": "$ITERABLE.each { |$VAR| $$$BODY }",
+        "description": "Each block"
+      },
+      {
+        "pattern": "$COND ? $THEN : $ELSE",
+        "description": "Ternary"
+      }
+    ],
+    "error_handling": [
+      {
+        "pattern": "begin\n  $$$TRY\nrescue $EXC\n  $$$RESCUE\nend",
+        "description": "Begin-rescue block"
+      },
+      {
+        "pattern": "raise $MSG",
+        "description": "Raise exception"
+      }
+    ],
+    "async": [
+      {
+        "pattern": "Thread.new { $$$BODY }",
+        "description": "New thread"
+      }
+    ]
+  },
+  "c": {
+    "function": [
+      {
+        "pattern": "$RET $NAME($$$PARAMS) { $$$BODY }",
+        "description": "Function definition"
+      },
+      {
+        "pattern": "static $RET $NAME($$$PARAMS) { $$$BODY }",
+        "description": "Static function"
+      }
+    ],
+    "class": [
+      {
+        "pattern": "struct $NAME { $$$FIELDS };",
+        "description": "Struct definition"
+      },
+      {
+        "pattern": "typedef struct { $$$FIELDS } $NAME;",
+        "description": "Typedef struct"
+      },
+      {
+        "pattern": "enum $NAME { $$$VALUES };",
+        "description": "Enum definition"
+      }
+    ],
+    "import": [
+      {
+        "pattern": "#include \"$PATH\"",
+        "description": "Include local header"
+      },
+      {
+        "pattern": "#include <$PATH>",
+        "description": "Include system header"
+      }
+    ],
+    "variable": [
+      {
+        "pattern": "$TYPE $NAME = $VALUE;",
+        "description": "Variable declaration"
+      },
+      {
+        "pattern": "const $TYPE $NAME = $VALUE;",
+        "description": "Const variable"
+      },
+      {
+        "pattern": "$TYPE *$NAME = $VALUE;",
+        "description": "Pointer declaration"
+      }
+    ],
+    "control_flow": [
+      {
+        "pattern": "if ($COND) { $$$BODY }",
+        "description": "If statement"
+      },
+      {
+        "pattern": "for ($INIT; $COND; $INCR) { $$$BODY }",
+        "description": "For loop"
+      },
+      {
+        "pattern": "while ($COND) { $$$BODY }",
+        "description": "While loop"
+      },
+      {
+        "pattern": "switch ($EXPR) { $$$CASES }",
+        "description": "Switch statement"
+      }
+    ],
+    "error_handling": [
+      {
+        "pattern": "if ($VAR == NULL) { $$$BODY }",
+        "description": "NULL check"
+      },
+      {
+        "pattern": "if ($RET < 0) { $$$BODY }",
+        "description": "Error return check"
+      }
+    ],
+    "async": []
+  },
+  "cpp": {
+    "function": [
+      {
+        "pattern": "$RET $NAME($$$PARAMS) { $$$BODY }",
+        "description": "Function definition"
+      },
+      {
+        "pattern": "auto $NAME($$$PARAMS) -> $RET { $$$BODY }",
+        "description": "Trailing return type"
+      },
+      {
+        "pattern": "[$$$CAPTURE]($$$PARAMS) { $$$BODY }",
+        "description": "Lambda expression"
+      }
+    ],
+    "class": [
+      {
+        "pattern": "class $NAME { $$$BODY };",
+        "description": "Class definition"
+      },
+      {
+        "pattern": "class $NAME : public $PARENT { $$$BODY };",
+        "description": "Class with inheritance"
+      },
+      {
+        "pattern": "template<$$$PARAMS>\nclass $NAME { $$$BODY };",
+        "description": "Template class"
+      }
+    ],
+    "import": [
+      {
+        "pattern": "#include \"$PATH\"",
+        "description": "Include local header"
+      },
+      {
+        "pattern": "#include <$PATH>",
+        "description": "Include system header"
+      },
+      {
+        "pattern": "using namespace $NS;",
+        "description": "Using namespace"
+      }
+    ],
+    "variable": [
+      {
+        "pattern": "auto $NAME = $VALUE;",
+        "description": "Auto type deduction"
+      },
+      {
+        "pattern": "std::unique_ptr<$TYPE> $NAME = $VALUE;",
+        "description": "Unique pointer"
+      },
+      {
+        "pattern": "std::shared_ptr<$TYPE> $NAME = $VALUE;",
+        "description": "Shared pointer"
+      }
+    ],
+    "control_flow": [
+      {
+        "pattern": "if ($COND) { $$$BODY }",
+        "description": "If statement"
+      },
+      {
+        "pattern": "for (auto& $VAR : $CONTAINER) { $$$BODY }",
+        "description": "Range-based for"
+      },
+      {
+        "pattern": "if constexpr ($COND) { $$$BODY }",
+        "description": "Compile-time if"
+      }
+    ],
+    "error_handling": [
+      {
+        "pattern": "try { $$$TRY } catch ($TYPE $VAR) { $$$CATCH }",
+        "description": "Try-catch block"
+      },
+      {
+        "pattern": "throw $EXPR;",
+        "description": "Throw exception"
+      },
+      {
+        "pattern": "std::optional<$TYPE>",
+        "description": "Optional type"
+      }
+    ],
+    "async": [
+      {
+        "pattern": "std::async($POLICY, $FUNC, $$$ARGS)",
+        "description": "Async call"
+      },
+      {
+        "pattern": "co_await $EXPR",
+        "description": "Coroutine await"
+      },
+      {
+        "pattern": "std::thread($FUNC, $$$ARGS)",
+        "description": "Create thread"
+      }
+    ]
+  }
+}

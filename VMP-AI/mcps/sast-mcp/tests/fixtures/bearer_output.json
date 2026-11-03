@@ -1,0 +1,24 @@
+{
+  "findings": [
+    {
+      "title": "SQL Injection",
+      "description": "User input used directly in SQL query without parameterization.",
+      "severity": "CRITICAL",
+      "confidence": "HIGH",
+      "file": "tests/fixtures/test_target.py",
+      "line": 3,
+      "data_flow": [
+        {"file": "tests/fixtures/test_target.py", "line": 1, "code_snippet": "user_input = request.args.get('q')"},
+        {"file": "tests/fixtures/test_target.py", "line": 3, "code_snippet": "db.execute(f'SELECT * FROM users WHERE name = {user_input}')"}
+      ]
+    },
+    {
+      "title": "Hardcoded Secret",
+      "description": "API key found hardcoded in source code.",
+      "severity": "HIGH",
+      "confidence": "MEDIUM",
+      "file": "tests/fixtures/test_target.py",
+      "line": 7
+    }
+  ]
+}

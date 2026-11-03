@@ -1,0 +1,34 @@
+[
+  {
+    "question": "On the pg_app connection, how many rows does the users table in the public schema contain?",
+    "answer": "500"
+  },
+  {
+    "question": "On the pg_app connection, which table in the public schema references the users table through a foreign key?",
+    "answer": "orders"
+  },
+  {
+    "question": "On the pg_app connection, what is the name of the unique index that enforces uniqueness of the email column in the users table?",
+    "answer": "users_email_key"
+  },
+  {
+    "question": "On the pg_app connection, how many rows does the orders table contain?",
+    "answer": "5000"
+  },
+  {
+    "question": "What access mode does db_schema_connections report for the pg_app connection?",
+    "answer": "read_write"
+  },
+  {
+    "question": "On the pg_app connection, using vector search on the articles table with the vector [1,0,0] and the cosine metric, what is the title of the nearest article?",
+    "answer": "alpha"
+  },
+  {
+    "question": "On the pg_app connection, which article title matches a full-text search for the word fulltext on the body column of the articles table?",
+    "answer": "beta"
+  },
+  {
+    "question": "On the pg_app connection, which distance metric does the vector index on the articles table use?",
+    "answer": "cosine"
+  }
+]

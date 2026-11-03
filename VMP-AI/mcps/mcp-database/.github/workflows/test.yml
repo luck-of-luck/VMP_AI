@@ -1,0 +1,241 @@
+name: Test
+
+# Read-only CI: the full gate suite (lint, security, tests, compat, cluster) on every push to main and
+# every PR (including forks). This workflow has no write access to anything — publishing lives entirely
+# in release.yml, which never re-runs these gates.
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "**.md"
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - "**.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: "1 - Static analysis (ruff: lint, format, sec)"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - name: Set up uv and Python 3.12
+        uses: astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990 # v8.3.2
+        with:
+          python-version: "3.12"
+      - name: Install dependencies (frozen)
+        run: uv sync --frozen
+      - name: Ruff check (incl. bandit S rules)
+        id: check
+        run: uv run ruff check src tests --output-format=full | tee ruff-report.txt
+      - name: Ruff format check
+        id: fmt
+        run: uv run ruff format --check src tests
+      - name: Summary
+        if: always()
+        run: |
+          { [ "${{ steps.check.outcome }}" = success ] && [ "${{ steps.fmt.outcome }}" = success ]; } && s="✅ Passed" || s="❌ Failed"
+          {
+            echo "## Static analysis (ruff)"
+            echo ""
+            echo "Lint, format and code security (bandit S rules) — ${s}"
+            echo ""
+            echo "<details><summary>Report — click to expand</summary>"
+            echo ""
+            echo '```'
+            if [ -s ruff-report.txt ]; then cat ruff-report.txt; else echo "All checks passed."; fi
+            echo '```'
+            echo ""
+            echo "</details>"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  security:
+    name: 2 - Security scan (Trivy)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - name: Scan repo (uv.lock vulns, secrets, Dockerfile misconfig)
+        id: scan
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          scanners: vuln,secret,misconfig
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          exit-code: "1"
+          format: table
+          output: trivy-report.txt
+      - name: Summary
+        if: always()
+        run: |
+          [ "${{ steps.scan.outcome }}" = success ] && s="✅ No CRITICAL/HIGH with a fix" || s="❌ Findings — see report"
+          {
+            echo "## Security scan (Trivy)"
+            echo ""
+            echo "uv.lock vulnerabilities, secrets and Dockerfile misconfig (CRITICAL/HIGH, fixable) — ${s}"
+            echo ""
+            echo "<details><summary>Report — click to expand</summary>"
+            echo ""
+            echo '```'
+            if [ -s trivy-report.txt ]; then cat trivy-report.txt; else echo "No findings."; fi
+            echo '```'
+            echo ""
+            echo "</details>"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  tests:
+    name: 3 - Tests & coverage gate
+    needs: [lint, security]
+    if: ${{ !cancelled() && !failure() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - name: Set up uv and Python 3.12
+        uses: astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990 # v8.3.2
+        with:
+          python-version: "3.12"
+      - name: Install dependencies (frozen)
+        run: uv sync --frozen
+      # One job, steps per tier, coverage accumulated in place with --cov-append — no artifacts to move.
+      - name: Unit — guard, config, formatter, audit (no I/O)
+        id: unit
+        run: uv run pytest tests/unit -v --cov=mcp_database --cov-report=
+      - name: E2E — every tool over the real MCP protocol (in-memory)
+        id: e2e
+        run: uv run pytest tests/e2e -v --cov=mcp_database --cov-append --cov-report=
+      - name: Integration — adapters vs real pg/mysql/mongo (default images)
+        id: integration
+        run: uv run pytest tests/integration -v -m "not cross_engine and not cluster" --cov=mcp_database --cov-append --cov-report=
+      - name: Cross-engine — tool parity, mode/injection safety, resilience
+        id: cross
+        run: uv run pytest tests/integration -v -m cross_engine --cov=mcp_database --cov-append --cov-report=
+      - name: Coverage gate (95%)
+        run: uv run coverage report --fail-under=95
+      - name: Summary
+        if: always()
+        run: |
+          badge() { case "$1" in success) echo "✅ Passed";; failure) echo "❌ Failed";; skipped) echo "⏭️ Skipped";; *) echo "$1";; esac; }
+          total=$(uv run coverage report --format=total 2>/dev/null || true)
+          case "$total" in
+            "" | *[!0-9]*) cov="n/a" ;;
+            *) [ "$total" -ge 95 ] && cov="${total}% (≥95%) ✅" || cov="${total}% (<95%) ❌" ;;
+          esac
+          {
+            echo "## Tests & coverage"
+            echo ""
+            echo "| Step | Result |"
+            echo "| --- | --- |"
+            echo "| Unit | $(badge '${{ steps.unit.outcome }}') |"
+            echo "| E2E | $(badge '${{ steps.e2e.outcome }}') |"
+            echo "| Integration (pg17 / mysql8.4 / mongo8) | $(badge '${{ steps.integration.outcome }}') |"
+            echo "| Cross-engine | $(badge '${{ steps.cross.outcome }}') |"
+            echo "| Coverage | ${cov} |"
+            if [ "$cov" != "n/a" ]; then
+              echo ""
+              echo "<details><summary>Per-file report</summary>"
+              echo ""
+              uv run coverage report --format=markdown
+              echo ""
+              echo "</details>"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  compat:
+    name: 4 - Version compatibility (smoke, no coverage)
+    needs: [lint, security]
+    if: ${{ !cancelled() && !failure() }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - engine: postgres
+            image: postgres:17-alpine
+          - engine: postgres
+            image: postgres:16-alpine
+          - engine: mysql
+            image: mysql:8.4
+          - engine: mysql
+            image: mysql:8.0
+          - engine: mariadb
+            image: mariadb:11.4
+          - engine: mariadb
+            image: mariadb:10.11
+          - engine: sqlite
+            image: file-based
+          - engine: redis
+            image: redis:8
+          - engine: redis
+            image: redis:7
+          - engine: mongodb
+            image: mongo:8
+          - engine: mongodb
+            image: mongo:7
+          - engine: search
+            image: pgvector/pgvector:pg17
+            pg_image: pgvector/pgvector:pg17
+          - engine: search
+            image: mongodb/mongodb-atlas-local:8.0
+            mongo_image: mongodb/mongodb-atlas-local:8.0
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - name: Set up uv and Python 3.12
+        uses: astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990 # v8.3.2
+        with:
+          python-version: "3.12"
+      - name: Install dependencies (frozen)
+        run: uv sync --frozen
+      # Version breadth only: assert the adapter does not crash on each engine/version. No coverage,
+      # so no artifact — the tests job (default images) owns the coverage number.
+      - name: Smoke test on ${{ matrix.engine }} ${{ matrix.image }}
+        env:
+          PG_IMAGE: ${{ matrix.pg_image || (matrix.engine == 'postgres' && matrix.image || 'postgres:17-alpine') }}
+          MYSQL_IMAGE: ${{ matrix.engine == 'mysql' && matrix.image || 'mysql:8.4' }}
+          MARIADB_IMAGE: ${{ matrix.engine == 'mariadb' && matrix.image || 'mariadb:11.4' }}
+          MONGO_IMAGE: ${{ matrix.mongo_image || (matrix.engine == 'mongodb' && matrix.image || 'mongo:8') }}
+          REDIS_IMAGE: ${{ matrix.engine == 'redis' && matrix.image || 'redis:8' }}
+        run: uv run pytest tests/integration/test_${{ matrix.engine }}_integration.py -v --no-cov
+
+  cluster:
+    name: 5 - Cluster topologies (multi-node, no coverage)
+    needs: [lint, security]
+    if: ${{ !cancelled() && !failure() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - name: Set up uv and Python 3.12
+        uses: astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990 # v8.3.2
+        with:
+          python-version: "3.12"
+      - name: Install dependencies (frozen)
+        run: uv sync --frozen
+      - name: Multi-node topology tests
+        id: run
+        run: uv run pytest tests/integration -v -m cluster --no-cov
+      - name: Summary
+        if: ${{ always() }}
+        run: |
+          {
+            echo "## Cluster topologies ${{ steps.run.outcome == 'failure' && '❌' || '✅' }}"
+            echo "pg primary+standby · mysql source+replica · mongo 3-member rs · redis primary+replica"
+          } >> "$GITHUB_STEP_SUMMARY"

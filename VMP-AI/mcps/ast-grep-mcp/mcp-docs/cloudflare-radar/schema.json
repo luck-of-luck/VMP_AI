@@ -1,0 +1,22 @@
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Cloudflare-Radar MCP Server",
+  "description": "Access Cloudflare Radar internet intelligence data",
+  "applicationCategory": "DeveloperApplication",
+  "applicationSubCategory": "Analytics",
+  "operatingSystem": "Cross-platform",
+  "softwareVersion": "latest",
+  "programmingLanguage": [
+    "JavaScript"
+  ],
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "softwareHelp": {
+    "@type": "WebPage",
+    "url": "https://www.npmjs.com/package/@cloudflare/mcp-radar"
+  }
+}

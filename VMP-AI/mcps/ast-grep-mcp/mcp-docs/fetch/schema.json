@@ -1,0 +1,19 @@
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Fetch MCP Server",
+  "description": "HTTP request capabilities for fetching web content",
+  "applicationCategory": "DeveloperApplication",
+  "applicationSubCategory": "Web",
+  "operatingSystem": "Cross-platform",
+  "softwareVersion": "latest",
+  "programmingLanguage": [
+    "JavaScript"
+  ],
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "url": "https://github.com/modelcontextprotocol/server-fetch"
+}

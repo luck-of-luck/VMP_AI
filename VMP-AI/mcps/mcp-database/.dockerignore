@@ -1,0 +1,7 @@
+# Default-deny build context: only what the Dockerfile actually COPYs enters the image build.
+# Keeps the context small and prevents .git, tests, docs or local state from leaking in.
+*
+!pyproject.toml
+!uv.lock
+!README.md
+!src

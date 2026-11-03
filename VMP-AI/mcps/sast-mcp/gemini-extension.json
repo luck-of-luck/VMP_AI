@@ -1,0 +1,15 @@
+{
+  "name": "sast-mcp-server",
+  "version": "0.8.3",
+  "description": "SAST/DAST vulnerability scanner for AI agents — 11 scanners (Bandit, njsscan, Bearer, Semgrep, Trivy, CodeQL, Checkov, Gitleaks, OSV-Scanner, Grype, OWASP ZAP) with closed-loop remediation, SARIF/SBOM/VEX export, baselines, and CI integrations",
+  "mcpServers": {
+    "sast": {
+      "command": "uvx",
+      "args": ["sast-mcp-server"],
+      "env": {
+        "SAST_MCP_TIMEOUT": "300",
+        "SAST_MCP_LOG_LEVEL": "INFO"
+      }
+    }
+  }
+}

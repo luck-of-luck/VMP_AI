@@ -1,0 +1,124 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ast-grep-mcp"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "pydantic>=2.11.0",
+    "pydantic-settings>=2.8.0",
+    "mcp[cli]>=1.6.0",
+    "pyyaml>=6.0.2",
+    "structlog>=24.1.0",
+    "httpx>=0.28.0",
+    "sentry-sdk[anthropic]>=2.0.0",
+    "datasketch>=1.6.0", # MinHash + LSH for O(n) similarity detection
+    "pillow>=12.1.0",
+    "cachetools>=5.3.0",
+]
+
+[project.optional-dependencies]
+# Phase 5: CodeBERT semantic similarity (optional)
+# Enables Type-4 (semantic) clone detection using transformer embeddings
+# Note: Requires ~400MB model download on first use
+semantic = [
+    "transformers>=4.35.0",
+    "torch>=2.0.0",
+]
+
+# All optional features
+all = [
+    "transformers>=4.35.0",
+    "torch>=2.0.0",
+]
+
+[project.scripts]
+ast-grep-server = "main:run_mcp_server"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v"
+asyncio_mode = "auto"
+markers = [
+    "unit: Unit tests (fast, mocked dependencies)",
+    "integration: Integration tests (requires ast-grep binary)",
+    "slow: Slow tests that may take longer to run",
+    "semantic: Tests requiring transformers and torch (Phase 5 CodeBERT)",
+]
+
+[tool.coverage.run]
+source = ["main"]
+omit = ["tests/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if __name__ == .__main__.:",
+    "raise NotImplementedError",
+    "pass",
+    "except ImportError:",
+    "@mcp.tool\\(\\)",
+]
+
+[tool.ruff]
+line-length = 140
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W"]
+ignore = ["N806"]  # Non-lowercase variable in function - intentional for config patterns
+
+[tool.ruff.lint.per-file-ignores]
+"src/ast_grep_mcp/features/cross_language/pattern_database.py" = ["E501"]  # Long template strings
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+mypy_path = "$MYPY_CONFIG_FILE_DIR/src"
+namespace_packages = false
+exclude = [
+    "^tests/",
+    "^scripts/",
+    "^dev/",
+    "^analyze_codebase\\.py$",
+]
+
+[[tool.mypy.overrides]]
+module = "ast_grep_mcp.*"
+ignore_missing_imports = false
+
+[[tool.mypy.overrides]]
+module = "yaml"
+ignore_missing_imports = true
+
+[dependency-groups]
+dev = [
+    "mypy>=1.17.1",
+    "pytest>=8.4.1",
+    "pytest-asyncio>=1.3.0",
+    "pytest-benchmark>=5.2.3",
+    "pytest-cov>=7.1.0",
+    "pytest-mock>=3.15.1",
+    "ruff>=0.15.22",
+    "sympy>=1.14.0",
+    "tokenizers>=0.22.2",
+    "torch>=2.13.0",
+    "transformers>=5.14.1",
+    "types-cachetools>=7.0.0.20260713",
+    "types-pyyaml>=6.0.12.20250809",
+]
+

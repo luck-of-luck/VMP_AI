@@ -1,0 +1,18 @@
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Schema-Org MCP Server",
+  "description": "Generate and validate Schema.org structured data markup",
+  "applicationCategory": "DeveloperApplication",
+  "applicationSubCategory": "SEO/Semantic Web",
+  "operatingSystem": "Cross-platform",
+  "softwareVersion": "latest",
+  "programmingLanguage": [
+    "JavaScript"
+  ],
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}

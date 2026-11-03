@@ -1,0 +1,89 @@
+name: Prepare release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version bump to apply"
+        required: true
+        default: "patch (x.y.Z - fixes)"
+        type: choice
+        options:
+          - "patch (x.y.Z - fixes)"
+          - "minor (x.Y.0 - features)"
+          - "major (X.0.0 - breaking)"
+
+permissions:
+  contents: read
+
+jobs:
+  create-pr:
+    name: Bump version and open release PR
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout (full history, credentials kept for branch push)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+      - name: Set up uv 0.11.2 and Python 3.12
+        uses: astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990 # v8.3.2
+        with:
+          python-version: "3.12"
+          version: "0.11.2"
+      - name: Bump version (pyproject.toml + uv.lock)
+        id: bump
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          uv version --bump "${INPUT_VERSION%% *}"
+          echo "NEW_VERSION=v$(uv version --short)" >> "$GITHUB_OUTPUT"
+      - name: Check version regression
+        id: version-check
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NEW_VERSION: ${{ steps.bump.outputs.NEW_VERSION }}
+        run: |
+          set -euo pipefail
+          LATEST_TAG=$(gh release list --exclude-drafts --exclude-pre-releases \
+            --limit 1 --json tagName --jq '.[0].tagName // empty')
+          if [[ -z "$LATEST_TAG" ]]; then
+            exit 0
+          fi
+          if ! printf '%s\n%s\n' "$LATEST_TAG" "$NEW_VERSION" | sort -V -C; then
+            echo "VERSION_WARNING=⚠️ New version \`${NEW_VERSION}\` is lower than the latest release \`${LATEST_TAG}\` — verify this is intentional." >> "$GITHUB_OUTPUT"
+          fi
+      - name: Push release branch and open PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NEW_VERSION: ${{ steps.bump.outputs.NEW_VERSION }}
+          VERSION_WARNING: ${{ steps.version-check.outputs.VERSION_WARNING }}
+        run: |
+          set -euo pipefail
+          BRANCH="chore/release-${NEW_VERSION}"
+          TITLE="chore: release mcp-database ${NEW_VERSION}"
+
+          git add pyproject.toml uv.lock
+          if git diff --cached --quiet; then
+            echo "::notice::Version unchanged — nothing to release"
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$BRANCH"
+          git commit -m "$TITLE"
+          git push --force origin "$BRANCH"
+
+          STATE=$(gh pr view "$BRANCH" --json state --jq .state 2>/dev/null || true)
+          if [[ "$STATE" != "OPEN" ]]; then
+            BODY=$(printf '%s\n%s\n\n%s\n' \
+              "Bumps the package version to ${NEW_VERSION}." \
+              "Merging this PR publishes the release: the multi-arch image to GHCR, the Linux/Windows binaries, and a draft GitHub release (with the SBOM and a commit-log changelog) that you review and publish." \
+              "$VERSION_WARNING")
+            gh pr create --base main --head "$BRANCH" --title "$TITLE" --body "$BODY"
+          fi

@@ -1,0 +1,14 @@
+[
+  {
+    "question": "On the sqlite_app connection, how many rows does the tasks table contain?",
+    "answer": "25"
+  },
+  {
+    "question": "On the sqlite_app connection, how many tasks are done (done = 1)?",
+    "answer": "8"
+  },
+  {
+    "question": "On the sqlite_app connection, which note title matches a text search for the word fts5 in the notes table?",
+    "answer": "beta"
+  }
+]

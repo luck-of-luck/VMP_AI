@@ -1,0 +1,96 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/main/sarif-2.1/schema/sarif-schema-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "CodeQL",
+          "version": "2.16.0",
+          "rules": [
+            {
+              "id": "py/sql-injection",
+              "shortDescription": {"text": "SQL Injection"},
+              "fullDescription": {"text": "Building a SQL query from user-controlled sources is vulnerable to insertion of malicious SQL code."},
+              "defaultConfiguration": {"level": "error"}
+            },
+            {
+              "id": "py/command-injection",
+              "shortDescription": {"text": "Command Injection"},
+              "fullDescription": {"text": "Executing a system command with user input allows command injection."},
+              "defaultConfiguration": {"level": "error"}
+            },
+            {
+              "id": "py/hardcoded-credentials",
+              "shortDescription": {"text": "Hardcoded credentials"},
+              "fullDescription": {"text": "Credentials stored in source code may be exposed."},
+              "defaultConfiguration": {"level": "warning"}
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "py/sql-injection",
+          "level": "error",
+          "message": {"text": "This query string is built from user input, which can lead to SQL injection."},
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {"uri": "tests/fixtures/test_target.py"},
+                "region": {"startLine": 3, "endLine": 3}
+              }
+            }
+          ],
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {"uri": "tests/fixtures/test_target.py"},
+                          "region": {"startLine": 1}
+                        },
+                        "message": {"text": "user_input = request.args.get('q')"}
+                      }
+                    },
+                    {
+                      "location": {
+                        "physicalLocation": {
+                          "artifactLocation": {"uri": "tests/fixtures/test_target.py"},
+                          "region": {"startLine": 3}
+                        },
+                        "message": {"text": "query = f\"SELECT * FROM users WHERE name = '{user_input}'\""}
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "confidence": "HIGH"
+          }
+        },
+        {
+          "ruleId": "py/hardcoded-credentials",
+          "level": "warning",
+          "message": {"text": "Hardcoded password found in source code."},
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {"uri": "tests/fixtures/test_target.py"},
+                "region": {"startLine": 7, "endLine": 7}
+              }
+            }
+          ],
+          "properties": {
+            "confidence": "MEDIUM"
+          }
+        }
+      ]
+    }
+  ]
+}

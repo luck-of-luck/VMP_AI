@@ -52,6 +52,10 @@ cron/
 kanban/
 __pycache__/
 .ruff_cache/
+**/.ruff_cache/
+**/.pytest_cache/
+*-report.json
+VMP-AI/cluster/runs/
 node_modules/
 
 # ── Generated / Build artifacts ──
@@ -106,3 +110,38 @@ venv/
 .venv/
 hermes_agent.egg-info/
 *.heapsnapshot
+
+# Privado & dados pessoais do usuario
+Ampliagro/
+.curator_backups/
+.playwright-mcp/
+crowork/*.json
+temp-profile/
+token.txt
+*.db
+*.sqlite
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
+!db.sqlite3
+*.png
+!docs/*.png
+ollama_cloud_models_cache.json
+provider_models_cache.json
+release_notes.txt
+extract_frames.ps1
+test_all_ias.py
+test_mcp.py
+*.pre_*
+*.pre-*
+.coverage
+htmlcov/
+
+.opencode/skills/ampliagro-dev/
+
+**/.venv/
+**/venv/
+**/__pycache__/
+**/*.pyc
+**/*.egg-info/
+

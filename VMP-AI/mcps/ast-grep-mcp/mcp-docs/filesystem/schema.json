@@ -1,0 +1,19 @@
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Filesystem MCP Server",
+  "description": "File system access for reading and managing files",
+  "applicationCategory": "DeveloperApplication",
+  "applicationSubCategory": "System",
+  "operatingSystem": "Cross-platform",
+  "softwareVersion": "latest",
+  "programmingLanguage": [
+    "JavaScript"
+  ],
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "url": "https://github.com/modelcontextprotocol/server-filesystem"
+}

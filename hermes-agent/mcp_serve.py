@@ -29,6 +29,7 @@ MCP client config (e.g. claude_desktop_config.json):
 
 from __future__ import annotations
 
+import inspect
 import json
 import logging
 import os
@@ -617,6 +618,136 @@ class EventBridge:
 
 
 # ---------------------------------------------------------------------------
+# Hermes native tools (browser automation) exposed over MCP
+# ---------------------------------------------------------------------------
+
+# JSON Schema type -> Python type mapping for signature generation.
+_JSON_TO_PY = {
+    "string": str,
+    "integer": int,
+    "number": float,
+    "boolean": bool,
+    "array": list,
+    "object": dict,
+}
+
+# Hermes native browser tools exposed to MCP clients (OpenCode, Claude Code,
+# Cursor, ...). Dispatch is delegated to Hermes' own ``handle_function_call``,
+# so the tools behave exactly as the agent core invokes them: session
+# isolation, SSRF guards, secret redaction, cursor control and recording.
+_BROWSER_TOOLS: tuple = (
+    "browser_navigate",
+    "browser_snapshot",
+    "browser_click",
+    "browser_type",
+    "browser_scroll",
+    "browser_back",
+    "browser_press",
+    "browser_get_images",
+    "browser_console",
+    "browser_vision",
+    "browser_pointer",
+    "browser_record",
+    # Browser Use CLI driver — replaces the browser_* surface when
+    # browser.backend is unset/"" and the browser-use CLI is installed.
+    "browser_exec",
+)
+
+
+def _signature_from_schema(schema: Optional[dict]):
+    """Build a Python function signature and annotations from a JSON schema."""
+    props = (schema or {}).get("properties") or {}
+    required = set((schema or {}).get("required") or [])
+    params, annots = [], {}
+
+    for pname, pspec in props.items():
+        if pname.startswith("_"):
+            continue
+        py = _JSON_TO_PY.get((pspec or {}).get("type"), object)
+        ann, default = (
+            (py, inspect.Parameter.empty)
+            if pname in required
+            else (Optional[py], None)
+        )
+        annots[pname] = ann
+        params.append(
+            inspect.Parameter(
+                pname, inspect.Parameter.KEYWORD_ONLY, annotation=ann, default=default
+            )
+        )
+
+    return inspect.Signature(params, return_annotation=str), annots
+
+
+def _register_hermes_tools(mcp) -> None:
+    """Register Hermes' native browser tool surface on the MCP server.
+
+    This is what turns ``hermes mcp serve`` from a messaging-only bridge into
+    a full browser-for-the-AI surface: the MCP client (OpenCode) gains a cursor
+    (``browser_pointer``), data entry (``browser_type``), screen analysis
+    (``browser_vision``), and screen recording (``browser_record``), alongside
+    navigation/click/snapshot.
+    """
+    try:
+        from model_tools import get_tool_definitions, handle_function_call
+    except Exception as exc:  # pragma: no cover - model_tools is always present
+        logger.warning("Hermes native tools unavailable over MCP: %s", exc)
+        return
+
+    all_defs: Dict[str, dict] = {}
+    try:
+        for td in (get_tool_definitions(quiet_mode=True) or []):
+            if isinstance(td, dict) and td.get("type") == "function":
+                fn = td.get("function") or {}
+                if fn.get("name"):
+                    all_defs[fn["name"]] = fn
+    except Exception as exc:  # pragma: no cover - defensive
+        logger.warning("Could not load Hermes tool definitions for MCP: %s", exc)
+        return
+
+    registered = 0
+    for name in _BROWSER_TOOLS:
+        spec = all_defs.get(name)
+        if spec is None:
+            logger.debug("skipping %s — not registered in this Hermes process", name)
+            continue
+
+        description = spec.get("description") or f"Hermes {name} tool"
+        params_schema = spec.get("parameters") or {"type": "object", "properties": {}}
+        sig, annots = _signature_from_schema(params_schema)
+
+        def _make_handler(tool_name: str):
+            def _dispatch(**kwargs):
+                try:
+                    # Filter out None values so unset optionals aren't forwarded.
+                    args = {k: v for k, v in kwargs.items() if v is not None}
+                    return handle_function_call(tool_name, args or {})
+                except Exception as exc:
+                    logger.exception("tool %s raised", tool_name)
+                    return json.dumps({"error": str(exc), "tool": tool_name})
+
+            _dispatch.__name__ = tool_name
+            _dispatch.__doc__ = description
+            _dispatch.__signature__ = sig
+            _dispatch.__annotations__ = {**annots, "return": str}
+            return _dispatch
+
+        try:
+            mcp.add_tool(_make_handler(name), name=name, description=description)
+        except TypeError:
+            # Older mcp SDK signature — fall back to decorator-style.
+            handler = _make_handler(name)
+            handler = mcp.tool(name=name, description=description)(handler)
+        registered += 1
+
+    logger.info(
+        "hermes mcp serve registered %d/%d native browser tools",
+        registered,
+        len(_BROWSER_TOOLS),
+    )
+
+
+# ---------------------------------------------------------------------------
 # MCP Server
 # ---------------------------------------------------------------------------
 
@@ -1018,6 +1149,11 @@ def create_mcp_server(event_bridge: Optional[EventBridge] = None) -> "MCPServer"
 
         result = bridge.respond_to_approval(id, decision)
         return json.dumps(result, indent=2)
+
+    # Expose Hermes' native browser tools (navigation, cursor, typing, vision,
+    # recording) so MCP clients like OpenCode can drive a full browser for the
+    # AI. Kept after the messaging bridge tools; both surfaces coexist.
+    _register_hermes_tools(mcp)
 
     return mcp
 

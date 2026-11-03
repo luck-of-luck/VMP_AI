@@ -1,0 +1,32 @@
+{
+  "results": [
+    {
+      "test_name": "B307",
+      "test_id": "B307",
+      "issue_severity": "MEDIUM",
+      "issue_confidence": "HIGH",
+      "issue_text": "Use of possibly insecure function - consider using safer ast.literal_eval.",
+      "filename": "tests/fixtures/test_target.py",
+      "line_number": 3,
+      "line_range": [3]
+    },
+    {
+      "test_name": "B105",
+      "test_id": "B105",
+      "issue_severity": "LOW",
+      "issue_confidence": "MEDIUM",
+      "issue_text": "Possible hardcoded password.",
+      "filename": "tests/fixtures/test_target.py",
+      "line_number": 7,
+      "line_range": [7]
+    }
+  ],
+  "metrics": {
+    "_totals": {
+      "SEVERITY.LOW": 1,
+      "SEVERITY.MEDIUM": 1,
+      "CONFIDENCE.HIGH": 1,
+      "CONFIDENCE.MEDIUM": 1
+    }
+  }
+}

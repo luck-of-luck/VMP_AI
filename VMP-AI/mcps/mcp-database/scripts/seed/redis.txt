@@ -1,0 +1,26 @@
+SELECT 0
+DEL greeting queue tags ranking user:1 user:2 user:3 user:4 user:5 user:6 user:7 user:8 user:9 user:10 user:11 user:12 user:13 user:14 user:15 user:16 user:17 user:18 user:19 user:20
+SET greeting hello
+HSET user:1 name user_1 email user_1@example.com
+HSET user:2 name user_2 email user_2@example.com
+HSET user:3 name user_3 email user_3@example.com
+HSET user:4 name user_4 email user_4@example.com
+HSET user:5 name user_5 email user_5@example.com
+HSET user:6 name user_6 email user_6@example.com
+HSET user:7 name user_7 email user_7@example.com
+HSET user:8 name user_8 email user_8@example.com
+HSET user:9 name user_9 email user_9@example.com
+HSET user:10 name user_10 email user_10@example.com
+HSET user:11 name user_11 email user_11@example.com
+HSET user:12 name user_12 email user_12@example.com
+HSET user:13 name user_13 email user_13@example.com
+HSET user:14 name user_14 email user_14@example.com
+HSET user:15 name user_15 email user_15@example.com
+HSET user:16 name user_16 email user_16@example.com
+HSET user:17 name user_17 email user_17@example.com
+HSET user:18 name user_18 email user_18@example.com
+HSET user:19 name user_19 email user_19@example.com
+HSET user:20 name user_20 email user_20@example.com
+RPUSH queue job_1 job_2 job_3 job_4 job_5
+SADD tags alpha beta gamma delta
+ZADD ranking 10 ana 20 bob 30 caro

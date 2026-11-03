@@ -1,0 +1,498 @@
+# High-Priority Python Security Rules (Fully Relational + Enhanced Follows)
+# Based on ast-grep-essentials: https://github.com/coderabbitai/ast-grep-essentials/tree/main/rules/python/security
+# All rules use advanced relational patterns with sophisticated follows/precedes/inside/not combinations
+
+---
+# Rule 1: Hardcoded Secrets in Authentication Libraries
+# Enhanced: follows + precedes + inside + not composition
+id: hardcoded-auth-secret
+language: python
+severity: error
+message: >-
+  Authentication secret is hard-coded. Use environment variables instead
+  (OPENAI_API_KEY, JWT_SECRET, etc.).
+note: |
+  CWE-798: Use of Hard-coded Credentials
+rule:
+  all:
+    # Pattern: hardcoded secret in specific credential contexts
+    - any:
+        - pattern: jwt.encode($ARG1, "$SECRET", $$$ARGS)
+        - pattern: openai.api_key = "$KEY"
+        - pattern: requests.auth.HTTPBasicAuth("$USER", "$PASSWORD")
+    # Follows: library must be imported at module level
+    - follows:
+        any:
+          - pattern: import jwt
+          - pattern: from jwt import.*
+          - pattern: import openai
+          - pattern: import requests
+        stopBy:
+          pattern: "def $$$ARGS"
+
+    # Precedes: secret is actually used after import
+    - precedes:
+        any:
+          - pattern: jwt.encode(...)
+          - pattern: openai.Completion.create(...)
+          - pattern: requests.get(...)|requests.post(...)|requests.request(...)
+    # Inside: within function/class definition
+    - inside:
+        any:
+          - pattern: "def $$$FUNC($$$ARGS): $$$BODY"
+          - pattern: "class $$$CLASS: $$$BODY"
+    # Not: exclude tests and safe patterns
+    - not:
+        inside:
+          pattern: "def test_$$$ARGS($$$PARAMS): $$$BODY"
+
+---
+# Rule 2: Hardcoded Database Credentials
+# Enhanced: follows with strict import checking + precedes + inside + not
+id: database-hardcoded-credential
+language: python
+severity: error
+message: >-
+  Hard-coded database credential detected. Use environment variables or
+  secure credential management instead.
+note: |
+  CWE-798: Use of Hard-coded Credentials
+rule:
+  all:
+    # Pattern: any database with hardcoded password
+    - any:
+        - pattern: psycopg2.connect(..., password="$PASSWORD", ...)
+        - pattern: mysql.connector.connect(..., password="$PASSWORD", ...)
+        - pattern: pymysql.connect(..., password="$PASSWORD", ...)
+        - pattern: MongoClient(..., password="$PASSWORD", ...)
+        - pattern: redis.Redis(..., password="$PASSWORD", ...)
+        - pattern: couchbase.Cluster(..., password="$PASSWORD", ...)
+        - pattern: psycopg2.connect(..., user="$USER", password="$PASSWORD", ...)
+        - pattern: MongoClient(..., username="$USER", password="$PASSWORD", ...)
+    # Follows: library must be imported at module level
+    - follows:
+        any:
+          - all:
+              - pattern: import psycopg2
+
+          - all:
+              - pattern: from psycopg2 import.*
+
+          - all:
+              - pattern: import pymysql|import mysql.connector
+
+          - all:
+              - pattern: from pymongo import|from redis import|from couchbase import
+        stopBy:
+          pattern: "def $$$ARGS"
+
+    # Precedes: connection is actually used
+    - precedes:
+        any:
+          - pattern: 'db = .*\.connect(...)'
+          - pattern: 'cursor = .*\.cursor()'
+    # Inside: within function that establishes connection
+    - inside:
+        any:
+          - pattern: "def connect($$$ARGS): $$$BODY"
+          - pattern: "def create_connection($$$ARGS): $$$BODY"
+          - pattern: "def init_db($$$ARGS): $$$BODY"
+          - pattern: "class $$$DB: $$$BODY"
+    # Not: exclude safe patterns
+    - not:
+        inside:
+          any:
+            - pattern: "def test_$$$ARGS($$$PARAMS): $$$BODY"
+            - pattern: "if os.getenv|if environ.get"
+
+---
+# Rule 3: Empty/Default Database Passwords
+# Enhanced: follows + inside + not with strict context matching
+id: database-empty-credential
+language: python
+severity: warning
+message: >-
+  Empty or default password detected in database connection.
+  This indicates misconfiguration or development credentials in production.
+note: |
+  CWE-521: Weak Password Requirements
+rule:
+  all:
+    # Pattern: empty password string
+    - any:
+        - pattern: psycopg2.connect(..., password="", ...)
+        - pattern: pymysql.connect(..., password="", ...)
+        - pattern: MongoClient(..., password="", ...)
+        - pattern: redis.Redis(..., password="", ...)
+    # Follows: library imported at module level
+    - follows:
+        any:
+          - all:
+              - pattern: import psycopg2|import pymysql|import redis
+
+          - all:
+              - pattern: from pymongo import|from redis import
+        stopBy:
+          pattern: "def $$$ARGS"
+
+    # Inside: connection context
+    - inside:
+        any:
+          - pattern: "def $$$FUNC($$$ARGS): $$$BODY"
+          - pattern: "class $$$CLASS: $$$BODY"
+          - pattern: "try: $$$BODY"
+    # Not: exclude test/dev contexts
+    - not:
+        inside:
+          any:
+            - pattern: "def test_$$$ARGS($$$PARAMS): $$$BODY"
+            - pattern: "if __name__ == '__main__': $$$BODY"
+            - pattern: "def setup_test($$$ARGS): $$$BODY"
+
+---
+# Rule 4: Insecure Cryptography
+# Enhanced: follows + inside + not with algorithm-specific contexts
+id: insecure-cryptography
+language: python
+severity: error
+message: >-
+  Insecure or deprecated cryptographic algorithm detected.
+  Use modern algorithms: AES-256, ChaCha20, or authenticated encryption.
+note: |
+  CWE-327: Use of Broken Cryptographic Algorithm
+rule:
+  all:
+    # Pattern: weak algorithms
+    - any:
+        - pattern: Cipher.new("RC4", ...)
+        - pattern: Cipher.new("DES", ...)
+        - pattern: hashlib.md5($$$ARGS)
+        - pattern: hashlib.sha1($$$ARGS)
+    # Follows: crypto library imported
+    - follows:
+        any:
+          - all:
+              - pattern: from Crypto.Cipher import
+
+          - all:
+              - pattern: import hashlib
+
+    # Precedes: algorithm actually used
+    - precedes:
+        any:
+          - pattern: '.encrypt($$$ARGS)'
+          - pattern: '.digest()|.hexdigest()'
+          - pattern: "cipher = Cipher.new(...)"
+    # Inside: crypto function context
+    - inside:
+        any:
+          - pattern: "def encrypt($$$ARGS): $$$BODY"
+          - pattern: "def hash($$$ARGS): $$$BODY"
+          - pattern: "def digest($$$ARGS): $$$BODY"
+          - pattern: "def sign($$$ARGS): $$$BODY"
+    # Not: exclude tests and safe hashlib usage
+    - not:
+        any:
+          # Exclude test functions
+          - inside:
+              pattern: "def test_$$$ARGS($$$PARAMS): $$$BODY"
+          # Exclude safe hashlib usage (Python 3.9+): usedforsecurity=False for checksums/dedup
+          - pattern: hashlib.md5($$$ARGS, usedforsecurity=False)
+          - pattern: hashlib.sha1($$$ARGS, usedforsecurity=False)
+
+---
+# Rule 5: Flask Debug Mode Enabled
+# Enhanced: follows + inside with multi-context checking + not
+id: flask-debug-mode
+language: python
+severity: error
+message: >-
+  Flask debug mode is enabled. This exposes sensitive information and the
+  debugger. Use environment variables (FLASK_ENV=development) instead.
+note: |
+  CWE-489: Active Debug Code
+rule:
+  all:
+    # Pattern: debug=True in Flask
+    - any:
+        - pattern: app.run(..., debug=True, ...)
+        - pattern: flask.run(..., debug=True, ...)
+        - pattern: app.debug = True
+    # Follows: Flask imported
+    - follows:
+        any:
+          - all:
+              - pattern: import flask
+
+          - all:
+              - pattern: from flask import.*
+
+    # Precedes: app actually runs
+    - precedes:
+        any:
+          - pattern: app.run()
+          - pattern: flask.run()
+          - pattern: ".run()"
+    # Inside: flag if inside app factory
+    - inside:
+        pattern: "def create_app($$$ARGS): $$$BODY"
+    # Not: exclude tests and main block
+    - not:
+        inside:
+          any:
+            - pattern: "def test_$$$ARGS($$$PARAMS): $$$BODY"
+            - pattern: "if __name__ == '__main__': $$$BODY"
+
+---
+# Rule 6: Insecure Temporary File Creation
+# Enhanced: follows + inside + precedes + not
+id: insecure-temp-file
+language: python
+severity: warning
+message: >-
+  mktemp() has a race condition vulnerability. Use tempfile.NamedTemporaryFile()
+  with delete=False instead.
+note: |
+  CWE-377: Insecure Temporary File
+rule:
+  all:
+    # Pattern: unsafe temp functions
+    - any:
+        - pattern: tempfile.mktemp()
+        - pattern: mktemp()
+    # Follows: tempfile imported at module level
+    - follows:
+        any:
+          - all:
+              - pattern: import tempfile
+
+          - all:
+              - pattern: from tempfile import mktemp
+
+    # Inside: temp file context - assignment of mktemp result
+    - inside:
+        pattern: "$VAR = mktemp()"
+    # Not: exclude test context (safer)
+    - not:
+        inside:
+          pattern: "def test_$$$ARGS($$$PARAMS): $$$BODY"
+
+---
+# Rule 7: Hardcoded API/Search Engine Credentials
+# Enhanced: follows with strict import + inside + not
+id: search-engine-hardcoded-credentials
+language: python
+severity: error
+message: >-
+  Hard-coded credentials detected in search engine connection.
+  Use environment variables or managed identity instead.
+note: |
+  CWE-798: Use of Hard-coded Credentials
+rule:
+  all:
+    # Pattern: hardcoded credentials
+    - any:
+        - pattern: Elasticsearch(..., basic_auth=("$USER", "$PASSWORD"), ...)
+        - pattern: Elasticsearch(..., api_key="$KEY", ...)
+        - pattern: OpenSearch(..., basic_auth=("$USER", "$PASSWORD"), ...)
+        - pattern: OpenSearch(..., api_key="$KEY", ...)
+    # Follows: client imported
+    - follows:
+        any:
+          - all:
+              - pattern: from elasticsearch import|import elasticsearch
+
+          - all:
+              - pattern: from opensearchpy import|import opensearchpy
+
+    # Precedes: client actually used
+    - precedes:
+        any:
+          - pattern: '.search(...)'
+          - pattern: '.index(...)'
+          - pattern: '.get(...)'
+    # Inside: client context
+    - inside:
+        any:
+          - pattern: "def connect($$$ARGS): $$$BODY"
+          - pattern: "def init_search($$$ARGS): $$$BODY"
+          - pattern: "class $$$Client: $$$BODY"
+    # Not: exclude tests
+    - not:
+        inside:
+          pattern: "def test_$$$ARGS($$$PARAMS): $$$BODY"
+
+---
+# Rule 8: HTTP Requests with Embedded Credentials
+# Enhanced: follows + inside + not with request context
+id: http-embedded-credentials
+language: python
+severity: error
+message: >-
+  Credentials embedded in HTTP request URL. Use environment variables and
+  pass credentials via headers or auth parameter.
+note: |
+  CWE-798: Use of Hard-coded Credentials
+rule:
+  all:
+    # Pattern: credentials in URL
+    - any:
+        - pattern: requests.$METHOD("http://$USER:$PASSWORD@...", ...)
+        - pattern: requests.$METHOD("https://$USER:$PASSWORD@...", ...)
+        - pattern: urllib.request.urlopen("http://$USER:$PASSWORD@...", ...)
+    # Follows: requests/urllib imported
+    - follows:
+        any:
+          - all:
+              - pattern: import requests
+
+          - all:
+              - pattern: import urllib|from urllib import.*
+
+    # Precedes: request actually sent
+    - precedes:
+        any:
+          - pattern: ".json()|.text|.content"
+          - pattern: "response = requests.*"
+          - pattern: "urllib.request.urlopen(...).read()"
+    # Inside: request context
+    - inside:
+        any:
+          - pattern: "def fetch($$$ARGS): $$$BODY"
+          - pattern: "def call_api($$$ARGS): $$$BODY"
+          - pattern: "def request($$$ARGS): $$$BODY"
+    # Not: exclude tests
+    - not:
+        inside:
+          pattern: "def test_$$$ARGS($$$PARAMS): $$$BODY"
+
+---
+# Rule 9: Secret Variable Assignment and Usage
+# Enhanced: precedes with strict context + inside + not
+id: secret-variable-used-after-assignment
+language: python
+severity: error
+message: >-
+  Hard-coded secret assigned to variable then used. Move secrets to
+  environment variables, don't assign hardcoded values.
+note: |
+  CWE-798: Use of Hard-coded Credentials
+rule:
+  all:
+    # Pattern: hardcoded secret in credential contexts (named or literal)
+    - any:
+        - pattern: password = "$$$"
+        - pattern: secret = "$$$"
+        - pattern: api_key = "$$$"
+        - pattern: token = "$$$"
+        - pattern: jwt.encode(..., "$$$SECRET", ...)
+        - pattern: openai.api_key = "$$$KEY"
+        - pattern: "connect(..., password=\"$$$CRED\", ...)"
+        - pattern: "Redis(..., password=\"$$$CRED\", ...)"
+        - pattern: "Elasticsearch(..., api_key=\"$$$CRED\", ...)"
+    # Inside: function definition
+    - inside:
+        pattern: "def $$$FUNC($$$ARGS): $$$BODY"
+    # Not: exclude tests
+    - not:
+        inside:
+          pattern: "def test_$$$ARGS($$$PARAMS): $$$BODY"
+
+---
+# Rule 10: Unencrypted Connection Strings
+# Enhanced: inside + follows + not with protocol checking
+id: unencrypted-db-connection
+language: python
+severity: warning
+message: >-
+  Unencrypted connection string detected (http://). Use secure protocols
+  (https://, postgresql://, mongodb+srv://, etc.).
+note: |
+  CWE-295: Improper Certificate Validation
+rule:
+  all:
+    # Pattern: http:// URL
+    - pattern: $VAR = "http://$$$"
+    # Inside: connection context
+    - inside:
+        any:
+          - pattern: "def connect($$$ARGS): $$$BODY"
+          - pattern: "def create_connection($$$ARGS): $$$BODY"
+          - pattern: "def init_db($$$ARGS): $$$BODY"
+          - pattern: "$VAR = os.getenv('DATABASE_URL')|$VAR = environ['DB']"
+    # Follows: database driver imported at module level
+    - follows:
+        any:
+          - all:
+              - pattern: import psycopg2|from psycopg2 import.*
+
+          - all:
+              - pattern: from pymongo import|import pymongo
+
+          - all:
+              - pattern: import requests|from requests import.*
+        stopBy:
+          pattern: "def $$$ARGS"
+---
+# Rule 11: Credentials via String Concatenation
+# Enhanced: inside + not with string context
+id: credentials-string-concatenation
+language: python
+severity: warning
+message: >-
+  Credentials constructed via string concatenation. Use environment variables
+  or secure vaults instead of building strings.
+note: |-
+  CWE-798: Use of Hard-coded Credentials
+rule:
+  all:
+    # Pattern: concatenated strings for credentials
+    - any:
+        - pattern: password = $STR1 + $STR2
+        - pattern: api_key = $STR1 + $STR2 + $STR3
+        - pattern: secret = $STR1 + $STR2
+        - pattern: token = $STR1 + $STR2
+    # Inside: function definition
+    - inside:
+        pattern: "def $$$FUNC($$$ARGS): $$$BODY"
+    # Not: exclude safe patterns
+    - not:
+        inside:
+          pattern: "def test_$$$ARGS($$$PARAMS): $$$BODY"
+
+---
+# Rule 12: Logging Secrets
+# Enhanced: inside + not with safe logging patterns
+id: secrets-in-logging
+language: python
+severity: warning
+message: >-
+  Potential secret in logging call. Never log passwords, API keys, tokens,
+  or other sensitive data.
+note: |-
+  CWE-532: Insertion of Sensitive Information into Log File
+rule:
+  all:
+    # Pattern: logging common credential-named variables
+    - any:
+        - pattern: print(password)
+        - pattern: print(secret)
+        - pattern: print(api_key)
+        - pattern: print(token)
+        - pattern: print(credential)
+        - pattern: logger.info(..., password, ...)
+        - pattern: logger.info(..., secret, ...)
+        - pattern: logger.info(..., api_key, ...)
+        - pattern: logger.debug(..., password, ...)
+        - pattern: logger.debug(..., secret, ...)
+        - pattern: logger.debug(..., token, ...)
+        - pattern: logger.error(..., password, ...)
+        - pattern: logger.error(..., api_key, ...)
+        - pattern: logger.warning(..., secret, ...)
+    # Inside: function definition
+    - inside:
+        pattern: "def $$$FUNC($$$ARGS): $$$BODY"
+    # Not: exclude tests
+    - not:
+        inside:
+          pattern: "def test_$$$ARGS($$$PARAMS): $$$BODY"

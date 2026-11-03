@@ -1643,6 +1643,7 @@ def _socket_safe_tmpdir() -> str:
 # Stores: session_name (always), bb_session_id + cdp_url (cloud mode only)
 _active_sessions: Dict[str, Dict[str, Any]] = {}  # session_key -> {session_name, ...}
 _recording_sessions: set = set()  # session_keys with active recordings
+_recording_paths: Dict[str, str] = {}  # session_key -> active recording file path
 
 # Tracks the most recent session_key used per task_id. Set by browser_navigate()
 # after it chooses a backend for a URL; read by every non-nav browser tool
@@ -2332,6 +2333,56 @@ BROWSER_TOOL_SCHEMAS = [
                 }
             },
             "required": []
+        }
+    },
+    {
+        "name": "browser_pointer",
+        "description": "Control a virtual mouse cursor on the current page. Move the cursor to viewport coordinates (x,y), click, double-click, hover, drag, or type into the element under the cursor. Coordinates are CSS pixels relative to the top-left of the browser viewport. Use browser_vision(annotate=true) or browser_snapshot to locate targets, then act with precision. Requires browser_navigate first.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "action": {
+                    "type": "string",
+                    "enum": ["move", "click", "double_click", "hover", "type", "drag"],
+                    "description": "Cursor operation. 'move' returns the element under the cursor without clicking; 'click' clicks at (x,y); 'double_click' double-clicks; 'hover' hovers; 'type' focuses and types text into the element at (x,y); 'drag' drags from (x,y) to (to_x,to_y)."
+                },
+                "x": {
+                    "type": "integer",
+                    "description": "Horizontal coordinate in CSS pixels (0 = left edge of the viewport)."
+                },
+                "y": {
+                    "type": "integer",
+                    "description": "Vertical coordinate in CSS pixels (0 = top edge of the viewport)."
+                },
+                "text": {
+                    "type": "string",
+                    "description": "Text to type. Only used when action='type'."
+                },
+                "to_x": {
+                    "type": "integer",
+                    "description": "Drag destination x. Only used when action='drag'."
+                },
+                "to_y": {
+                    "type": "integer",
+                    "description": "Drag destination y. Only used when action='drag'."
+                }
+            },
+            "required": ["action", "x", "y"]
+        }
+    },
+    {
+        "name": "browser_record",
+        "description": "Record the browser screen (the current page) to a WebM video file. action='start' begins recording; action='stop' stops and returns the saved video path (share it with MEDIA:<path>); action='status' reports whether recording is active. Recordings are saved under the browser_recordings directory and cleaned up after 72 hours. Requires browser_navigate first.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "action": {
+                    "type": "string",
+                    "enum": ["start", "stop", "status"],
+                    "description": "'start' begins recording; 'stop' stops and returns the video path; 'status' reports the current recording state."
+                }
+            },
+            "required": ["action"]
         }
     },
 ]
@@ -3965,6 +4016,162 @@ def browser_console(clear: bool = False, expression: Optional[str] = None, task_
     return json.dumps(response, ensure_ascii=False)
 
 
+_POINTER_ACTIONS = ("move", "click", "double_click", "hover", "type", "drag")
+
+
+def _build_pointer_js(
+    action: str,
+    x: int,
+    y: int,
+    text: Optional[str],
+    to_x: Optional[int],
+    to_y: Optional[int],
+) -> str:
+    """Build a self-contained JavaScript IIFE that performs a cursor action.
+
+    Uses ``document.elementFromPoint`` (CSS viewport coordinates) and
+    synthetic MouseEvent/input dispatch so it works on any browser backend
+    that exposes ``eval`` — local agent-browser, CDP supervisor, and Camofox.
+    The returned value is a JSON string describing the element under the
+    cursor and the effect, so the model gets structured feedback.
+    """
+    text_literal = json.dumps(text or "", ensure_ascii=False)
+    return (
+        "(function(){\n"
+        "  var X=" + str(int(x)) + ", Y=" + str(int(y)) + ";\n"
+        "  var TOX=" + str(int(to_x if to_x is not None else x)) + ","
+        " TOY=" + str(int(to_y if to_y is not None else y)) + ";\n"
+        "  var ACTION=" + json.dumps(action, ensure_ascii=False) + ";\n"
+        "  var TEXT=" + text_literal + ";\n"
+        "  function describe(el){\n"
+        "    if(!el) return null;\n"
+        "    var a=function(n){try{return el.getAttribute(n)||'';}catch(e){return '';}};\n"
+        "    return {tag:(el.tagName||'').toLowerCase(), id:el.id||'',"
+        " classes:(typeof el.className==='string'?el.className:''),"
+        " text:(el.innerText||el.textContent||'').trim().slice(0,200),"
+        " role:a('role'), ariaLabel:a('aria-label'), href:(el.href||'').slice(0,500),"
+        " type:a('type'), name:a('name'), disabled:!!el.disabled};\n"
+        "  }\n"
+        "  function fire(el, type){\n"
+        "    try {\n"
+        "      var e;\n"
+        "      if (typeof MouseEvent === 'function') {\n"
+        "        e = new MouseEvent(type, {bubbles:true, cancelable:true, view:window, clientX:X, clientY:Y});\n"
+        "      } else {\n"
+        "        e = document.createEvent('MouseEvents');\n"
+        "        e.initMouseEvent(type, true, true, window, 0, 0, 0, X, Y, false, false, false, false, 0, null);\n"
+        "      }\n"
+        "      return el.dispatchEvent(e);\n"
+        "    } catch(err) { return false; }\n"
+        "  }\n"
+        "  function clickAt(el, cx, cy){\n"
+        "    fire(el,'pointerdown'); fire(el,'mousedown'); fire(el,'pointerup'); fire(el,'mouseup'); fire(el,'click');\n"
+        "  }\n"
+        "  var el = document.elementFromPoint(X, Y);\n"
+        "  if(!el) return JSON.stringify({ok:false, error:'no element at point ('+X+','+Y+')'});\n"
+        "  var out = {ok:true, action:ACTION, x:X, y:Y, cursor:describe(el)};\n"
+        "  if(ACTION==='move'){ out.effect='inspected'; }\n"
+        "  else if(ACTION==='click'){ clickAt(el, X, Y); out.effect='clicked'; }\n"
+        "  else if(ACTION==='double_click'){ clickAt(el, X, Y); clickAt(el, X, Y); fire(el,'dblclick'); out.effect='double_clicked'; }\n"
+        "  else if(ACTION==='hover'){ fire(el,'pointerover'); fire(el,'mouseover'); fire(el,'mouseenter'); out.effect='hovered'; }\n"
+        "  else if(ACTION==='type'){\n"
+        "    el.focus();\n"
+        "    var setter=null;\n"
+        "    if(el.tagName==='INPUT'||el.tagName==='TEXTAREA'){\n"
+        "      try {\n"
+        "        var proto = el.tagName==='INPUT' ? window.HTMLInputElement.prototype : window.HTMLTextAreaElement.prototype;\n"
+        "        setter = Object.getOwnPropertyDescriptor(proto,'value').set;\n"
+        "      } catch(e){}\n"
+        "      if(setter){ setter.call(el, TEXT); } else { el.value = TEXT; }\n"
+        "      el.dispatchEvent(new Event('input',{bubbles:true}));\n"
+        "      el.dispatchEvent(new Event('change',{bubbles:true}));\n"
+        "    } else if(el.isContentEditable){\n"
+        "      el.textContent = TEXT;\n"
+        "      el.dispatchEvent(new Event('input',{bubbles:true}));\n"
+        "    }\n"
+        "    out.effect='typed'; out.typed=TEXT;\n"
+        "  }\n"
+        "  else if(ACTION==='drag'){\n"
+        "    var target = document.elementFromPoint(TOX, TOY) || el;\n"
+        "    fire(el,'pointerdown'); fire(el,'mousedown');\n"
+        "    fire(target,'pointermove'); fire(target,'mousemove');\n"
+        "    fire(target,'pointerup'); fire(target,'mouseup'); fire(target,'click');\n"
+        "    out.effect='dragged'; out.draggedTo={x:TOX, y:TOY, cursor:describe(target)};\n"
+        "  }\n"
+        "  return JSON.stringify(out);\n"
+        "})()"
+    )
+
+
+def browser_pointer(
+    action: str,
+    x: Optional[int] = None,
+    y: Optional[int] = None,
+    text: Optional[str] = None,
+    to_x: Optional[int] = None,
+    to_y: Optional[int] = None,
+    task_id: Optional[str] = None,
+) -> str:
+    """Move and click a virtual mouse cursor on the current page.
+
+    Gives the agent a cursor: inspect the element under (x,y), click, double-click,
+    hover, drag, or type directly at viewport coordinates. Coordinates are CSS
+    pixels relative to the top-left of the viewport. This complements
+    ``browser_click``/``browser_type`` (which use ref IDs from the snapshot) by
+    adding coordinate-precise control for visual/QA workflows.
+
+    Args:
+        action: One of "move", "click", "double_click", "hover", "type", "drag".
+        x: Horizontal viewport coordinate.
+        y: Vertical viewport coordinate.
+        text: Text to type (action="type").
+        to_x: Drag destination x (action="drag").
+        to_y: Drag destination y (action="drag").
+        task_id: Task identifier for session isolation.
+
+    Returns:
+        JSON string describing the element under the cursor and the effect.
+    """
+    action = (action or "").strip().lower()
+    if action not in _POINTER_ACTIONS:
+        return json.dumps({
+            "success": False,
+            "error": f"Invalid action '{action}'. Use one of {', '.join(_POINTER_ACTIONS)}.",
+        }, ensure_ascii=False)
+    if x is None or y is None:
+        return json.dumps({
+            "success": False,
+            "error": "browser_pointer requires x and y viewport coordinates.",
+        }, ensure_ascii=False)
+
+    effective_task_id = _last_session_key(task_id or "default")
+
+    # Input-dispatching actions must respect the private-page guard.
+    if action in {"click", "double_click", "hover", "type", "drag"}:
+        blocked = _blocked_private_page_action(effective_task_id, f"pointer {action}")
+        if blocked is not None:
+            return blocked
+
+    js = _build_pointer_js(action, x, y, text, to_x, to_y)
+    raw = _browser_eval(js, task_id)
+
+    try:
+        envelope = json.loads(raw) if isinstance(raw, str) else raw
+    except (json.JSONDecodeError, TypeError):
+        envelope = {}
+    if isinstance(envelope, dict) and envelope.get("success"):
+        inner = envelope.get("result")
+        return json.dumps({
+            "success": True,
+            "action": action,
+            "x": int(x),
+            "y": int(y),
+            "result": inner,
+        }, ensure_ascii=False, default=str)
+    # Propagate eval failures (already a JSON string).
+    return raw
+
+
 def _eval_ssrf_guard_active(effective_task_id: str) -> bool:
     """Return True when eval-driven private-network access must be guarded.
 
@@ -4439,6 +4646,7 @@ def _maybe_start_recording(task_id: str):
         if result.get("success"):
             with _cleanup_lock:
                 _recording_sessions.add(task_id)
+                _recording_paths[task_id] = str(recording_path)
             logger.info("Auto-recording browser session %s to %s", task_id, recording_path)
         else:
             logger.debug("Could not start auto-recording: %s", result.get("error"))
@@ -4461,6 +4669,116 @@ def _maybe_stop_recording(task_id: str):
     finally:
         with _cleanup_lock:
             _recording_sessions.discard(task_id)
+            _recording_paths.pop(task_id, None)
+
+
+def browser_record(action: str = "status", task_id: Optional[str] = None) -> str:
+    """Record the browser screen (the current page) to a WebM video on demand.
+
+    Lets the agent (or a user via the agent) start, stop, and query screen
+    recordings. This is the explicit counterpart to the automatic
+    ``browser.record_sessions`` config flag: the agent can now control
+    recording mid-session regardless of that setting.
+
+    Args:
+        action: "start", "stop", or "status".
+        task_id: Task identifier for session isolation.
+
+    Returns:
+        JSON string with the recording state and, on stop, the saved video path.
+    """
+    action = (action or "status").strip().lower()
+    if action not in {"start", "stop", "status"}:
+        return json.dumps({
+            "success": False,
+            "error": f"Invalid action '{action}'. Use 'start', 'stop', or 'status'.",
+        }, ensure_ascii=False)
+
+    if _is_camofox_mode():
+        return json.dumps({
+            "success": False,
+            "error": "browser_record is not supported by the Camofox browser backend.",
+        }, ensure_ascii=False)
+
+    effective_task_id = _last_session_key(task_id or "default")
+
+    if action == "status":
+        with _cleanup_lock:
+            active = effective_task_id in _recording_sessions
+            path = _recording_paths.get(effective_task_id)
+        return json.dumps({
+            "success": True,
+            "recording": active,
+            "path": path,
+        }, ensure_ascii=False)
+
+    if action == "start":
+        with _cleanup_lock:
+            if effective_task_id in _recording_sessions:
+                return json.dumps({
+                    "success": True,
+                    "recording": True,
+                    "path": _recording_paths.get(effective_task_id),
+                    "message": "Recording already active for this session.",
+                }, ensure_ascii=False)
+
+        recordings_dir = get_hermes_home() / "browser_recordings"
+        recordings_dir.mkdir(parents=True, exist_ok=True)
+        _cleanup_old_recordings(max_age_hours=72)
+
+        timestamp = time.strftime("%Y%m%d_%H%M%S")
+        recording_path = recordings_dir / f"session_{timestamp}_{effective_task_id[:16]}.webm"
+
+        result = _run_browser_command(effective_task_id, "record", ["start", str(recording_path)])
+        if not result.get("success"):
+            return json.dumps({
+                "success": False,
+                "error": result.get("error", "Failed to start recording"),
+            }, ensure_ascii=False)
+
+        with _cleanup_lock:
+            _recording_sessions.add(effective_task_id)
+            _recording_paths[effective_task_id] = str(recording_path)
+        logger.info("Started browser recording for session %s → %s", effective_task_id, recording_path)
+        return json.dumps({
+            "success": True,
+            "recording": True,
+            "path": str(recording_path),
+        }, ensure_ascii=False)
+
+    # action == "stop"
+    with _cleanup_lock:
+        was_active = effective_task_id in _recording_sessions
+        known_path = _recording_paths.get(effective_task_id)
+
+    if not was_active:
+        return json.dumps({
+            "success": True,
+            "recording": False,
+            "path": known_path,
+            "message": "No active recording for this session.",
+        }, ensure_ascii=False)
+
+    result = _run_browser_command(effective_task_id, "record", ["stop"])
+    saved_path = (result.get("data", {}) or {}).get("path", "") if isinstance(result, dict) else ""
+    saved_path = saved_path or known_path or ""
+
+    with _cleanup_lock:
+        _recording_sessions.discard(effective_task_id)
+        _recording_paths.pop(effective_task_id, None)
+
+    if not saved_path and not result.get("success"):
+        return json.dumps({
+            "success": False,
+            "error": result.get("error", "Failed to stop recording"),
+        }, ensure_ascii=False)
+
+    logger.info("Saved browser recording for session %s: %s", effective_task_id, saved_path)
+    return json.dumps({
+        "success": True,
+        "recording": False,
+        "path": saved_path,
+    }, ensure_ascii=False)
 
 
 def browser_get_images(task_id: Optional[str] = None) -> str:
@@ -5468,6 +5786,14 @@ def check_browser_press_requirements() -> bool:
     return check_browser_routed_requirements("browser_press")
 
 
+def check_browser_pointer_requirements() -> bool:
+    return check_browser_routed_requirements("browser_pointer")
+
+
+def check_browser_record_requirements() -> bool:
+    return check_browser_requirements()
+
+
 registry.register(
     name="browser_navigate",
     toolset="browser",
@@ -5599,4 +5925,38 @@ registry.register(
     ),
     check_fn=check_browser_requirements,
     emoji="🖥️",
+)
+registry.register(
+    name="browser_pointer",
+    toolset="browser",
+    schema=_BROWSER_SCHEMA_MAP["browser_pointer"],
+    handler=lambda args, **kw: routed_browser_handler(
+        "browser_pointer",
+        args,
+        fallback=lambda: browser_pointer(
+            action=args.get("action", ""),
+            x=args.get("x"),
+            y=args.get("y"),
+            text=args.get("text"),
+            to_x=args.get("to_x"),
+            to_y=args.get("to_y"),
+            task_id=kw.get("task_id"),
+        ),
+        **_browser_router_kw(kw),
+    ),
+    check_fn=check_browser_pointer_requirements,
+    emoji="🖱️",
+)
+registry.register(
+    name="browser_record",
+    toolset="browser",
+    schema=_BROWSER_SCHEMA_MAP["browser_record"],
+    handler=lambda args, **kw: routed_browser_handler(
+        "browser_record",
+        args,
+        fallback=lambda: browser_record(action=args.get("action", "status"), task_id=kw.get("task_id")),
+        **_browser_router_kw(kw),
+    ),
+    check_fn=check_browser_record_requirements,
+    emoji="🎥",
 )

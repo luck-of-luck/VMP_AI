@@ -1,0 +1,20 @@
+version: 2
+updates:
+  # Keep the SHA-pinned GitHub Actions current (bumps both the pinned SHA and the version comment),
+  # so pinning by hash does not mean missing action security fixes.
+  # Python deps are handled by uv (see [tool.uv] exclude-newer in pyproject.toml); Dependabot has no
+  # native uv ecosystem, so it is intentionally not configured for Python here.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "ci"
+
+  # Keep the digest-pinned base images in the Dockerfile current.
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "ci"

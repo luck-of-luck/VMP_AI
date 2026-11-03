@@ -27,18 +27,6 @@ if not exist "%~dp0.env" (
   echo Continuando mesmo assim (fallback local pode funcionar)...
   echo.
 )
-REM CROWORK auto-start: cria/entra na sala padrão ampliagro-sprint (via python handler - sempre disponível)
-if not exist "%~dp0crowork" mkdir "%~dp0crowork" >nul 2>&1
-set "PY=%~dp0hermes-agent\venv\Scripts\python.exe"
-if not exist "%PY%" set "PY=python"
-if not exist "%~dp0crowork\ampliagro-sprint.json" (
-  echo [CROWORK] criando sala padrão ampliagro-sprint...
-  "%PY%" -c "from hermes_cli.crowork import handle_crowork; print(handle_crowork(['create','ampliagro-sprint','Sprint Agro 5.0 - sala padrao VMP-AI']))" >nul 2>&1
-)
-echo [CROWORK] entrando em ampliagro-sprint...
-"%PY%" -c "from hermes_cli.crowork import handle_crowork; print(handle_crowork(['join','ampliagro-sprint']))" >nul 2>&1
-"%PY%" -c "from hermes_cli.crowork import handle_crowork; print(handle_crowork(['share','ampliagro-sprint']))"
-echo.
 "%HERMES_EXE%" %*
 echo.
 echo Hermes saiu com codigo %errorlevel%

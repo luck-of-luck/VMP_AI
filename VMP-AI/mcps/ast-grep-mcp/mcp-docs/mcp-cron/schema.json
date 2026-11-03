@@ -1,0 +1,16 @@
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Mcp-Cron MCP Server",
+  "description": "Cron-based task scheduling interface",
+  "applicationCategory": "DeveloperApplication",
+  "applicationSubCategory": "Automation",
+  "operatingSystem": "Cross-platform",
+  "softwareVersion": "latest",
+  "programmingLanguage": [],
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
