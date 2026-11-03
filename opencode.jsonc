@@ -443,6 +443,23 @@
     },
   },
   "providers": {
+    "openjarvis": {
+      "name": "openjarvis",
+      "package": "@opencode/ai/providers/openai-compatible",
+      "settings": {
+        "baseURL": "http://127.0.0.1:20260/v1",
+        "apiKey": "openjarvis-key"
+      },
+      "models": {
+        "cycle-auto": {
+          "name": "cycle-auto",
+          "modalities": {
+            "input": ["text"],
+            "output": ["text"]
+          }
+        }
+      }
+    },
     "9router": {
       // OpenCode v2: "npm"/"options" (v1) são ignorados -> "Unsupported package".
       // Use "package" + "settings".
